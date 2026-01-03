@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class BookCollection extends ResourceCollection
 {
-    
+
     public function toArray(Request $request): array
     {
         return [
@@ -19,6 +19,15 @@ class BookCollection extends ResourceCollection
                     'description' => $book->description
                 ];
             })
+        ];
+    }
+
+    public function with(Request $request): array
+    {
+        return [
+            'meta' => [
+                'total' => $this->collection->count()
+            ]
         ];
     }
 }

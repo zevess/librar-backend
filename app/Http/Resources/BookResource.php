@@ -14,7 +14,8 @@ class BookResource extends BaseResource
             'id' => $this->id,
             'title'=> $this->title,
             'slug'=> $this->slug,
-            'description' => $this->description
+            'description' => $this->description,
+            'author' => new AuthorResource($this->whenLoaded('author')),
         ];
     }
 }

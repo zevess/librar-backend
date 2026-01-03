@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBookRequest extends FormRequest
+class UpdateAuthorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,27 +22,20 @@ class StoreBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|min:3',
+            'name' => 'required|min:3',
             'slug' => 'nullable',
             'description' => 'required|min:10',
-            'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
-            'author_id' => 'required|numeric'
+            'author_id' => 'nullable'
+            // 'years' => 'required|integer'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'title.required' => 'Пожалуйста введите название книги',
+            'name.required' => 'Пожалуйста введите имя автора',
             'description.required' => 'Пожалуйста введите описание',
-            'author_id.required' => 'Пожайлуста введите id автора'
+            'years.required' => 'Пожалуйста укажите даты'
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'is_published' => $this->boolean('is_published'),
-        ]);
     }
 }

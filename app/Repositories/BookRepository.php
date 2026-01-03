@@ -18,6 +18,11 @@ class BookRepository implements BookRepositoryInterface
         return Book::find($id);
     }
 
+    public function findByAuthorId(int $authorId): Collection
+    {
+        return Book::where('author_id', $authorId)->get();
+    }
+
     public function create(array $data): Book
     {
         return Book::create($data);
@@ -32,5 +37,10 @@ class BookRepository implements BookRepositoryInterface
     public function delete(Book $book): bool
     {
         return $book->delete();
+    }
+
+    public function restore(Book $book): bool
+    {
+        return $book->restore();
     }
 }

@@ -10,22 +10,28 @@ use Illuminate\Support\Str;
 
 class BookService implements BookServiceInterface
 {
-    
+
     public function __construct(
         private BookRepositoryInterface $bookRepository
-    ){}
+    ) {
+    }
 
-    public function getAllBooks(): Collection
+    public function getAll(): Collection
     {
         return $this->bookRepository->all();
     }
 
-    public function getBookById(int $id): ?Book
+    public function getById(int $id): ?Book
     {
         return $this->bookRepository->find($id);
     }
 
-    public function createBook(array $data): Book
+    public function getByAuthorId(int $authorId): Collection
+    {
+        return $this->bookRepository->findByAuthorId($authorId);
+    }
+
+    public function create(array $data): Book
     {
         $slug = Str::slug($data['title']);
         $data['slug'] = $slug;
@@ -33,10 +39,10 @@ class BookService implements BookServiceInterface
         return $this->bookRepository->create($data);
     }
 
-    public function updateBook(int $id, array $data): ?Book
+    public function update(int $id, array $data): ?Book
     {
         $book = $this->bookRepository->find($id);
-        if(!$book){
+        if (!$book) {
             return null;
         }
         $slug = Str::slug($data['title']);
@@ -44,13 +50,21 @@ class BookService implements BookServiceInterface
         return $this->bookRepository->update($book, $data);
     }
 
-    public function deleteBook(int $id): bool
+    public function delete(int $id): bool
     {
         $book = $this->bookRepository->find($id);
-        if(!$book){
+        if (!$book) {
             return false;
         }
 
         return $this->bookRepository->delete($book);
+    }
+
+    public function restore(int $id): bool
+    {
+        $book = Book::withTrashed()->find($id);
+
+        return $this->bookRepository->restore($book);
+
     }
 }

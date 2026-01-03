@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface BookServiceInterface
 {
-    public function getAllBooks(): Collection;
+    public function getAll(): Collection;
 
-    public function getBookById(int $id): ?Book;
+    public function getById(int $id): ?Book;
 
-    public function createBook(array $data): Book;
+    public function getByAuthorId(int $authorId): Collection;
 
-    public function updateBook(int $id, array $data): ?Book;
+    public function create(array $data): Book;
 
-    public function deleteBook(int $id): bool;
+    public function update(int $id, array $data): ?Book;
+
+    public function delete(int $id): bool;
+
+    public function restore(int $id): bool;
 }
