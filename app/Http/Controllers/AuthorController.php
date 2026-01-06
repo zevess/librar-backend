@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreAuthorRequest;
-use App\Http\Requests\UpdateAuthorRequest;
+use App\Http\Requests\Author\StoreAuthorRequest;
+use App\Http\Requests\Author\UpdateAuthorRequest;
 use App\Http\Resources\AuthorCollection;
 use App\Http\Resources\AuthorResource;
 use App\Http\Resources\BookCollection;
-use App\Services\BookService;
 use App\Services\Interfaces\AuthorServiceInterface;
+use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class AuthorController extends Controller
 {
     public function __construct(
         private AuthorServiceInterface $authorService,
-        private BookService $bookService
+        private BookServiceInterface $bookService
     ){}
 
     public function index(): AuthorCollection

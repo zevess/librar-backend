@@ -6,10 +6,14 @@ use App\Repositories\AuthorRepository;
 use App\Repositories\BookRepository;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\UserRepository;
 use App\Services\AuthorService;
 use App\Services\BookService;
 use App\Services\Interfaces\AuthorServiceInterface;
 use App\Services\Interfaces\BookServiceInterface;
+use App\Services\Interfaces\UserServiceInterface;
+use App\Services\UserService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(AuthorRepositoryInterface::class, AuthorRepository::class);
         $this->app->bind(AuthorServiceInterface::class, AuthorService::class);
+    
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(UserServiceInterface::class, UserService::class);
+    
     }
 
     /**

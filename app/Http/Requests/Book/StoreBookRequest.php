@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Book;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBookRequest extends FormRequest
+class StoreBookRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,14 +19,14 @@ class UpdateBookRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+   public function rules(): array
     {
         return [
-            'title' => 'required|min:3',
+            'title' => ['required', 'min:3'],
             'slug' => 'nullable',
-            'description' => 'required|min:10',
+            'description' => ['required', 'min:10'],
             'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
-            'remove_image' => ['sometimes', 'boolean']
+            'author_id' => ['required', 'numeric']
         ];
     }
 
@@ -34,7 +34,8 @@ class UpdateBookRequest extends FormRequest
     {
         return [
             'title.required' => 'Пожалуйста введите название книги',
-            'description.required' => 'Пожалуйста введите описание'
+            'description.required' => 'Пожалуйста введите описание',
+            'author_id.required' => 'Пожайлуста введите id автора'
         ];
     }
 
@@ -42,7 +43,6 @@ class UpdateBookRequest extends FormRequest
     {
         $this->merge([
             'is_published' => $this->boolean('is_published'),
-            'remove_image' => $this->boolean('remove_image')
         ]);
     }
 }

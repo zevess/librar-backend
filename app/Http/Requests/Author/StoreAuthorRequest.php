@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Author;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAuthorRequest extends FormRequest
+class StoreAuthorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,9 @@ class UpdateAuthorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|min:3',
+            'name' => ['required', 'min:3'],
             'slug' => 'nullable',
-            'description' => 'required|min:10',
-            'author_id' => 'nullable'
+            'description' => ['required', 'min:10'],
             // 'years' => 'required|integer'
         ];
     }
@@ -35,7 +34,7 @@ class UpdateAuthorRequest extends FormRequest
         return [
             'name.required' => 'Пожалуйста введите имя автора',
             'description.required' => 'Пожалуйста введите описание',
-            'years.required' => 'Пожалуйста укажите даты'
+            // 'years.required' => 'Пожалуйста укажите даты'
         ];
     }
 }

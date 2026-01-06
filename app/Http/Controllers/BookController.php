@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Book\StoreBookRequest as BookStoreBookRequest;
+use App\Http\Requests\Book\UpdateBookRequest as BookUpdateBookRequest;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Http\Resources\BookCollection;
@@ -35,14 +37,14 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
-    public function store(StoreBookRequest $request): BookResource
+    public function store(BookStoreBookRequest $request): BookResource
     {
         $data = $request->validated();
         $book = $this->bookService->create($data);
         return new BookResource($book);
     }
 
-    public function update(UpdateBookRequest $request, int $id): BookResource|JsonResponse
+    public function update(BookUpdateBookRequest $request, int $id): BookResource|JsonResponse
     {
         $book = $this->bookService->getById($id);
 
