@@ -24,12 +24,23 @@ Route::prefix('books')->group(function () {
     Route::get('/', [BookController::class, 'index']);
     Route::get('/{id}', [BookController::class, 'show']);
 
-    Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+
+    Route::middleware('auth:sanctum')->group(function () {
+
+        Route::post('/{id}/reserve', [BookController::class, 'reserve']);
+        
+    });
+
+    Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
         Route::post('/', [BookController::class, 'store']);
         Route::put('/{id}', [BookController::class, 'update']);
         Route::delete('/{id}', [BookController::class, 'delete']);
         Route::post('/{id}/restore', [BookController::class, 'restore']);
+
+        Route::post('/{id}/issue', [BookController::class, 'issue']);
+        Route::post('/{id}/accept', [BookController::class, 'accept']);
     });
+
 });
 
 Route::prefix('authors')->group(function () {
@@ -38,10 +49,10 @@ Route::prefix('authors')->group(function () {
 
     Route::get('/{id}/books', [AuthorController::class, 'showWithBooks']);
 
-    Route::middleware(['auth:sanctum', 'role:admin', 'role:librarian'])->group(function () {
+    Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
         Route::post('/', [AuthorController::class, 'store']);
         Route::put('/{id}', [AuthorController::class, 'update']);
-        Route::delete('/{id}', [AuthorController::class, 'delete']);
+        Route::delete('/{id}', [AuthorController::class, 'destroy']);
     });
 });
 
@@ -50,17 +61,17 @@ Route::prefix('authors')->group(function () {
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     Route::prefix('users')->group(function () {
-        
-            Route::get('/', [UserController::class, 'index']);
-            Route::post('/', [UserController::class, 'store']);
 
-            Route::get('/{id}', [UserController::class, 'show']);
-            Route::put('/{id}', [UserController::class, 'update']);
-            Route::put('/role/{id}', [UserController::class, 'updateRole']);
+        Route::get('/', [UserController::class, 'index']);
+        Route::post('/', [UserController::class, 'store']);
 
-            Route::delete('/{id}', [UserController::class, 'destroy']);
-            Route::post('/{id}/restore', [UserController::class, 'restore']);
-        
+        Route::get('/{id}', [UserController::class, 'show']);
+        Route::put('/{id}', [UserController::class, 'update']);
+        Route::put('/role/{id}', [UserController::class, 'updateRole']);
+
+        Route::delete('/{id}', [UserController::class, 'destroy']);
+        Route::post('/{id}/restore', [UserController::class, 'restore']);
+
     });
 
 });

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PublishingHouse extends Model
+class Publisher extends Model
 {
     use SoftDeletes;
 

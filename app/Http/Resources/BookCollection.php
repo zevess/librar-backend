@@ -16,7 +16,9 @@ class BookCollection extends ResourceCollection
                     'id' => $book->id,
                     'title' => $book->title,
                     'slug' => $book->slug,
-                    'description' => $book->description
+                    'description' => $book->description,
+                    'status' => $this->status,
+                    'reserved_by' => $this->reserved_by,
                 ];
             })
         ];

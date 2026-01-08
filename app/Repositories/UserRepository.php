@@ -9,9 +9,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class UserRepository implements UserRepositoryInterface
 {
-    /**
-     * Create a new class instance.
-     */
+    
     public function getPaginated(int $perPage): LengthAwarePaginator
     {
         return User::latest()->paginate($perPage);

@@ -3,14 +3,18 @@
 namespace App\Providers;
 
 use App\Repositories\AuthorRepository;
+use App\Repositories\AuthRepository;
 use App\Repositories\BookRepository;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
+use App\Repositories\Interfaces\AuthRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\UserRepository;
 use App\Services\AuthorService;
+use App\Services\AuthService;
 use App\Services\BookService;
 use App\Services\Interfaces\AuthorServiceInterface;
+use App\Services\Interfaces\AuthServiceInterface;
 use App\Services\Interfaces\BookServiceInterface;
 use App\Services\Interfaces\UserServiceInterface;
 use App\Services\UserService;
@@ -32,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(UserServiceInterface::class, UserService::class);
     
+        $this->app->bind(AuthServiceInterface::class, AuthService::class);
+        $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
+
     }
 
     /**

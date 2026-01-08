@@ -24,9 +24,7 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        $data = $request->validated();
-
-        return $this->userService->create($data);
+        return $this->userService->create($request->validated());
     }
 
     public function show(int $id)

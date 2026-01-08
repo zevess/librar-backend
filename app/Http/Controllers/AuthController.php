@@ -5,17 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use App\Services\Interfaces\AuthServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
+    public function __construct(
+        private AuthServiceInterface $authService
+    ){}
+
     public function register(RegisterRequest $request): JsonResponse
     {
-        $data = $request->validated();
+        // $data = $request->validated();
 
-        $user = User::query()->create($data);
+        // $user = User::query()->create($data);
+
+        $user = $this->authService->register($request->validated());
 
         $token = $user->createToken('api_token')->plainTextToken;
 
@@ -27,16 +35,18 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
-        $data = $request->validated();
-        $user = User::query()
-            ->where('email', $data['email'])
-            ->first();
+        // $data = $request->validated();
+        // $user = User::query()
+        //     ->where('email', $data['email'])
+        //     ->first();
         
-        if(!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json([
-                'message' => 'Неверный email или пароль'
-            ], 402);
-        }
+        // if(!$user || !Hash::check($data['password'], $user->password)) {
+        //     return response()->json([
+        //         'message' => 'Неверный email или пароль'
+        //     ], 402);
+        // }
+
+        $user = $this->authService->login($request->validated());
 
         $token = $user->createToken('api_token')->plainTextToken;
 

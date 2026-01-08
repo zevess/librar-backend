@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BookStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,17 +19,26 @@ class Book extends Model
         
         'author_id',
         
-        'is_available',
-        'published_at'
+        'status',
+        'reserved_by'
     ];
 
     protected $casts = [
-        'is_available' => 'boolean',
-        'published_at' => 'datetime',
+        'status' => BookStatus::class,
     ];
 
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class, 'author_id');
+    }
+
+    public function reservedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reserved_by');
+    }
+
+    public function publishingHouse(): BelongsTo
+    {
+        return $this->belongsTo(Publisher::class, 'publisher_id');
     }
 }
