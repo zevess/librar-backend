@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\ApiException;
 use App\Models\Author;
 use App\Models\Book;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
@@ -11,10 +12,11 @@ use Illuminate\Support\Str;
 
 class AuthorService implements AuthorServiceInterface
 {
-    
+
     public function __construct(
         private AuthorRepositoryInterface $authorRepository
-    ){}
+    ) {
+    }
 
     public function getAll(): Collection
     {
@@ -23,21 +25,28 @@ class AuthorService implements AuthorServiceInterface
 
     public function getById(int $id): ?Author
     {
-        return $this->authorRepository->find($id);
+        $author = $this->authorRepository->find($id);
+
+        if (!$author) {
+            throw new ApiException("Автор не найден");
+        }
+
+        return $author;
     }
 
     public function create(array $data): Author
     {
         $slug = Str::slug($data["name"]);
         $data['slug'] = $slug;
-        return $this->authorRepository->create($data);
+        $author = $this->authorRepository->create($data);
+        return $author;
     }
 
     public function update(int $id, array $data): ?Author
     {
         $author = $this->authorRepository->find($id);
-        if(!$author) {
-            return null;
+        if (!$author) {
+            throw new ApiException("Автор не найден");
         }
 
         $slug = Str::slug($data["name"]);
@@ -49,8 +58,8 @@ class AuthorService implements AuthorServiceInterface
     public function delete(int $id): bool
     {
         $author = $this->authorRepository->find($id);
-        if(!$author) {
-            return false;
+        if (!$author) {
+            throw new ApiException("Автор не найден");
         }
 
         return $this->authorRepository->delete($author);

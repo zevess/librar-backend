@@ -20,11 +20,11 @@ interface BookServiceInterface
 
     // public function changeStatus(int $id, array $data): ?Book;
 
-    public function reserve(int $id, int $userId): ?Book;
+    // public function reserve(int $id, int $userId): ?Book;
 
-    public function issue(int $id): ?Book;
+    // public function issue(int $id): ?Book;
 
-    public function accept(int $id): ?Book;
+    // public function accept(int $id): ?Book;
 
     public function delete(int $id): bool;
 

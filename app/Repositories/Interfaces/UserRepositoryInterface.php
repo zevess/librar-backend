@@ -14,7 +14,7 @@ interface UserRepositoryInterface
 
     public function findByEmail(string $email): ?User;
 
-    public function updateRole(int $id, UserRole $role): bool;
+    public function updateRole(int $id, UserRole $role): ?User;
 
     public function create(array $data): User;
 

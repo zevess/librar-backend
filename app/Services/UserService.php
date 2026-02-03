@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\UserRole;
+use App\Exceptions\ApiException;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Interfaces\UserServiceInterface;
@@ -15,7 +16,8 @@ class UserService implements UserServiceInterface
      */
     public function __construct(
         private UserRepositoryInterface $userRepository
-    ){}
+    ) {
+    }
 
     public function getPaginated(int $perPage): LengthAwarePaginator
     {
@@ -24,16 +26,32 @@ class UserService implements UserServiceInterface
 
     public function getById(int $id): ?User
     {
-        return $this->userRepository->find($id);
+        $user = $this->userRepository->find($id);
+        if (!$user) {
+            throw new ApiException("Пользователь не найден");
+        }
+        return $user;
     }
 
     public function getByEmail(string $email): ?User
     {
-        return $this->userRepository->findByEmail($email);
+        $user = $this->userRepository->findByEmail($email);
+
+        if (!$user) {
+            throw new ApiException("Пользователь не найден");
+        }
+
+        return $user;
     }
 
-    public function changeRole(int $id, UserRole $role): bool
+    public function changeRole(int $id, UserRole $role): User
     {
+        $user = $this->userRepository->find($id);
+
+        if (!$user) {
+            throw new ApiException("Пользователь не найден");
+        }
+
         return $this->userRepository->updateRole($id, $role);
     }
 
@@ -41,8 +59,8 @@ class UserService implements UserServiceInterface
     {
         $user = $this->userRepository->find($id);
 
-        if(!$user) {
-            return null;
+        if (!$user) {
+            throw new ApiException("Пользователь не найден");
         }
 
         return $this->userRepository->update($user, $data);
@@ -56,8 +74,9 @@ class UserService implements UserServiceInterface
     public function delete(int $id): bool
     {
         $user = $this->userRepository->find($id);
+
         if (!$user) {
-            return false;
+            throw new ApiException("Пользователь не найден");
         }
 
         return $this->userRepository->delete($user);
@@ -66,6 +85,10 @@ class UserService implements UserServiceInterface
     public function restore(int $id): bool
     {
         $user = User::withTrashed()->find($id);
+
+        if (!$user) {
+            throw new ApiException("Удаленный пользователь не найден");
+        }
 
         return $this->userRepository->restore($user);
     }

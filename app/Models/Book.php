@@ -16,9 +16,7 @@ class Book extends Model
         'slug',
         'description',
         'image',
-        
         'author_id',
-        
         'status',
         'reserved_by'
     ];

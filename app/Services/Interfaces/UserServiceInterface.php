@@ -14,7 +14,7 @@ interface UserServiceInterface
     
     public function getByEmail(string $email): ?User;
 
-    public function changeRole(int $id, UserRole $role): bool;
+    public function changeRole(int $id, UserRole $role): User;
 
     public function create(array $data): User;
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,27 +22,34 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('books')->group(function () {
-    Route::get('/', [BookController::class, 'index']);
-    Route::get('/{id}', [BookController::class, 'show']);
 
-
-    Route::middleware('auth:sanctum')->group(function () {
-
-        Route::post('/{id}/reserve', [BookController::class, 'reserve']);
-        
+    Route::middleware('auth:sanctum')->group(callback: function () {
+        Route::post('/{id}/reserve', [ReservationController::class, 'reserve']);
     });
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
+
+        Route::prefix('reservations')->group(function () {
+            Route::get('/', [ReservationController::class, 'index']);
+            Route::get('/{id}', [ReservationController::class, 'show']);
+        });
+
         Route::post('/', [BookController::class, 'store']);
         Route::put('/{id}', [BookController::class, 'update']);
         Route::delete('/{id}', [BookController::class, 'delete']);
         Route::post('/{id}/restore', [BookController::class, 'restore']);
 
-        Route::post('/{id}/issue', [BookController::class, 'issue']);
-        Route::post('/{id}/accept', [BookController::class, 'accept']);
+        Route::post('/{id}/issue', [ReservationController::class, 'issue']);
+        Route::post('/{id}/accept', [ReservationController::class, 'accept']);
+
     });
 
+    Route::get('/', [BookController::class, 'index']);
+    Route::get('/{id}', [BookController::class, 'show']);
+
 });
+
+
 
 Route::prefix('authors')->group(function () {
     Route::get('/', [AuthorController::class, 'index']);
@@ -55,6 +63,8 @@ Route::prefix('authors')->group(function () {
         Route::delete('/{id}', [AuthorController::class, 'destroy']);
     });
 });
+
+
 
 
 

@@ -19,10 +19,7 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        // $data = $request->validated();
-
-        // $user = User::query()->create($data);
-
+        
         $user = $this->authService->register($request->validated());
 
         $token = $user->createToken('api_token')->plainTextToken;
@@ -35,19 +32,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
-        // $data = $request->validated();
-        // $user = User::query()
-        //     ->where('email', $data['email'])
-        //     ->first();
-        
-        // if(!$user || !Hash::check($data['password'], $user->password)) {
-        //     return response()->json([
-        //         'message' => 'Неверный email или пароль'
-        //     ], 402);
-        // }
-
         $user = $this->authService->login($request->validated());
-
         $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([

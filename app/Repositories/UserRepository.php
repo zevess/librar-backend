@@ -25,11 +25,18 @@ class UserRepository implements UserRepositoryInterface
         return User::where("email", $email)->first();
     }
 
-    public function updateRole(int $id, UserRole $role): bool
+    public function updateRole(int $id, UserRole $role): User
     {
-        return User::where('id', $id)->update([
+        $user = User::findOrFail($id);
+        $user->update([
             'role' => $role->value
         ]);
+        return $user;
+
+        
+        // return User::where('id', $id)->update([
+        //     'role' => $role->value
+        // ]);
     }
 
     public function create(array $data): User
