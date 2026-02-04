@@ -10,7 +10,9 @@ use App\Http\Resources\BookCollection;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use App\Services\Interfaces\BookServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
@@ -20,10 +22,13 @@ class BookController extends Controller
     ) {
     }
 
-    public function index(): BookCollection
+    public function index(Request $request): LengthAwarePaginator|BookCollection
     {
-        $books = $this->bookService->getAll();
-        return new BookCollection($books);
+        // $books = $this->bookService->getAll();
+        // $books->load('author');
+        $books = $this->bookService->getPaginated($request->get("q"), 12);
+        // return new BookCollection($books);
+        return $books;
     }
 
     public function show(int $id): BookResource|JsonResponse
@@ -34,6 +39,7 @@ class BookController extends Controller
         }
 
         $book->load('author');
+        $book->load('genres');
 
         return new BookResource($book);
     }

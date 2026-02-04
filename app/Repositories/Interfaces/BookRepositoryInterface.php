@@ -3,6 +3,7 @@
 namespace App\Repositories\Interfaces;
 
 use App\Models\Book;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface BookRepositoryInterface
@@ -12,6 +13,8 @@ interface BookRepositoryInterface
     public function find(int $id): ?Book;
     
     public function findByAuthorId(int $authorId): Collection;
+
+    public function getPaginated(?string $search, int $perPage): LengthAwarePaginator;
 
     public function create(array $data): Book;
 

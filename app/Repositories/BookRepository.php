@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Book;
 use App\Repositories\Interfaces\BookRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class BookRepository implements BookRepositoryInterface
@@ -16,6 +17,24 @@ class BookRepository implements BookRepositoryInterface
     public function find(int $id): ?Book
     {
         return Book::find($id);
+    }
+
+    public function getPaginated(?string $search, int $perPage): LengthAwarePaginator
+    {
+        // $query = Book::query();
+        // $result = 
+        $query = Book::with('author')
+            ->where('slug', 'like', "%{$search}%")
+            ->orWhereHas('author', function($q) use ($search){
+                $q->where('slug', 'like', "%{$search}%");
+            });
+        // $query->load('author');
+        // if($search = trim((string) $search)){
+        //     $query->where(function ($q) use ($search) {
+        //         $q->where('title', 'like', "%{$search}");
+        //     });
+        // }
+        return $query->orderByDesc('created_at')->paginate($perPage)->withQueryString();
     }
 
     public function findByAuthorId(int $authorId): Collection

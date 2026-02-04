@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Repositories\AuthorRepository;
 use App\Repositories\AuthRepository;
 use App\Repositories\BookRepository;
+use App\Repositories\GenreRepository;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\AuthRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
+use App\Repositories\Interfaces\GenreRepositoryInterface;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\ReservationRepository;
@@ -15,9 +17,11 @@ use App\Repositories\UserRepository;
 use App\Services\AuthorService;
 use App\Services\AuthService;
 use App\Services\BookService;
+use App\Services\GenreService;
 use App\Services\Interfaces\AuthorServiceInterface;
 use App\Services\Interfaces\AuthServiceInterface;
 use App\Services\Interfaces\BookServiceInterface;
+use App\Services\Interfaces\GenreServiceInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
 use App\Services\Interfaces\UserServiceInterface;
 use App\Services\ReservationService;
@@ -45,6 +49,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(ReservationServiceInterface::class, ReservationService::class);
         $this->app->bind(ReservationRepositoryInterface::class, ReservationRepository::class);
+
+        $this->app->bind(GenreRepositoryInterface::class, GenreRepository::class);
+        $this->app->bind(GenreServiceInterface::class, GenreService::class);
     }
 
     /**

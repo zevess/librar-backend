@@ -7,6 +7,7 @@ use App\Exceptions\ApiException;
 use App\Models\Book;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Services\Interfaces\BookServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
@@ -21,6 +22,13 @@ class BookService implements BookServiceInterface
     public function getAll(): Collection
     {
         return $this->bookRepository->all();
+    }
+
+    public function getPaginated(?string $search, int $perPage): LengthAwarePaginator
+    {
+        $slug = Str::slug($search);
+
+        return $this->bookRepository->getPaginated($slug, $perPage);
     }
 
     public function getById(int $id): ?Book

@@ -18,7 +18,8 @@ class BookCollection extends ResourceCollection
                     'slug' => $book->slug,
                     'description' => $book->description,
                     'status' => $book->status,
-                    'reserved_by' => $book->reserved_by,
+                    'author' => new AuthorResource($this->whenLoaded('author')),
+                    // 'reserved_by' => $book->reserved_by,
                 ];
             })
         ];
