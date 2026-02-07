@@ -17,5 +17,7 @@ interface GenreServiceInterface
 
     public function attachToBook(int $bookId, array $genres): bool;
 
+    public function detachFromBook(int $bookId, array $genres): bool;
+
     public function delete(int $id): bool;
 }

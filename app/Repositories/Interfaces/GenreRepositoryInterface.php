@@ -13,6 +13,8 @@ interface GenreRepositoryInterface
 
     public function find(int $id): Genre;
 
+    public function findBySlug(string $slug): ?Genre;
+
     public function update(Genre $genre, array $data): Genre;
 
     public function delete(Genre $genre): bool;

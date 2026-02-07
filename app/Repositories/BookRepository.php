@@ -19,22 +19,60 @@ class BookRepository implements BookRepositoryInterface
         return Book::find($id);
     }
 
-    public function getPaginated(?string $search, int $perPage): LengthAwarePaginator
+    // public function getPaginated(?string $search, ?array $genres, int $perPage): LengthAwarePaginator
+    // {
+
+    //     $result = Book::with(['author', 'genres', 'publisher', 'category'])
+
+    //         ->when($search !== '', function ($query) use ($search) {
+    //             $query->where(function ($q) use ($search) {
+    //                 $q->where('slug', 'like', "%{$search}%")
+    //                     ->orWhereHas('author', function ($author) use ($search) {
+    //                         $author->where('slug', 'like', "%{$search}%");
+    //                     });
+    //             });
+    //         })
+    //         ->when(!empty($genres), function ($query) use ($genres) {
+    //             $query->whereHas('genres', function ($q) use ($genres) {
+    //                 $q->whereIn('genres.id', $genres);
+    //             });
+    //         })
+    //         ->when()
+        
+    //     return $result->paginate($perPage)->withQueryString();
+    // }
+
+    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
     {
-        // $query = Book::query();
-        // $result = 
-        $query = Book::with('author')
-            ->where('slug', 'like', "%{$search}%")
-            ->orWhereHas('author', function($q) use ($search){
-                $q->where('slug', 'like', "%{$search}%");
+
+        $search = $data['q'] ?? '';
+        $genres = $data['genres'];
+        $category = $data['category'];
+        $publisher = $data['publisher'] ?? '';
+
+        $result = Book::with(['author', 'genres', 'publisher', 'category'])
+
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('slug', 'like', "%{$search}%")
+                        ->orWhereHas('author', function ($author) use ($search) {
+                            $author->where('slug', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->when(!empty($genres), function ($query) use ($genres) {
+                $query->whereHas('genres', function ($q) use ($genres) {
+                    $q->whereIn('genres.id', $genres);
+                });
+            })
+            ->when($publisher, function ($query) use ($publisher){
+                $query->where('publisher_id', $publisher);
+            })
+            ->when($category, function ($query) use ($category){
+                $query->where('category_id', $category);
             });
-        // $query->load('author');
-        // if($search = trim((string) $search)){
-        //     $query->where(function ($q) use ($search) {
-        //         $q->where('title', 'like', "%{$search}");
-        //     });
-        // }
-        return $query->orderByDesc('created_at')->paginate($perPage)->withQueryString();
+        
+        return $result->paginate($perPage)->withQueryString();
     }
 
     public function findByAuthorId(int $authorId): Collection

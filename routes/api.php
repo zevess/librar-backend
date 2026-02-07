@@ -4,7 +4,9 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ReservationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,10 +37,10 @@ Route::prefix('books')->group(function () {
             Route::get('/{id}', [ReservationController::class, 'show']);
         });
 
-        Route::prefix('genres')->group(function (){
-            Route::get('/', [GenreController::class, 'index']);
+        Route::prefix('genres')->group(function () {
             Route::post('/{genreName}', [GenreController::class, 'store']);
             Route::post('/attach/{bookId}', [GenreController::class, 'attach']);
+            Route::delete('/detach/{bookId}', [GenreController::class, 'detach']);
             Route::delete('/{id}', [GenreController::class, 'destroy']);
         });
 
@@ -52,12 +54,34 @@ Route::prefix('books')->group(function () {
 
     });
 
+    Route::get('genres', [GenreController::class, 'index']);
+    
     Route::get('/', [BookController::class, 'index']);
     Route::get('/{id}', [BookController::class, 'show']);
 
 });
 
+Route::prefix('publishers')->group(function () {
+    Route::get('/', [PublisherController::class, 'index']);
+    Route::get('/{id}', [PublisherController::class, 'show']);
 
+    Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
+        Route::post('/', [PublisherController::class, 'store']);
+        Route::put('/{id}', [PublisherController::class, 'update']);
+        Route::delete('/{id}', [PublisherController::class, 'destroy']);
+    });
+});
+
+Route::prefix('categories')->group(function () {
+    Route::get('/', [CategoryController::class, 'index']);
+    Route::get('/{id}', [CategoryController::class, 'show']);
+
+    Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
+        Route::post('/', [CategoryController::class, 'store']);
+        Route::put('/{id}', [CategoryController::class, 'update']);
+        Route::delete('/{id}', [CategoryController::class, 'destroy']);
+    });
+});
 
 Route::prefix('authors')->group(function () {
     Route::get('/', [AuthorController::class, 'index']);

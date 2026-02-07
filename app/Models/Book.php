@@ -19,8 +19,7 @@ class Book extends Model
         'image',
         'author_id',
         'publisher_id',
-        'status',
-        'reserved_by'
+        'category_id'
     ];
 
     protected $casts = [
@@ -45,5 +44,10 @@ class Book extends Model
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(Genre::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

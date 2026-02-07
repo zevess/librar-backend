@@ -26,16 +26,20 @@ class StoreBookRequest extends FormRequest
             'slug' => 'nullable',
             'description' => ['required', 'min:10'],
             'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
-            'author_id' => ['required', 'numeric']
+            'author_id' => ['required', 'numeric'],
+            'publisher_id' => ['required', 'numeric'],
+            'category_id' => ['required', 'numeric']
         ];
     }
 
     public function messages(): array
     {
         return [
-            'title.required' => 'Пожалуйста введите название книги',
-            'description.required' => 'Пожалуйста введите описание',
-            'author_id.required' => 'Пожайлуста введите id автора'
+            'title.required' => 'Пожалуйста укажите название книги',
+            'description.required' => 'Пожалуйста укажите описание',
+            'author_id.required' => 'Пожайлуста укажите id автора',
+            'publisher_id.required' => 'Пожайлуста укажите id издательства',
+            'category_id.required' => 'Пожайлуста укажите id категории',
         ];
     }
 

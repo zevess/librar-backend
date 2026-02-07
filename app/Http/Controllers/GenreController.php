@@ -33,10 +33,21 @@ class GenreController extends Controller
 
     public function attach(Request $request, int $bookId)
     {
-        $rawJson = $request->getContent();
-        $this->genreService->attachToBook($bookId, json_decode($rawJson, true));
+        $genres = array_map('intval', $request->input('genres') ?: []);
+
+        $this->genreService->attachToBook($bookId, $genres);
         return response()->json([
             "message" => "Жанры присвоены"
+        ], 200);
+    }
+
+    public function detach(Request $request, int $bookId)
+    {
+        $genres = array_map('intval', $request->input('genres') ?: []);
+
+        $this->genreService->detachFromBook($bookId, $genres);
+        return response()->json([
+            "message" => "Жанры удалены"
         ], 200);
     }
 

@@ -23,6 +23,11 @@ class GenreRepository implements GenreRepositoryInterface
         return Genre::findOrFail($id);
     }
 
+    public function findBySlug(string $slug): ?Genre
+    {
+        return Genre::where('slug', $slug)->first();
+    }
+
     public function update(Genre $genre, array $data): Genre
     {
         $genre->update($data);

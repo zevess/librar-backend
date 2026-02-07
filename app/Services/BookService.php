@@ -5,7 +5,10 @@ namespace App\Services;
 use App\Enums\BookStatus;
 use App\Exceptions\ApiException;
 use App\Models\Book;
+use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
+use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Interfaces\PublisherRepositoryInterface;
 use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -15,7 +18,10 @@ class BookService implements BookServiceInterface
 {
 
     public function __construct(
-        private BookRepositoryInterface $bookRepository
+        private BookRepositoryInterface $bookRepository,
+        private CategoryRepositoryInterface $categoryRepository,
+        private PublisherRepositoryInterface $publisherRepository,
+        private AuthorRepositoryInterface $authorRepository
     ) {
     }
 
@@ -24,11 +30,12 @@ class BookService implements BookServiceInterface
         return $this->bookRepository->all();
     }
 
-    public function getPaginated(?string $search, int $perPage): LengthAwarePaginator
+    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
     {
-        $slug = Str::slug($search);
+        $data['q'] = Str::slug($data['q'] ?? '');
+        $data['genres'] = array_map('intval', $data['genres'] ?? []);
 
-        return $this->bookRepository->getPaginated($slug, $perPage);
+        return $this->bookRepository->getPaginated($data, $perPage);
     }
 
     public function getById(int $id): ?Book
@@ -58,6 +65,21 @@ class BookService implements BookServiceInterface
         $slug = Str::slug($data['title']);
         $data['slug'] = $slug;
 
+        $existingCategory = $this->categoryRepository->find($data['category_id']);
+        if (!$existingCategory) {
+            throw new ApiException('Категория не найдена');
+        }
+        
+        $existingAuthor = $this->authorRepository->find($data['author_id']);
+        if(!$existingAuthor){
+            throw new ApiException('Автор не найден');
+        }
+
+        $existingPublisher = $this->publisherRepository->find($data['publisher_id']);
+        if (!$existingPublisher) {
+            throw new ApiException('Издатель не найден');
+        }
+
         return $this->bookRepository->create($data);
     }
 
@@ -67,8 +89,21 @@ class BookService implements BookServiceInterface
         if (!$book) {
             throw new ApiException("Книга не найдена");
         }
-        $slug = Str::slug($data['title']);
+
+        $existingCategory = $this->categoryRepository->find($data['category_id']);
+        if (!$existingCategory) {
+            throw new ApiException('Категория не найдена');
+        }
+
+        $existingPublisher = $this->publisherRepository->find($data['publisher_id']);
+        if (!$existingPublisher) {
+            throw new ApiException('Издатель не найден');
+        }
+        
+
+        $slug = Str::slug($data['title'] ?? $book->title);
         $data['slug'] = $slug;
+
         return $this->bookRepository->update($book, $data);
     }
 

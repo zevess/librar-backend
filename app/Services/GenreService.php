@@ -40,6 +40,12 @@ class GenreService implements GenreServiceInterface
         $slug = Str::slug($genreName);
         $data['name'] = $genreName;
         $data['slug'] = $slug;
+
+        $existingGenre = $this->genreRepository->findBySlug($slug);
+        if ($existingGenre) {
+            throw new ApiException("Жанр уже существует");
+        }
+
         return $this->genreRepository->create($data);
     }
 
@@ -60,14 +66,32 @@ class GenreService implements GenreServiceInterface
         if (!$book) {
             throw new ApiException("Книга не найдена");
         }
-        
+
         $exists = Genre::whereIn('id', $genres)->pluck('id')->all();
 
-        if(count($exists) !== count($genres)){
+        if (count($exists) !== count($genres)) {
             throw new ApiException("Один или более жанров не существуют. Пожалуйста, укажите корректные жанры");
         }
 
         $book->genres()->attach($genres);
+        return true;
+    }
+
+    public function detachFromBook(int $bookId, array $genres): bool
+    {
+        $book = $this->bookRepository->find($bookId);
+        if (!$book) {
+            throw new ApiException("Книга не найдена");
+        }
+
+        $exists = Genre::whereIn('id', $genres)->pluck('id')->all();
+
+        if (count($exists) !== count($genres)) {
+            throw new ApiException("Один или более жанров не существуют. Пожалуйста, укажите корректные жанры");
+        }
+
+        $book->genres()->detach($genres);
+
         return true;
     }
 

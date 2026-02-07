@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\BookStatus;
 use App\Http\Requests\Book\BookStatusRequest;
-use App\Http\Requests\Book\StoreBookRequest as BookStoreBookRequest;
-use App\Http\Requests\Book\UpdateBookRequest as BookUpdateBookRequest;
+use App\Http\Requests\Book\GetBookRequest;
+use App\Http\Requests\Book\StoreBookRequest;
+use App\Http\Requests\Book\UpdateBookRequest;
 use App\Http\Resources\BookCollection;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
@@ -22,12 +23,9 @@ class BookController extends Controller
     ) {
     }
 
-    public function index(Request $request): LengthAwarePaginator|BookCollection
+    public function index(GetBookRequest $request): LengthAwarePaginator|BookCollection
     {
-        // $books = $this->bookService->getAll();
-        // $books->load('author');
-        $books = $this->bookService->getPaginated($request->get("q"), 12);
-        // return new BookCollection($books);
+        $books = $this->bookService->getPaginated($request->validated(), 12);
         return $books;
     }
 
@@ -40,30 +38,37 @@ class BookController extends Controller
 
         $book->load('author');
         $book->load('genres');
+        $book->load('publisher');
+        $book->load('category');
 
         return new BookResource($book);
     }
 
-    public function store(BookStoreBookRequest $request): BookResource
+    public function store(StoreBookRequest $request): BookResource
     {
-        $data = $request->validated();
-        $book = $this->bookService->create($data);
+        $book = $this->bookService->create($request->validated());
+        $book->load('author');
+        $book->load('genres');
+        $book->load('publisher');
+        $book->load('category');
         return new BookResource($book);
     }
 
-    public function update(BookUpdateBookRequest $request, int $id): BookResource|JsonResponse
+    public function update(int $id, UpdateBookRequest $request): BookResource|JsonResponse
     {
-
         $book = $this->bookService->update($id, $request->validated());
-
+        $book->load('author');
+        $book->load('genres');
+        $book->load('publisher');
+        $book->load('category');
         return new BookResource($book);
     }
 
     public function destroy(int $id): BookResource|JsonResponse
     {
-        
+
         $this->bookService->delete($id);
-       
+
         return response()->json([
             "message" => "Удалено"
         ], 200);

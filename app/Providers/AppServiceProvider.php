@@ -5,25 +5,33 @@ namespace App\Providers;
 use App\Repositories\AuthorRepository;
 use App\Repositories\AuthRepository;
 use App\Repositories\BookRepository;
+use App\Repositories\CategoryRepository;
 use App\Repositories\GenreRepository;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\AuthRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
+use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\GenreRepositoryInterface;
+use App\Repositories\Interfaces\PublisherRepositoryInterface;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\PublisherRepository;
 use App\Repositories\ReservationRepository;
 use App\Repositories\UserRepository;
 use App\Services\AuthorService;
 use App\Services\AuthService;
 use App\Services\BookService;
+use App\Services\CategoryService;
 use App\Services\GenreService;
 use App\Services\Interfaces\AuthorServiceInterface;
 use App\Services\Interfaces\AuthServiceInterface;
 use App\Services\Interfaces\BookServiceInterface;
+use App\Services\Interfaces\CategoryServiceInterface;
 use App\Services\Interfaces\GenreServiceInterface;
+use App\Services\Interfaces\PublisherServiceInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
 use App\Services\Interfaces\UserServiceInterface;
+use App\Services\PublisherService;
 use App\Services\ReservationService;
 use App\Services\UserService;
 use Illuminate\Support\ServiceProvider;
@@ -52,6 +60,12 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(GenreRepositoryInterface::class, GenreRepository::class);
         $this->app->bind(GenreServiceInterface::class, GenreService::class);
+
+        $this->app->bind(CategoryServiceInterface::class, CategoryService::class);
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+
+        $this->app->bind(PublisherServiceInterface::class, PublisherService::class);
+        $this->app->bind(PublisherRepositoryInterface::class, PublisherRepository::class);
     }
 
     /**
