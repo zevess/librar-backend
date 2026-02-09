@@ -51,7 +51,7 @@ class BookService implements BookServiceInterface
 
     public function getByAuthorId(int $authorId): Collection
     {
-        $books = $this->bookRepository->findByAuthorId($authorId);
+        $books = $this->bookRepository->findByAuthor($authorId);
 
         if (!$books) {
             throw new ApiException("Книга не найдена");

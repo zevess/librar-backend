@@ -18,13 +18,17 @@ interface ReservationServiceInterface
 
     public function getByBookIdAndStatus(int $bookId, ReservationStatus $status): ?Reservation;
 
+    // public function getByUserAndStatus(int $userId, ReservationStatus $status): Collection;
+
     public function reserve(int $bookId, int $userId): Reservation;
+
+    public function cancel(int $bookId, int $userId): Reservation;
 
     public function issue(int $bookId): Reservation;
 
     public function accept(int $bookId): Reservation;
 
-    public function expiration();
+    public function cancelExpired();
 
     public function update(Reservation $reservation, array $data): Reservation;
 }

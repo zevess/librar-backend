@@ -9,6 +9,7 @@ use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 use function Illuminate\Support\now;
 
@@ -75,6 +76,26 @@ class ReservationService implements ReservationServiceInterface
         return $this->reservationRepository->create($data);
     }
 
+    public function cancel(int $bookId, int $userId): Reservation
+    {
+        $reservedBook = $this->reservationRepository->findByUser($userId, ReservationStatus::RESERVED, $bookId)->first();
+
+        if(!$reservedBook){
+            throw new ApiException('Бронь не найдена');
+        }
+
+        Gate::authorize('update', $reservedBook);
+
+        // if($reservedBook['reserved_by'] !== $userId){
+        //     throw new ApiException('Отказано');
+        // }
+
+        $data['status'] = ReservationStatus::CANCELED->value;
+        $data['expires_at'] = null; 
+
+        return $this->reservationRepository->update($reservedBook, $data);
+    }
+
     public function issue(int $bookId): Reservation
     {
         $reservedBook = $this->reservationRepository->findByBookIdAndStatus($bookId, ReservationStatus::RESERVED);
@@ -112,7 +133,7 @@ class ReservationService implements ReservationServiceInterface
         return $this->reservationRepository->update($issuedBook, $data);
     }
 
-    public function expiration()
+    public function cancelExpired()
     {
         $activeReservations = $this->reservationRepository->findByStatus(ReservationStatus::RESERVED);
         

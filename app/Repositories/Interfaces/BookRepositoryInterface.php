@@ -12,9 +12,7 @@ interface BookRepositoryInterface
 
     public function find(int $id): ?Book;
     
-    public function findByAuthorId(int $authorId): Collection;
-
-    // public function getPaginated(?string $search, ?array $genres, int $perPage): LengthAwarePaginator;
+    public function findByAuthor(int $authorId): Collection;
 
     public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
 

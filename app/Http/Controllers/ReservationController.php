@@ -18,7 +18,7 @@ class ReservationController extends Controller
 
     public function index(): ReservationCollection
     {
-        $reservations = $this->reservationService->expiration();
+        $reservations = $this->reservationService->cancelExpired();
         return new ReservationCollection($reservations);
     }
 
@@ -40,6 +40,17 @@ class ReservationController extends Controller
 
         return response()->json([
             "message" => "Книга забронирована",
+            "reservation" => new ReservationResource($reservation)
+        ]);
+    }
+
+    public function cancel(int $id)
+    {
+        $reservation = $this->reservationService->cancel($id, auth()->id());
+        $reservation->load('book');
+        
+        return response()->json([
+            "message" => "Бронь отменена",
             "reservation" => new ReservationResource($reservation)
         ]);
     }

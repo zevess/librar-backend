@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Enums\ReservationStatus;
 use App\Models\Reservation;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 class ReservationRepository implements ReservationRepositoryInterface
 {
@@ -37,6 +37,18 @@ class ReservationRepository implements ReservationRepositoryInterface
     public function findByBookIdAndStatus(int $bookId, ReservationStatus $status): ?Reservation
     {
         return Reservation::where('book_id', $bookId)->where('status', $status)->first();
+    }
+
+    public function findByUser(int $userId, ReservationStatus $status, ?int $bookId): Collection
+    {
+        return Reservation::where('reserved_by', $userId)->where('status', $status)->get();
+
+        // ->when($bookId, function($book, $bookId){$book->where('book_id', $bookId);})
+    }
+
+    public function findByBookIdAndUserId(int $bookId, int $userId): ?Reservation
+    {
+        return Reservation::where('book_id', $bookId)::where('reserved_by', $userId);
     }
 
     public function create(array $data): Reservation

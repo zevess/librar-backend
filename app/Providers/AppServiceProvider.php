@@ -14,9 +14,11 @@ use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\GenreRepositoryInterface;
 use App\Repositories\Interfaces\PublisherRepositoryInterface;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
+use App\Repositories\Interfaces\ReviewRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\PublisherRepository;
 use App\Repositories\ReservationRepository;
+use App\Repositories\ReviewRepository;
 use App\Repositories\UserRepository;
 use App\Services\AuthorService;
 use App\Services\AuthService;
@@ -30,9 +32,11 @@ use App\Services\Interfaces\CategoryServiceInterface;
 use App\Services\Interfaces\GenreServiceInterface;
 use App\Services\Interfaces\PublisherServiceInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
+use App\Services\Interfaces\ReviewServiceInterface;
 use App\Services\Interfaces\UserServiceInterface;
 use App\Services\PublisherService;
 use App\Services\ReservationService;
+use App\Services\ReviewService;
 use App\Services\UserService;
 use Illuminate\Support\ServiceProvider;
 
@@ -66,6 +70,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(PublisherServiceInterface::class, PublisherService::class);
         $this->app->bind(PublisherRepositoryInterface::class, PublisherRepository::class);
+
+        $this->app->bind(ReviewServiceInterface::class, ReviewService::class);
+        $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
     }
 
     /**

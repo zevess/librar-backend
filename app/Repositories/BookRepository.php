@@ -19,29 +19,6 @@ class BookRepository implements BookRepositoryInterface
         return Book::find($id);
     }
 
-    // public function getPaginated(?string $search, ?array $genres, int $perPage): LengthAwarePaginator
-    // {
-
-    //     $result = Book::with(['author', 'genres', 'publisher', 'category'])
-
-    //         ->when($search !== '', function ($query) use ($search) {
-    //             $query->where(function ($q) use ($search) {
-    //                 $q->where('slug', 'like', "%{$search}%")
-    //                     ->orWhereHas('author', function ($author) use ($search) {
-    //                         $author->where('slug', 'like', "%{$search}%");
-    //                     });
-    //             });
-    //         })
-    //         ->when(!empty($genres), function ($query) use ($genres) {
-    //             $query->whereHas('genres', function ($q) use ($genres) {
-    //                 $q->whereIn('genres.id', $genres);
-    //             });
-    //         })
-    //         ->when()
-        
-    //     return $result->paginate($perPage)->withQueryString();
-    // }
-
     public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
     {
 
@@ -75,7 +52,7 @@ class BookRepository implements BookRepositoryInterface
         return $result->paginate($perPage)->withQueryString();
     }
 
-    public function findByAuthorId(int $authorId): Collection
+    public function findByAuthor(int $authorId): Collection
     {
         return Book::where('author_id', $authorId)->get();
     }
