@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Publisher\StorePublisherRequest;
+use App\Http\Resources\Publisher\PublisherResource;
 use App\Services\Interfaces\PublisherServiceInterface;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,8 @@ class PublisherController extends Controller
 {
     public function __construct(
         private PublisherServiceInterface $publisherService
-    ){}
+    ) {
+    }
 
     public function index()
     {
@@ -18,28 +20,30 @@ class PublisherController extends Controller
         return $publishers;
     }
 
-    public function show(int $id)
+    public function show(int $id): PublisherResource
     {
         $publisher = $this->publisherService->getById($id);
-        return $publisher;
+        return new PublisherResource($publisher);
     }
 
-    public function showBySlug(int $slug)
+    public function showBySlug(int $slug): PublisherResource
     {
         $publisher = $this->publisherService->getBySlug($slug);
-        return $publisher;
+        return new PublisherResource($publisher);
+
     }
 
-    public function store(StorePublisherRequest $request)
+    public function store(StorePublisherRequest $request): PublisherResource
     {
         $publisher = $this->publisherService->create($request->validated());
-        return $publisher;
+        return new PublisherResource($publisher);
+
     }
 
-    public function update(int $id, StorePublisherRequest $request)
+    public function update(int $id, StorePublisherRequest $request): PublisherResource
     {
         $publisher = $this->publisherService->update($id, $request->validated());
-        return $publisher;
+        return new PublisherResource($publisher);
     }
 
     public function destroy(int $id)

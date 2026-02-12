@@ -9,6 +9,7 @@ use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\PublisherRepositoryInterface;
+use App\Repositories\Interfaces\ReservationRepositoryInterface;
 use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -21,7 +22,8 @@ class BookService implements BookServiceInterface
         private BookRepositoryInterface $bookRepository,
         private CategoryRepositoryInterface $categoryRepository,
         private PublisherRepositoryInterface $publisherRepository,
-        private AuthorRepositoryInterface $authorRepository
+        private AuthorRepositoryInterface $authorRepository,
+        private ReservationRepositoryInterface $reservationRepository
     ) {
     }
 
@@ -41,7 +43,7 @@ class BookService implements BookServiceInterface
     public function getById(int $id): ?Book
     {
         $book = $this->bookRepository->find($id);
-
+        
         if (!$book) {
             throw new ApiException("Книга не найдена");
         }

@@ -32,11 +32,6 @@ class UserRepository implements UserRepositoryInterface
             'role' => $role->value
         ]);
         return $user;
-
-        
-        // return User::where('id', $id)->update([
-        //     'role' => $role->value
-        // ]);
     }
 
     public function create(array $data): User

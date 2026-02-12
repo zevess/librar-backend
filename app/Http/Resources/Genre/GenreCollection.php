@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Genre;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CategoryCollection extends ResourceCollection
+class GenreCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -20,7 +20,7 @@ class CategoryCollection extends ResourceCollection
                     'id' => $category->id,
                     'name' => $category->name,
                     'slug' => $category->slug,
-                    'description' => $category->description,
+                    // 'description' => $category->description,
                 ];
             })
         ];

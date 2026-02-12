@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Book\AttachBookGenresRequest;
+use App\Http\Resources\Genre\GenreCollection;
+use App\Http\Resources\Genre\GenreResource;
 use App\Services\Interfaces\GenreServiceInterface;
 use Illuminate\Http\Request;
 
@@ -13,22 +15,24 @@ class GenreController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(): GenreCollection
     {
         $genres = $this->genreService->getAll();
-        return $genres;
+        return new GenreCollection($genres);
     }
 
-    public function show($id)
+    public function show($id): GenreResource
     {
         $genre = $this->genreService->getById($id);
-        return $genre;
+        return new GenreResource($genre);
+
     }
 
-    public function store(string $genreName)
+    public function store(string $genreName): GenreResource
     {
         $genre = $this->genreService->create($genreName);
-        return $genre;
+        return new GenreResource($genre);
+
     }
 
     public function attach(Request $request, int $bookId)

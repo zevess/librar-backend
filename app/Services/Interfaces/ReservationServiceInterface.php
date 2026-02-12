@@ -10,23 +10,23 @@ interface ReservationServiceInterface
 {
     public function getAll(): Collection;
 
+    public function getFiltered(?array $data): Collection;
+
     public function getById(int $id): ?Reservation;
     
-    public function getByUserId(int $userId): Collection;
+    // public function getByUser(int $userId, ?array $data): Collection;
 
-    public function getByBookId(int $bookId): Collection;
+    // public function getByBookId(int $bookId): Collection;
 
-    public function getByBookIdAndStatus(int $bookId, ReservationStatus $status): ?Reservation;
-
-    // public function getByUserAndStatus(int $userId, ReservationStatus $status): Collection;
+    // public function getByBookIdAndStatus(int $bookId, ReservationStatus $status): ?Reservation;
 
     public function reserve(int $bookId, int $userId): Reservation;
 
-    public function cancel(int $bookId, int $userId): Reservation;
+    public function cancel(int $reservationId): Reservation;
 
-    public function issue(int $bookId): Reservation;
+    public function issue(int $reservationId): Reservation;
 
-    public function accept(int $bookId): Reservation;
+    public function accept(int $reservationId): Reservation;
 
     public function cancelExpired();
 

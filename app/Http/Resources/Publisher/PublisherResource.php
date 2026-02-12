@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Publisher;
 
+use App\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryResource extends JsonResource
+class PublisherResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +17,8 @@ class CategoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'slug' => $this->slug,
+            'name'=> $this->name,
+            'slug'=> $this->slug,
             'description' => $this->description,
         ];
     }

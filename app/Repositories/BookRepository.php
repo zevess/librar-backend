@@ -16,7 +16,7 @@ class BookRepository implements BookRepositoryInterface
 
     public function find(int $id): ?Book
     {
-        return Book::find($id);
+        return Book::with(['activeReservations', 'author', 'category', 'genres', 'publisher'])->find($id);
     }
 
     public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
@@ -24,7 +24,7 @@ class BookRepository implements BookRepositoryInterface
 
         $search = $data['q'] ?? '';
         $genres = $data['genres'];
-        $category = $data['category'];
+        $category = $data['category'] ?? '';
         $publisher = $data['publisher'] ?? '';
 
         $result = Book::with(['author', 'genres', 'publisher', 'category'])
@@ -48,7 +48,7 @@ class BookRepository implements BookRepositoryInterface
             ->when($category, function ($query) use ($category){
                 $query->where('category_id', $category);
             });
-        
+
         return $result->paginate($perPage)->withQueryString();
     }
 

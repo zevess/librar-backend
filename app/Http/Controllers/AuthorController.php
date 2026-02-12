@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Author\StoreAuthorRequest;
 use App\Http\Requests\Author\UpdateAuthorRequest;
-use App\Http\Resources\AuthorCollection;
-use App\Http\Resources\AuthorResource;
-use App\Http\Resources\BookCollection;
+use App\Http\Resources\Author\AuthorCollection;
+use App\Http\Resources\Author\AuthorResource;
 use App\Services\Interfaces\AuthorServiceInterface;
 use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Http\JsonResponse;

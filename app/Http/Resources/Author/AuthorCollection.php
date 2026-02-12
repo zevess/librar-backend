@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Author;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -17,8 +17,6 @@ class AuthorCollection extends ResourceCollection
                     'name' => $author->name,
                     'slug' => $author->slug,
                     'description' => $author->description,
-                    // 'years' => $this->years
-
                 ];
             })
         ];

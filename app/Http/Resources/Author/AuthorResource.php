@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Author;
 
+use App\Http\Resources\BaseResource;
+use App\Http\Resources\Book\BookCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class AuthorResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +19,9 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name'=> $this->name,
-            'email' => $this->email,
-            'role' => $this->role
+            'slug'=> $this->slug,
+            'description' => $this->description,
+            'books' => new BookCollection($this->whenLoaded('books')),
         ];
     }
 }

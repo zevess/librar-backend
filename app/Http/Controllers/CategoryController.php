@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Category\StoreCategoryRequest;
+use App\Http\Resources\Category\CategoryCollection;
+use App\Http\Resources\Category\CategoryResource;
 use App\Services\Interfaces\CategoryServiceInterface;
 use Illuminate\Http\Request;
 
@@ -12,34 +14,34 @@ class CategoryController extends Controller
         private CategoryServiceInterface $categoryService
     ){}
 
-    public function index()
+    public function index(): CategoryCollection
     {
         $categories = $this->categoryService->getAll();
-        return $categories;
+        return new CategoryCollection($categories);
     }
 
-    public function show(int $id)
+    public function show(int $id): CategoryResource
     {
         $category = $this->categoryService->getById($id);
-        return $category;
+        return new CategoryResource($category);
     }
 
-    public function showBySlug(int $slug)
+    public function showBySlug(int $slug): CategoryResource
     {
         $category = $this->categoryService->getBySlug($slug);
-        return $category;
+        return new CategoryResource($category);
     }
 
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreCategoryRequest $request): CategoryResource
     {
         $category = $this->categoryService->create($request->validated());
-        return $category;
+        return new CategoryResource($category);
     }
 
-    public function update(int $id, StoreCategoryRequest $request)
+    public function update(int $id, StoreCategoryRequest $request): CategoryResource
     {
         $category = $this->categoryService->update($id, $request->validated());
-        return $category;
+        return new CategoryResource($category);
     }
 
     public function destroy(int $id)

@@ -26,25 +26,25 @@ class ReservationService implements ReservationServiceInterface
     {
         return $this->reservationRepository->all();
     }
-
+    
     public function getById(int $id): ?Reservation
     {
-        return $this->reservationRepository->find($id);
+        $reservation = $this->reservationRepository->find($id);
+        if (!$reservation) {
+            throw new ApiException('Бронь не найдена');
+        }
+        return $reservation;
     }
 
-    public function getByUserId(int $userId): Collection
+     public function getFiltered(?array $data): Collection
     {
-        return $this->reservationRepository->findByUserId($userId);
-    }
+        $reservations = $this->reservationRepository->findFiltered($data);
 
-    public function getByBookId(int $bookId): Collection
-    {
-        return $this->reservationRepository->findByBookId($bookId);
-    }
+        if ($reservations->isEmpty()) {
+            throw new ApiException('Брони не найдены');
+        }
 
-    public function getByBookIdAndStatus(int $bookId, ReservationStatus $status): Reservation
-    {
-        return $this->reservationRepository->findByBookIdAndStatus($bookId, $status);
+        return $reservations;
     }
 
     public function reserve(int $bookId, int $userId): Reservation
@@ -56,18 +56,24 @@ class ReservationService implements ReservationServiceInterface
             throw new ApiException("Книга не найдена");
         }
 
-        $isReserved = $this->reservationRepository->findByBookIdAndStatus($bookId, ReservationStatus::RESERVED);
+        $isReserved = $this->reservationRepository->findFiltered([
+            'book_id' => $bookId,
+            'status' => ReservationStatus::RESERVED->value
+        ])->first();
 
         if ($isReserved) {
             throw new ApiException("Книга уже забронирована");
         }
 
-        $isIssued = $this->reservationRepository->findByBookIdAndStatus($bookId, ReservationStatus::ISSUED);
+        $isIssued = $this->reservationRepository->findFiltered([
+            'book_id' => $bookId,
+            'status' => ReservationStatus::ISSUED->value
+        ])->first();
 
-        if($isIssued){
+        if ($isIssued) {
             throw new ApiException("Книга уже выдана");
         }
-        
+
         $data['book_id'] = $bookId;
         $data['reserved_by'] = $userId;
         $data['reserved_at'] = now();
@@ -76,40 +82,41 @@ class ReservationService implements ReservationServiceInterface
         return $this->reservationRepository->create($data);
     }
 
-    public function cancel(int $bookId, int $userId): Reservation
+    public function cancel(int $reservationId): Reservation
     {
-        $reservedBook = $this->reservationRepository->findByUser($userId, ReservationStatus::RESERVED, $bookId)->first();
+        $reservedBook = $this->reservationRepository->find($reservationId);
 
-        if(!$reservedBook){
+        if (!$reservedBook) {
             throw new ApiException('Бронь не найдена');
         }
 
-        Gate::authorize('update', $reservedBook);
-
-        // if($reservedBook['reserved_by'] !== $userId){
-        //     throw new ApiException('Отказано');
-        // }
 
         $data['status'] = ReservationStatus::CANCELED->value;
-        $data['expires_at'] = null; 
+        $data['expires_at'] = null;
 
         return $this->reservationRepository->update($reservedBook, $data);
     }
 
-    public function issue(int $bookId): Reservation
+    public function issue(int $reservationId): Reservation
     {
-        $reservedBook = $this->reservationRepository->findByBookIdAndStatus($bookId, ReservationStatus::RESERVED);
+        $reservedBook = $this->reservationRepository->find($reservationId);
 
-        $isIssued = $this->reservationRepository->findByBookIdAndStatus($bookId, ReservationStatus::ISSUED);
-
-        if($isIssued){
-            throw new ApiException("Книга уже выдана");
+        if (!$reservedBook) {
+            throw new ApiException('Бронь не найдена');
         }
 
-        if(!$reservedBook){
+        if ($reservedBook->status === ReservationStatus::ISSUED) {
+            throw new ApiException('Книга уже выдана');
+        }
+
+        if ($reservedBook->status === ReservationStatus::COMPLETED) {
+            throw new ApiException('Книга уже принята');
+        }
+
+        if (!$reservedBook) {
             throw new ApiException("Забронированная книга не найдена");
         }
-        
+
 
         $data['status'] = ReservationStatus::ISSUED->value;
         $data['issued_at'] = now();
@@ -119,12 +126,21 @@ class ReservationService implements ReservationServiceInterface
 
     }
 
-    public function accept(int $bookId): Reservation
+    public function accept(int $reservationId): Reservation
     {
-        $issuedBook = $this->reservationRepository->findByBookIdAndStatus($bookId, ReservationStatus::ISSUED);
 
-        if(!$issuedBook){
+        $issuedBook = $this->reservationRepository->find($reservationId);
+
+        if ($issuedBook->status === ReservationStatus::COMPLETED) {
             throw new ApiException("Книгу уже приняли");
+        }
+
+        if ($issuedBook->status === ReservationStatus::RESERVED) {
+            throw new ApiException("Книгу забронировали");
+        }
+
+        if ($issuedBook->status === ReservationStatus::CANCELED) {
+            throw new ApiException("Бронь была отменена");
         }
 
         $data['status'] = ReservationStatus::COMPLETED->value;
@@ -135,10 +151,12 @@ class ReservationService implements ReservationServiceInterface
 
     public function cancelExpired()
     {
-        $activeReservations = $this->reservationRepository->findByStatus(ReservationStatus::RESERVED);
-        
-        foreach ($activeReservations as $reservation){
-            if($reservation->expires_at < now()){
+        $activeReservations = $this->reservationRepository->findFiltered([
+            'status' => ReservationStatus::RESERVED->value
+        ]);
+
+        foreach ($activeReservations as $reservation) {
+            if ($reservation->expires_at < now()) {
                 $reservation->status = ReservationStatus::COMPLETED->value;
                 $reservation->save();
             }

@@ -12,4 +12,6 @@ interface AuthServiceInterface
 
     public function login (array $data);
 
+    public function forgotPassword(string $email);
+
 }

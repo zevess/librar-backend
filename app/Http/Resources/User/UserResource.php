@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
+use App\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PublisherResource extends JsonResource
+class UserResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +18,8 @@ class PublisherResource extends JsonResource
         return [
             'id' => $this->id,
             'name'=> $this->name,
-            'slug'=> $this->slug,
-            'description' => $this->description,
+            'email' => $this->email,
+            'role' => $this->role
         ];
     }
 }

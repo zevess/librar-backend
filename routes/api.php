@@ -17,49 +17,64 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::prefix('auth')->group(function () {
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
 
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('me', [AuthController::class, 'me']);
+    Route::middleware('guest')->group(function () {
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+        Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
     });
+
+    Route::get('me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 });
 
 Route::prefix('books')->group(function () {
 
-    Route::middleware('auth:sanctum')->group(callback: function () {
-        Route::post('/{id}/reserve', [ReservationController::class, 'reserve']);
-        Route::post('/reservations/{id}/cancel', [ReservationController::class, 'cancel']);
+    Route::prefix('reservations')->group(function () {
+        Route::post('/{book}/reserve', [ReservationController::class, 'reserve'])->middleware('auth:sanctum');
+
+        Route::get('/', [ReservationController::class, 'index'])->middleware(['auth:sanctum', 'role:admin,librarian']);
     });
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
-
-        Route::prefix('reservations')->group(function () {
-            Route::get('/', [ReservationController::class, 'index']);
-            Route::get('/{id}', [ReservationController::class, 'show']);
-            Route::post('/{id}/issue', [ReservationController::class, 'issue']);
-            Route::post('/{id}/accept', [ReservationController::class, 'accept']);
-        });
-
-        Route::prefix('genres')->group(function () {
-            Route::post('/{genreName}', [GenreController::class, 'store']);
-            Route::post('/attach/{bookId}', [GenreController::class, 'attach']);
-            Route::delete('/detach/{bookId}', [GenreController::class, 'detach']);
-            Route::delete('/{id}', [GenreController::class, 'destroy']);
-        });
-
         Route::post('/', [BookController::class, 'store']);
         Route::put('/{id}', [BookController::class, 'update']);
-        Route::delete('/{id}', [BookController::class, 'delete']);
+        Route::delete('/{id}', [BookController::class, 'destroy']);
         Route::post('/{id}/restore', [BookController::class, 'restore']);
-
     });
-
-    Route::get('genres', [GenreController::class, 'index']);
 
     Route::get('/', [BookController::class, 'index']);
     Route::get('/{id}', [BookController::class, 'show']);
     Route::get('/{id}/reviews', [ReviewController::class, 'showByBook']);
+
+});
+
+Route::prefix('genres')->group(function () {
+
+    Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
+        Route::post('/{genreName}', [GenreController::class, 'store']);
+        Route::post('/attach/{bookId}', [GenreController::class, 'attach']);
+        Route::delete('/detach/{bookId}', [GenreController::class, 'detach']);
+        Route::delete('/{id}', [GenreController::class, 'destroy']);
+    });
+
+    Route::get('/', [GenreController::class, 'index']);
+    Route::get('/{id}', [GenreController::class, 'show']);
+});
+
+Route::prefix('reservations')->group(function () {
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/{id}', [ReservationController::class, 'show']);
+        Route::get('/{user}', [ReservationController::class, 'showByUser']);
+        Route::post('/{id}/cancel', [ReservationController::class, 'cancel']);
+    });
+
+    Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
+        Route::get('/', [ReservationController::class, 'index']);
+        Route::post('/{id}/issue', [ReservationController::class, 'issue']);
+        Route::post('/{id}/accept', [ReservationController::class, 'accept']);
+    });
 
 });
 
@@ -98,10 +113,10 @@ Route::prefix('authors')->group(function () {
 
 Route::prefix('reviews')->group(function () {
     Route::get('/', [ReviewController::class, 'index']);
+    Route::post('/', [ReviewController::class, 'store'])->middleware(['auth:sanctum', 'role:admin,librarian']);
+
     Route::get('/{id}', [ReviewController::class, 'show']);
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/', [ReviewController::class, 'store']);
-    });
+
 });
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {

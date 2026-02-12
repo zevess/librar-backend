@@ -7,8 +7,9 @@ use App\Http\Requests\Book\BookStatusRequest;
 use App\Http\Requests\Book\GetBookRequest;
 use App\Http\Requests\Book\StoreBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
-use App\Http\Resources\BookCollection;
-use App\Http\Resources\BookResource;
+use App\Http\Resources\Book\BookCollection;
+use App\Http\Resources\Book\BookResource;
+use App\Http\Resources\PaginatedCollection;
 use App\Models\Book;
 use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -23,24 +24,16 @@ class BookController extends Controller
     ) {
     }
 
-    public function index(GetBookRequest $request): LengthAwarePaginator|BookCollection
+    public function index(GetBookRequest $request): BookCollection
     {
-        $books = $this->bookService->getPaginated($request->validated(), 12);
-        return $books;
+        $books = $this->bookService->getPaginated($request->validated(), 2);
+        return new BookCollection($books);
     }
 
-    public function show(int $id): BookResource|JsonResponse
+    public function show(int $id): BookResource
     {
         $book = $this->bookService->getById($id);
-        if (!$book) {
-            return response()->json(["message" => "not found"], 404);
-        }
-
-        $book->load('author');
-        $book->load('genres');
-        $book->load('publisher');
-        $book->load('category');
-
+  
         return new BookResource($book);
     }
 
@@ -57,10 +50,6 @@ class BookController extends Controller
     public function update(int $id, UpdateBookRequest $request): BookResource|JsonResponse
     {
         $book = $this->bookService->update($id, $request->validated());
-        $book->load('author');
-        $book->load('genres');
-        $book->load('publisher');
-        $book->load('category');
         return new BookResource($book);
     }
 

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Reservation\ReservationRequest;
 use App\Http\Requests\Reservation\StoreReservationRequest;
-use App\Http\Resources\ReservationCollection;
-use App\Http\Resources\ReservationResource;
+use App\Http\Resources\Reservation\ReservationCollection;
+use App\Http\Resources\Reservation\ReservationResource;
 use App\Services\Interfaces\ReservationServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,12 +14,15 @@ class ReservationController extends Controller
 {
     public function __construct(
         private ReservationServiceInterface $reservationService
-    ) {
-    }
+    ) {}
 
-    public function index(): ReservationCollection
+    public function index(Request $request): ReservationCollection
     {
-        $reservations = $this->reservationService->cancelExpired();
+        $data['status'] = $request->input('status');
+        $data['book_id'] = $request->input('book_id');
+        $data['user_id'] = $request->input('user_id');
+
+        $reservations = $this->reservationService->getFiltered($data);
         return new ReservationCollection($reservations);
     }
 
@@ -32,9 +36,15 @@ class ReservationController extends Controller
         return new ReservationResource($reservation);
     }
 
-    public function reserve(int $id): ReservationResource|JsonResponse
+    public function showByUser(int $user, ReservationRequest $request)
     {
-        $reservation = $this->reservationService->reserve($id, auth()->id());
+        $reservations = $this->reservationService->getByUser($user, $request->validated());
+        return new ReservationCollection($reservations);
+    }
+
+    public function reserve(int $book): ReservationResource|JsonResponse
+    {
+        $reservation = $this->reservationService->reserve($book, auth()->id());
 
         $reservation->load('book');
 

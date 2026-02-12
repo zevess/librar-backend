@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Repositories\Interfaces\AuthRepositoryInterface;
 use App\Services\Interfaces\AuthServiceInterface;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class AuthService implements AuthServiceInterface
 {
@@ -39,7 +40,11 @@ class AuthService implements AuthServiceInterface
         }
 
         return $user;
+    }
 
+    public function forgotPassword(string $email)
+    {
+        // $status = Password::sendResetLink($email);
     }
 
 }

@@ -73,7 +73,15 @@ class GenreService implements GenreServiceInterface
             throw new ApiException("Один или более жанров не существуют. Пожалуйста, укажите корректные жанры");
         }
 
-        $book->genres()->attach($genres);
+        $attachedGenres = $book->genres()->pluck('genres.id')->all();
+        $alreadyAttached = empty(array_diff($genres, $attachedGenres));
+
+        if($alreadyAttached){
+            return true;
+        }
+
+        $newGenres = array_diff($genres, $attachedGenres);
+        $book->genres()->attach($newGenres);
         return true;
     }
 
@@ -88,6 +96,13 @@ class GenreService implements GenreServiceInterface
 
         if (count($exists) !== count($genres)) {
             throw new ApiException("Один или более жанров не существуют. Пожалуйста, укажите корректные жанры");
+        }
+
+        $attachedGenres = $book->genres()->pluck('genres.id')->all();
+        $genresToDetach = empty(array_diff($genres, $attachedGenres));
+        
+        if(!$genresToDetach){
+            throw new ApiException('Указанные жанры не привязаны к книге');
         }
 
         $book->genres()->detach($genres);
