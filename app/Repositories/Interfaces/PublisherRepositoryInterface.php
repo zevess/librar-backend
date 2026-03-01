@@ -15,6 +15,8 @@ interface PublisherRepositoryInterface
 
     public function findBySlug(string $slug): ?Publisher;
 
+    public function findBySlugAndId(string $slug, int $id): ?Publisher;
+
     public function update(Publisher $publisher, array $data): Publisher;
 
     public function delete(Publisher $publisher): bool;

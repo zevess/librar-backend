@@ -39,6 +39,13 @@ class AuthorController extends Controller
         return new AuthorResource($author);
     }
 
+    public function showBySlug(string $slug, int $id): AuthorResource
+    {
+        $author = $this->authorService->getBySlug($slug, $id);
+        return new AuthorResource($author);
+    }
+
+
     public function update(UpdateAuthorRequest $request, int $id): AuthorResource|JsonResponse
     {
 

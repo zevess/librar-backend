@@ -25,7 +25,7 @@ class BookRepository implements BookRepositoryInterface
         $search = $data['q'] ?? '';
         $genres = $data['genres'];
         $category = $data['category'] ?? '';
-        $publisher = $data['publisher'] ?? '';
+        $publishers = $data['publishers'];
 
         $result = Book::with(['author', 'genres', 'publisher', 'category'])
 
@@ -42,14 +42,19 @@ class BookRepository implements BookRepositoryInterface
                     $q->whereIn('genres.id', $genres);
                 });
             })
-            ->when($publisher, function ($query) use ($publisher){
-                $query->where('publisher_id', $publisher);
+            ->when(!empty($publishers), function ($query) use ($publishers) {
+                $query->whereIn('publisher_id', $publishers);
             })
-            ->when($category, function ($query) use ($category){
+            ->when($category, function ($query) use ($category) {
                 $query->where('category_id', $category);
             });
 
         return $result->paginate($perPage)->withQueryString();
+    }
+
+    public function findBySlugAndId(string $slug, int $id): ?Book
+    {
+        return Book::where('slug', $slug)->where('id', $id)->first();
     }
 
     public function findByAuthor(int $authorId): Collection

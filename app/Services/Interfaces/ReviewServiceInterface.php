@@ -15,7 +15,7 @@ interface ReviewServiceInterface
 
     public function getByUser(int $userId): Collection;
 
-    public function create(array $data, int $userId): Review;
+    public function create(int $userId, int $bookId, array $data): Review;
 
     public function update(int $id, array $data): Review;
 

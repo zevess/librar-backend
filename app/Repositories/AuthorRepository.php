@@ -18,6 +18,11 @@ class AuthorRepository implements AuthorRepositoryInterface
         return Author::with('books')->find($id);
     }
 
+    public function findBySlug(string $slug, int $id): ?Author
+    {
+        return Author::with('books')->where('id', $id)->where('slug', $slug)->first();
+    }
+
     public function create(array $data): Author
     {
         return Author::create($data);

@@ -2,7 +2,6 @@
 
 namespace App\Services\Interfaces;
 
-use App\Enums\BookStatus;
 use App\Models\Book;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,6 +13,8 @@ interface BookServiceInterface
     public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
 
     public function getById(int $id): ?Book;
+
+    public function getBySlugAndId(string $slug, int $id): ?Book;
 
     public function getByAuthorId(int $authorId): Collection;
 

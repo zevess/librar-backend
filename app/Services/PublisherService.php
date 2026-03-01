@@ -35,12 +35,22 @@ class PublisherService implements PublisherServiceInterface
 
     public function getBySlug(string $slug): Publisher
     {
-        $publisher = $this->publisherRepository->find($slug);
+        $publisher = $this->publisherRepository->findBySlug($slug);
         if (!$publisher) {
             throw new ApiException('Издательство не найдено');
         }
         return $publisher;
     }
+
+    public function getBySlugAndId(string $slug, int $id): Publisher
+    {
+        $publisher = $this->publisherRepository->findBySlugAndId($slug, $id);
+        if (!$publisher) {
+            throw new ApiException('Издательство не найдено');
+        }
+        return $publisher;
+    }
+
 
     public function create(array $data): Publisher
     {

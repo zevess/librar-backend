@@ -14,13 +14,15 @@ class ReservationController extends Controller
 {
     public function __construct(
         private ReservationServiceInterface $reservationService
-    ) {}
+    ) {
+    }
 
     public function index(Request $request): ReservationCollection
     {
         $data['status'] = $request->input('status');
         $data['book_id'] = $request->input('book_id');
         $data['user_id'] = $request->input('user_id');
+        $data['id'] = $request->input('id');
 
         $reservations = $this->reservationService->getFiltered($data);
         return new ReservationCollection($reservations);
@@ -58,7 +60,7 @@ class ReservationController extends Controller
     {
         $reservation = $this->reservationService->cancel($id, auth()->id());
         $reservation->load('book');
-        
+
         return response()->json([
             "message" => "Бронь отменена",
             "reservation" => new ReservationResource($reservation)

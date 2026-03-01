@@ -34,6 +34,17 @@ class AuthorService implements AuthorServiceInterface
         return $author;
     }
 
+    public function getBySlug(string $slug, int $id): ?Author
+    {
+        $author = $this->authorRepository->findBySlug($slug, $id);
+
+        if (!$author) {
+            throw new ApiException("Автор не найден");
+        }
+
+        return $author;
+    }
+
     public function create(array $data): Author
     {
         $slug = Str::slug($data["name"]);

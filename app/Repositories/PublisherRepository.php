@@ -28,6 +28,11 @@ class PublisherRepository implements PublisherRepositoryInterface
         return Publisher::where('slug', $slug)->first();
     }
 
+    public function findBySlugAndId(string $slug, int $id): ?Publisher
+    {
+        return Publisher::with('books')->where('slug', $slug)->where('id', $id)->first();
+    }
+
     public function update(Publisher $publisher, array $data): Publisher
     {
         $publisher->update($data);

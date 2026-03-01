@@ -11,6 +11,8 @@ interface AuthorRepositoryInterface
 
     public function find(int $id): ?Author;
 
+    public function findBySlug(string $slug, int $id): ?Author;
+
     public function create(array $data): Author;
 
     public function update(Author $author, array $data): Author;

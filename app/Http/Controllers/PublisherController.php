@@ -26,9 +26,9 @@ class PublisherController extends Controller
         return new PublisherResource($publisher);
     }
 
-    public function showBySlug(int $slug): PublisherResource
+    public function showBySlug(string $slug, int $id): PublisherResource
     {
-        $publisher = $this->publisherService->getBySlug($slug);
+        $publisher = $this->publisherService->getBySlugAndId($slug, $id);
         return new PublisherResource($publisher);
 
     }

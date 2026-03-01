@@ -12,7 +12,8 @@ class ReviewService implements ReviewServiceInterface
 {
     public function __construct(
         private ReviewRepositoryInterface $reviewRepository
-    ){}
+    ) {
+    }
 
     public function getAll(): Collection
     {
@@ -23,7 +24,7 @@ class ReviewService implements ReviewServiceInterface
     {
         $review = $this->reviewRepository->find($id);
 
-        if(!$review){
+        if (!$review) {
             throw new ApiException('Отзыв не найден');
         }
 
@@ -40,22 +41,23 @@ class ReviewService implements ReviewServiceInterface
         return $this->reviewRepository->findByUser($userId);
     }
 
-    public function create(array $data, int $userId): Review
+    public function create(int $userId, int $bookId, array $data): Review
     {
-        $existingReview = $this->reviewRepository->findByBookAndUser($data['book_id'], $userId);
+        $existingReview = $this->reviewRepository->findByBookAndUser($bookId, $userId);
 
-        if($existingReview){
+        if ($existingReview) {
             throw new ApiException('Отзыв уже оставлен');
         }
 
         $data['user_id'] = $userId;
+        $data['book_id'] = $bookId;
         return $this->reviewRepository->create($data);
     }
 
     public function update(int $id, array $data): Review
     {
         $review = $this->reviewRepository->find($id);
-        if(!$review){
+        if (!$review) {
             throw new ApiException('Отзыв не найден');
         }
         return $this->reviewRepository->update($review, $data);
@@ -64,7 +66,7 @@ class ReviewService implements ReviewServiceInterface
     public function delete(int $id): bool
     {
         $review = $this->reviewRepository->find($id);
-        if(!$review){
+        if (!$review) {
             throw new ApiException('Отзыв не найден');
         }
         return $this->reviewRepository->delete($review);

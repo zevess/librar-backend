@@ -23,7 +23,9 @@ class BookCollection extends ResourceCollection
                     'author' => new AuthorResource($book->author),
                     'publisher' => new PublisherResource($book->publisher),
                     'category' => new CategoryResource($book->category),
-                    'genres' => new GenreCollection($book->genres)
+                    'genres' => new GenreCollection($book->genres),
+                    'isAvailable' => $book->activeReservations->isEmpty()
+
                 ];
             })
         ];

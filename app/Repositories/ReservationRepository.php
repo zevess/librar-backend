@@ -42,10 +42,13 @@ class ReservationRepository implements ReservationRepositoryInterface
     public function findFiltered(?array $data): Collection
     {
         $userId = $data['user_id'] ?? '';
-        $status = isset($data['status']) ? ReservationStatus::from($data['status']) : null;;
+        $id = $data['id'] ?? '';
+        $status = isset($data['status']) ? ReservationStatus::from($data['status']) : null;
         $bookId = $data['book_id'] ?? '';
 
-        return Reservation::with(['book', 'reservedBy'])->when($userId, fn($q) => $q->where('reserved_by', $userId))
+        return Reservation::with(['book', 'reservedBy'])
+            ->when($id, fn($q) => $q->where('id', $id))
+            ->when($userId, fn($q) => $q->where('reserved_by', $userId))
             ->when($status, fn($q) => $q->where('status', $status->value))
             ->when($bookId, fn($q) => $q->where('book_id', $bookId))
             ->get();

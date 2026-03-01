@@ -2,20 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BookStatus;
-use App\Http\Requests\Book\BookStatusRequest;
 use App\Http\Requests\Book\GetBookRequest;
 use App\Http\Requests\Book\StoreBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
 use App\Http\Resources\Book\BookCollection;
 use App\Http\Resources\Book\BookResource;
-use App\Http\Resources\PaginatedCollection;
-use App\Models\Book;
 use App\Services\Interfaces\BookServiceInterface;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 class BookController extends Controller
 {
@@ -26,14 +20,21 @@ class BookController extends Controller
 
     public function index(GetBookRequest $request): BookCollection
     {
-        $books = $this->bookService->getPaginated($request->validated(), 2);
+        $books = $this->bookService->getPaginated($request->validated(), 12);
         return new BookCollection($books);
     }
 
     public function show(int $id): BookResource
     {
         $book = $this->bookService->getById($id);
-  
+
+        return new BookResource($book);
+    }
+
+    public function showBySlug(string $slug, int $id): BookResource
+    {
+        $book = $this->bookService->getBySlugAndId($slug, $id);
+
         return new BookResource($book);
     }
 

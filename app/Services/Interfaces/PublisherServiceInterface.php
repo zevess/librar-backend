@@ -15,6 +15,8 @@ interface PublisherServiceInterface
 
     public function getBySlug(string $slug): Publisher;
 
+    public function getBySlugAndId(string $slug, int $id): Publisher;
+
     public function update(int $id, array $data): Publisher;
 
     public function delete(int $id): bool;

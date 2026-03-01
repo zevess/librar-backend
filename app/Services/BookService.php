@@ -36,6 +36,7 @@ class BookService implements BookServiceInterface
     {
         $data['q'] = Str::slug($data['q'] ?? '');
         $data['genres'] = array_map('intval', $data['genres'] ?? []);
+        $data['publishers'] = array_map('intval', $data['publishers'] ?? []);
 
         return $this->bookRepository->getPaginated($data, $perPage);
     }
@@ -43,7 +44,17 @@ class BookService implements BookServiceInterface
     public function getById(int $id): ?Book
     {
         $book = $this->bookRepository->find($id);
-        
+
+        if (!$book) {
+            throw new ApiException("Книга не найдена");
+        }
+
+        return $book;
+    }
+
+    public function getBySlugAndId(string $slug, int $id): ?Book
+    {
+        $book = $this->bookRepository->findBySlugAndId($slug, $id);
         if (!$book) {
             throw new ApiException("Книга не найдена");
         }
@@ -71,9 +82,9 @@ class BookService implements BookServiceInterface
         if (!$existingCategory) {
             throw new ApiException('Категория не найдена');
         }
-        
+
         $existingAuthor = $this->authorRepository->find($data['author_id']);
-        if(!$existingAuthor){
+        if (!$existingAuthor) {
             throw new ApiException('Автор не найден');
         }
 
@@ -101,7 +112,7 @@ class BookService implements BookServiceInterface
         if (!$existingPublisher) {
             throw new ApiException('Издатель не найден');
         }
-        
+
 
         $slug = Str::slug($data['title'] ?? $book->title);
         $data['slug'] = $slug;

@@ -4,9 +4,13 @@ namespace App\Enums;
 
 enum BookStatus: string
 {
+    case ALL = "all";
+
     case AVAILABLE = "available";
 
     case RESERVED = "reserved";
 
-    case ISSUED = "issued";
+    // case ABSENT = "absent";
+
+    // case ISSUED = "issued";
 }

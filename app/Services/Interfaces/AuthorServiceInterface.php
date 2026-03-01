@@ -11,6 +11,8 @@ interface AuthorServiceInterface
 
     public function getById(int $id): ?Author;
 
+    public function getBySlug(string $slug, int $id): ?Author;
+
     public function create(array $data): Author;
 
     public function update(int $id, array $data): ?Author;

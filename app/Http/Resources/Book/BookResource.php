@@ -13,19 +13,19 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class BookResource extends BaseResource
 {
-    
+
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'title'=> $this->title,
-            'slug'=> $this->slug,
+            'title' => $this->title,
+            'slug' => $this->slug,
             'description' => $this->description,
             'author' => new AuthorResource($this->author),
             'publisher' => new PublisherResource($this->publisher),
             'category' => new CategoryResource($this->category),
             'genres' => new GenreCollection($this->genres),
-            'isAwailable' => $this->activeReservations->isEmpty()
+            'isAvailable' => $this->activeReservations->isEmpty()
         ];
     }
 }

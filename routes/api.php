@@ -31,8 +31,6 @@ Route::prefix('auth')->group(function () {
 Route::prefix('books')->group(function () {
 
     Route::prefix('reservations')->group(function () {
-        Route::post('/{book}/reserve', [ReservationController::class, 'reserve'])->middleware('auth:sanctum');
-
         Route::get('/', [ReservationController::class, 'index'])->middleware(['auth:sanctum', 'role:admin,librarian']);
     });
 
@@ -43,7 +41,10 @@ Route::prefix('books')->group(function () {
         Route::post('/{id}/restore', [BookController::class, 'restore']);
     });
 
+    Route::post('/{book}/reserve', [ReservationController::class, 'reserve'])->middleware('auth:sanctum');
+
     Route::get('/', [BookController::class, 'index']);
+    Route::get('/{slug}-{id}', [BookController::class, 'showBySlug'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [BookController::class, 'show']);
     Route::get('/{id}/reviews', [ReviewController::class, 'showByBook']);
 
@@ -80,6 +81,7 @@ Route::prefix('reservations')->group(function () {
 
 Route::prefix('publishers')->group(function () {
     Route::get('/', [PublisherController::class, 'index']);
+    Route::get('/{slug}-{id}', [PublisherController::class, 'showBySlug'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [PublisherController::class, 'show']);
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
@@ -102,7 +104,9 @@ Route::prefix('categories')->group(function () {
 
 Route::prefix('authors')->group(function () {
     Route::get('/', [AuthorController::class, 'index']);
+    Route::get('/{slug}-{id}', [AuthorController::class, 'showBySlug'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [AuthorController::class, 'show']);
+
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
         Route::post('/', [AuthorController::class, 'store']);
@@ -113,7 +117,7 @@ Route::prefix('authors')->group(function () {
 
 Route::prefix('reviews')->group(function () {
     Route::get('/', [ReviewController::class, 'index']);
-    Route::post('/', [ReviewController::class, 'store'])->middleware(['auth:sanctum', 'role:admin,librarian']);
+    Route::post('/{book}', [ReviewController::class, 'store']);
 
     Route::get('/{id}', [ReviewController::class, 'show']);
 

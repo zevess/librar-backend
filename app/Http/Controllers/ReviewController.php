@@ -36,9 +36,9 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function store(StoreReviewRequest $request)
+    public function store(int $bookId, StoreReviewRequest $request)
     {
-        $review = $this->reviewService->create($request->validated(), auth()->id());
+        $review = $this->reviewService->create(auth()->id(), $bookId, $request->validated());
         return $review;
     }
 
