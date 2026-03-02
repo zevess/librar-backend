@@ -25,7 +25,6 @@ class BookCollection extends ResourceCollection
                     'category' => new CategoryResource($book->category),
                     'genres' => new GenreCollection($book->genres),
                     'isAvailable' => $book->activeReservations->isEmpty()
-
                 ];
             })
         ];

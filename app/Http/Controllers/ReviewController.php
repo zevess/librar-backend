@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Review\StoreReviewRequest;
+use App\Http\Resources\Review\ReviewCollection;
+use App\Http\Resources\Review\ReviewResource;
 use App\Services\Interfaces\ReviewServiceInterface;
 use Illuminate\Http\Request;
 
@@ -22,18 +24,19 @@ class ReviewController extends Controller
     public function show(int $id)
     {
         $review = $this->reviewService->getById($id);
-        return $review;
+        return new ReviewResource($review);
     }
 
     public function showByBook(int $bookId)
     {
         $reviews = $this->reviewService->getByBook($bookId);
+        $reviews->load('user');
         $average = $reviews->avg('rating');
 
-        return response()->json([
-            'reviews' => $reviews,
-            'average' => round($average, 1)
+        return (new ReviewCollection($reviews))->additional([
+            'average' => $average
         ]);
+
     }
 
     public function store(int $bookId, StoreReviewRequest $request)

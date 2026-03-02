@@ -18,7 +18,7 @@ class ReviewRepository implements ReviewRepositoryInterface
     }
     public function findByBook(int $bookId): Collection
     {
-        return Review::where('book_id', $bookId)->get();
+        return Review::with('user')->where('book_id', $bookId)->get();
     }
     public function findByUser(int $userId): Collection
     {
@@ -29,7 +29,7 @@ class ReviewRepository implements ReviewRepositoryInterface
     {
         return Review::where('user_id', $userId)->where('book_id', $bookId)->first();
     }
-    
+
     public function create(array $data): Review
     {
         return Review::create($data);
