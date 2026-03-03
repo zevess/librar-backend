@@ -97,4 +97,14 @@ class AuthController extends Controller
             'status' => trans($status)
         ], 400);
     }
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+        // $user->tokens()
+        return response()->json([
+            'message' => 'Вы успешно вышли'
+        ]);
+    }
 }
