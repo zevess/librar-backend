@@ -19,13 +19,14 @@ class StoreBookRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-   public function rules(): array
+    public function rules(): array
     {
         return [
-            'title' => ['required', 'min:3'],
+            'title' => ['required', 'min:1'],
             'slug' => 'nullable',
             'description' => ['required', 'min:10'],
-            'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
+            'image' => 'nullable',
+            // 'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
             'author_id' => ['required', 'numeric'],
             'publisher_id' => ['required', 'numeric'],
             'category_id' => ['required', 'numeric']

@@ -21,6 +21,7 @@ class BookResource extends BaseResource
             'title' => $this->title,
             'slug' => $this->slug,
             'description' => $this->description,
+            'image' => $this->image,
             'author' => new AuthorResource($this->author),
             'publisher' => new PublisherResource($this->publisher),
             'category' => new CategoryResource($this->category),

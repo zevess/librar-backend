@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
@@ -121,6 +122,8 @@ Route::prefix('reviews')->group(function () {
     Route::get('/{id}', [ReviewController::class, 'show']);
 
 });
+
+Route::post('/upload-image', [ImageController::class, 'store']);
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
 

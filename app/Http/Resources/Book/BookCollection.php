@@ -20,6 +20,7 @@ class BookCollection extends ResourceCollection
                     'id' => $book->id,
                     'title' => $book->title,
                     'slug' => $book->slug,
+                    'image' => $book->image,
                     'author' => new AuthorResource($book->author),
                     'publisher' => new PublisherResource($book->publisher),
                     'category' => new CategoryResource($book->category),
