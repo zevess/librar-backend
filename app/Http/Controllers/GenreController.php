@@ -21,6 +21,13 @@ class GenreController extends Controller
         return new GenreCollection($genres);
     }
 
+    public function getByQuery(Request $request): GenreCollection
+    {
+        $query = $request->input('q');
+        $genres = $this->genreService->getByQuery($query);
+        return new GenreCollection($genres);
+    }
+
     public function show($id): GenreResource
     {
         $genre = $this->genreService->getById($id);
@@ -28,11 +35,19 @@ class GenreController extends Controller
 
     }
 
-    public function store(string $genreName): GenreResource
+    public function store(Request $request): GenreResource
     {
+        $genreName = $request->input('name');
         $genre = $this->genreService->create($genreName);
         return new GenreResource($genre);
 
+    }
+
+    public function update(int $genreId, Request $request)
+    {
+        $data['name'] = $request->input('name');
+        $genre = $this->genreService->update($genreId, $data);
+        return new GenreResource($genre);
     }
 
     public function attach(Request $request, int $bookId)

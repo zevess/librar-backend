@@ -11,6 +11,8 @@ interface GenreServiceInterface
 
     public function getById(int $id): Genre;
 
+    public function getByQuery(?string $query): Collection;
+
     public function create(string $genreName): Genre;
 
     public function update(int $id, array $data): Genre;

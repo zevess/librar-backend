@@ -35,6 +35,17 @@ class GenreService implements GenreServiceInterface
         return $genre;
     }
 
+    public function getByQuery(?string $query): Collection
+    {
+        $slug = Str::slug($query);
+
+        $genres = $this->genreRepository->getBySlug($slug);
+        if (!$genres) {
+            throw new ApiException("Жанры не найдены");
+        }
+        return $genres;
+    }
+
     public function create(string $genreName): Genre
     {
         $slug = Str::slug($genreName);
@@ -76,7 +87,7 @@ class GenreService implements GenreServiceInterface
         $attachedGenres = $book->genres()->pluck('genres.id')->all();
         $alreadyAttached = empty(array_diff($genres, $attachedGenres));
 
-        if($alreadyAttached){
+        if ($alreadyAttached) {
             return true;
         }
 
@@ -100,8 +111,8 @@ class GenreService implements GenreServiceInterface
 
         $attachedGenres = $book->genres()->pluck('genres.id')->all();
         $genresToDetach = empty(array_diff($genres, $attachedGenres));
-        
-        if(!$genresToDetach){
+
+        if (!$genresToDetach) {
             throw new ApiException('Указанные жанры не привязаны к книге');
         }
 

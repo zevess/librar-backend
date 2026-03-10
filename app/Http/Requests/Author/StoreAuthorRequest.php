@@ -24,7 +24,7 @@ class StoreAuthorRequest extends FormRequest
         return [
             'name' => ['required', 'min:3'],
             'slug' => 'nullable',
-            'description' => ['sometimes', 'min:10'],
+            'description' => ['sometimes'],
             // 'years' => 'required|integer'
         ];
     }

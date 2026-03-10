@@ -25,7 +25,7 @@ class UpdateBookRequest extends FormRequest
             'title' => ['sometimes', 'min:3'],
             'slug' => 'nullable',
             'description' => ['sometimes', 'min:10'],
-            'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
+            'image' => ['nullable'],
             'remove_image' => ['sometimes', 'boolean'],
             'author_id' => ['sometimes', 'numeric'],
             'publisher_id' => ['sometimes', 'numeric'],

@@ -27,7 +27,7 @@ class BookRepository implements BookRepositoryInterface
         $category = $data['category'] ?? '';
         $publishers = $data['publishers'];
 
-        $result = Book::with(['author', 'genres', 'publisher', 'category'])
+        $result = Book::with(['author', 'genres', 'publisher', 'category', 'activeReservations'])
 
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {

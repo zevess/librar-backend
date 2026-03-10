@@ -53,13 +53,14 @@ Route::prefix('books')->group(function () {
 Route::prefix('genres')->group(function () {
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
-        Route::post('/{genreName}', [GenreController::class, 'store']);
+        Route::post('/', [GenreController::class, 'store']);
+        Route::put('/{id}', [GenreController::class, 'update']);
         Route::post('/attach/{bookId}', [GenreController::class, 'attach']);
         Route::delete('/detach/{bookId}', [GenreController::class, 'detach']);
         Route::delete('/{id}', [GenreController::class, 'destroy']);
     });
 
-    Route::get('/', [GenreController::class, 'index']);
+    Route::get('/', [GenreController::class, 'getByQuery']);
     Route::get('/{id}', [GenreController::class, 'show']);
 });
 
@@ -132,7 +133,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
         Route::get('/', [UserController::class, 'index']);
         Route::post('/', [UserController::class, 'store']);
 
-        Route::get('/{id}', [UserController::class, 'show']);
+        Route::get('/{id}', action: [UserController::class, 'show']);
         Route::put('/{id}', [UserController::class, 'update']);
         Route::put('/role/{id}', [UserController::class, 'updateRole']);
 

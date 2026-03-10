@@ -21,22 +21,18 @@ class BookCollection extends ResourceCollection
                     'title' => $book->title,
                     'slug' => $book->slug,
                     'image' => $book->image,
-                    'author' => new AuthorResource($book->author),
-                    'publisher' => new PublisherResource($book->publisher),
-                    'category' => new CategoryResource($book->category),
+                    'author' => $book->author ? new AuthorResource($book->author) : null,
+
+                    'publisher' => $book->publisher ? new PublisherResource($book->publisher) : null,
+
+                    'category' => $book->category ? new CategoryResource($book->category) : null,
+
                     'genres' => new GenreCollection($book->genres),
-                    'isAvailable' => $book->activeReservations->isEmpty()
+
+                    'isAvailable' => $book->activeReservations ? $book->activeReservations->isEmpty() : true,
                 ];
             })
         ];
     }
 
-    // public function with(Request $request): array
-    // {
-    //     return [
-    //         'meta' => [
-    //             'total' => $this->collection->count()
-    //         ]
-    //     ];
-    // }
 }

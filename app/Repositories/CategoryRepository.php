@@ -10,7 +10,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     public function all(): Collection
     {
-        return Category::latest()->get();
+        return Category::oldest()->get();
     }
 
     public function create(array $data): Category
