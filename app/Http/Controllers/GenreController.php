@@ -15,13 +15,7 @@ class GenreController extends Controller
     ) {
     }
 
-    public function index(): GenreCollection
-    {
-        $genres = $this->genreService->getAll();
-        return new GenreCollection($genres);
-    }
-
-    public function getByQuery(Request $request): GenreCollection
+    public function index(Request $request): GenreCollection
     {
         $query = $request->input('q');
         $genres = $this->genreService->getByQuery($query);

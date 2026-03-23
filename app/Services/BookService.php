@@ -2,14 +2,12 @@
 
 namespace App\Services;
 
-use App\Enums\BookStatus;
 use App\Exceptions\ApiException;
 use App\Models\Book;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\PublisherRepositoryInterface;
-use App\Repositories\Interfaces\ReservationRepositoryInterface;
 use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -23,7 +21,6 @@ class BookService implements BookServiceInterface
         private CategoryRepositoryInterface $categoryRepository,
         private PublisherRepositoryInterface $publisherRepository,
         private AuthorRepositoryInterface $authorRepository,
-        private ReservationRepositoryInterface $reservationRepository
     ) {
     }
 
@@ -32,11 +29,12 @@ class BookService implements BookServiceInterface
         return $this->bookRepository->all();
     }
 
-    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
+    public function getPaginated(?array $data): LengthAwarePaginator
     {
         $data['q'] = Str::slug($data['q'] ?? '');
         $data['genres'] = array_map('intval', $data['genres'] ?? []);
         $data['publishers'] = array_map('intval', $data['publishers'] ?? []);
+        $perPage = $data['perPage'] ?? 10;
 
         return $this->bookRepository->getPaginated($data, $perPage);
     }
@@ -111,6 +109,10 @@ class BookService implements BookServiceInterface
         $existingPublisher = $this->publisherRepository->find($data['publisher_id']);
         if (!$existingPublisher) {
             throw new ApiException('Издатель не найден');
+        }
+        $existingAuthor = $this->authorRepository->find($data['author_id']);
+        if (!$existingAuthor) {
+            throw new ApiException('Автор не найден');
         }
 
 

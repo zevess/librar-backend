@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Publisher\GetPublisherRequest;
 use App\Http\Requests\Publisher\StorePublisherRequest;
+use App\Http\Resources\Publisher\PublisherCollection;
 use App\Http\Resources\Publisher\PublisherResource;
 use App\Services\Interfaces\PublisherServiceInterface;
 use Illuminate\Http\Request;
@@ -14,10 +16,16 @@ class PublisherController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(GetPublisherRequest $request)
+    {
+        $publishers = $this->publisherService->getPaginated($request->validated());
+        return new PublisherCollection($publishers);
+    }
+
+    public function getAll()
     {
         $publishers = $this->publisherService->getAll();
-        return $publishers;
+        return new PublisherCollection($publishers);
     }
 
     public function show(int $id): PublisherResource
@@ -51,6 +59,18 @@ class PublisherController extends Controller
         $this->publisherService->delete($id);
         return response()->json([
             "message" => "Удалено"
+        ]);
+    }
+
+    public function restore(int $id)
+    {
+        $restored = $this->publisherService->restore($id);
+        if (!$restored) {
+            return response()->json(["message" => "Ошибка при восстановлении"], 404);
+        }
+
+        return response()->json([
+            "message" => "Восстановлено"
         ]);
     }
 }

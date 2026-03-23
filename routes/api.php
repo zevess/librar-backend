@@ -10,7 +10,6 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -30,10 +29,6 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('books')->group(function () {
 
-    Route::prefix('reservations')->group(function () {
-        Route::get('/', [ReservationController::class, 'index'])->middleware(['auth:sanctum', 'role:admin,librarian']);
-    });
-
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
         Route::post('/', [BookController::class, 'store']);
         Route::put('/{id}', [BookController::class, 'update']);
@@ -41,12 +36,13 @@ Route::prefix('books')->group(function () {
         Route::post('/{id}/restore', [BookController::class, 'restore']);
     });
 
-    Route::post('/{book}/reserve', [ReservationController::class, 'reserve'])->middleware('auth:sanctum');
 
     Route::get('/', [BookController::class, 'index']);
-    Route::get('/{slug}-{id}', [BookController::class, 'showBySlug'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
+    Route::get('/{slug}-{id}', [BookController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [BookController::class, 'show']);
     Route::get('/{id}/reviews', [ReviewController::class, 'showByBook']);
+    Route::post('/{id}/reviews', [ReviewController::class, 'store'])->middleware('auth:sanctum');
+    Route::post('/{bookId}/reserve', [ReservationController::class, 'reserve'])->middleware('auth:sanctum');
 
 });
 
@@ -60,7 +56,7 @@ Route::prefix('genres')->group(function () {
         Route::delete('/{id}', [GenreController::class, 'destroy']);
     });
 
-    Route::get('/', [GenreController::class, 'getByQuery']);
+    Route::get('/', [GenreController::class, 'index']);
     Route::get('/{id}', [GenreController::class, 'show']);
 });
 
@@ -68,7 +64,7 @@ Route::prefix('reservations')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', [ReservationController::class, 'show']);
-        Route::get('/{user}', [ReservationController::class, 'showByUser']);
+        Route::get('/user/{userId}', [ReservationController::class, 'showByUser']);
         Route::post('/{id}/cancel', [ReservationController::class, 'cancel']);
     });
 
@@ -76,12 +72,14 @@ Route::prefix('reservations')->group(function () {
         Route::get('/', [ReservationController::class, 'index']);
         Route::post('/{id}/issue', [ReservationController::class, 'issue']);
         Route::post('/{id}/accept', [ReservationController::class, 'accept']);
+        Route::put('/cancel-expired', [ReservationController::class, 'cancelExpired']);
     });
 
 });
 
 Route::prefix('publishers')->group(function () {
     Route::get('/', [PublisherController::class, 'index']);
+    Route::get('/get', [PublisherController::class, 'getAll']);
     Route::get('/{slug}-{id}', [PublisherController::class, 'showBySlug'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [PublisherController::class, 'show']);
 
@@ -89,6 +87,7 @@ Route::prefix('publishers')->group(function () {
         Route::post('/', [PublisherController::class, 'store']);
         Route::put('/{id}', [PublisherController::class, 'update']);
         Route::delete('/{id}', [PublisherController::class, 'destroy']);
+        Route::post('/{id}/restore', [PublisherController::class, 'restore']);
     });
 });
 
@@ -105,31 +104,26 @@ Route::prefix('categories')->group(function () {
 
 Route::prefix('authors')->group(function () {
     Route::get('/', [AuthorController::class, 'index']);
-    Route::get('/{slug}-{id}', [AuthorController::class, 'showBySlug'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
+    Route::get('/{slug}-{id}', [AuthorController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [AuthorController::class, 'show']);
-
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
         Route::post('/', [AuthorController::class, 'store']);
         Route::put('/{id}', [AuthorController::class, 'update']);
         Route::delete('/{id}', [AuthorController::class, 'destroy']);
+        Route::post('/{id}/restore', [AuthorController::class, 'restore']);
     });
 });
 
 Route::prefix('reviews')->group(function () {
     Route::get('/', [ReviewController::class, 'index']);
-    Route::post('/{book}', [ReviewController::class, 'store']);
-
     Route::get('/{id}', [ReviewController::class, 'show']);
-
 });
 
 Route::post('/upload-image', [ImageController::class, 'store']);
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
-
     Route::prefix('users')->group(function () {
-
         Route::get('/', [UserController::class, 'index']);
         Route::post('/', [UserController::class, 'store']);
 
@@ -139,7 +133,5 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
 
         Route::delete('/{id}', [UserController::class, 'destroy']);
         Route::post('/{id}/restore', [UserController::class, 'restore']);
-
     });
-
 });

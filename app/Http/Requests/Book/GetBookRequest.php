@@ -28,7 +28,9 @@ class GetBookRequest extends FormRequest
             'genres' => ['sometimes', 'array'],
             'category' => ['sometimes', 'numeric'],
             'publishers' => ['sometimes', 'array'],
-            'isAvailable' => ['sometimes', 'boolean']
+            'isAvailable' => ['sometimes', 'boolean'],
+            'bookId' => ['sometimes'],
+            'perPage' => ['sometimes']
         ];
     }
 }

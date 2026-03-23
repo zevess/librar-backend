@@ -24,8 +24,12 @@ class ReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'book_id' => ['sometimes', 'numeric'],
-            'status' => ['sometimes', new Enum(ReservationStatus::class)],
+            'bookId' => ['sometimes'],
+            'user' => ['sometimes'],
+            'userId' => ['sometimes'],
+            'id' => ['sometimes'],
+            'status' => ['sometimes'],
+            'perPage' => ['sometimes'],
         ];
     }
 }

@@ -17,14 +17,9 @@ class ReservationController extends Controller
     ) {
     }
 
-    public function index(Request $request): ReservationCollection
+    public function index(ReservationRequest $request): ReservationCollection
     {
-        $data['status'] = $request->input('status');
-        $data['book_id'] = $request->input('book_id');
-        $data['user_id'] = $request->input('user_id');
-        $data['id'] = $request->input('id');
-
-        $reservations = $this->reservationService->getFiltered($data);
+        $reservations = $this->reservationService->getPaginated($request->validated());
         return new ReservationCollection($reservations);
     }
 
@@ -38,15 +33,16 @@ class ReservationController extends Controller
         return new ReservationResource($reservation);
     }
 
-    public function showByUser(int $user, ReservationRequest $request)
+    public function showByUser(int $userId)
     {
-        $reservations = $this->reservationService->getByUser($user, $request->validated());
+        $data['userId'] = $userId;
+        $reservations = $this->reservationService->getPaginated($data, 2);
         return new ReservationCollection($reservations);
     }
 
-    public function reserve(int $book): ReservationResource|JsonResponse
+    public function reserve(int $bookId): ReservationResource|JsonResponse
     {
-        $reservation = $this->reservationService->reserve($book, auth()->id());
+        $reservation = $this->reservationService->reserve($bookId, auth()->id());
 
         $reservation->load('book');
 
@@ -58,7 +54,7 @@ class ReservationController extends Controller
 
     public function cancel(int $id)
     {
-        $reservation = $this->reservationService->cancel($id, auth()->id());
+        $reservation = $this->reservationService->cancel($id);
         $reservation->load('book');
 
         return response()->json([
@@ -87,5 +83,9 @@ class ReservationController extends Controller
             "message" => "Книга принята",
             "reservation" => new ReservationResource($reservation)
         ]);
+    }
+    public function cancelExpired()
+    {
+        return $this->reservationService->cancelExpired();
     }
 }

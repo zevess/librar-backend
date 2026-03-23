@@ -9,13 +9,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Author extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
         'slug',
         'description',
-        // 'years',
     ];
 
     public function books(): HasMany

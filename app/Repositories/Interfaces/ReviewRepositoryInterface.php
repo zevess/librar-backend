@@ -17,8 +17,6 @@ interface ReviewRepositoryInterface
 
     public function findByBookAndUser(int $bookId, int $userId): ?Review;
 
-    
-
     public function create(array $data): Review;
 
     public function update(Review $review, array $data): Review;

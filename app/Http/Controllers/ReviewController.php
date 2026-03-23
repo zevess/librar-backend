@@ -6,7 +6,7 @@ use App\Http\Requests\Review\StoreReviewRequest;
 use App\Http\Resources\Review\ReviewCollection;
 use App\Http\Resources\Review\ReviewResource;
 use App\Services\Interfaces\ReviewServiceInterface;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -33,8 +33,15 @@ class ReviewController extends Controller
         $reviews->load('user');
         $average = $reviews->avg('rating');
 
+        $userId = Auth::guard('sanctum')->id();
+        $hasUserReviewed = false;
+        if ($userId) {
+            $hasUserReviewed = $reviews->where('user_id', $userId)->isNotEmpty();
+        }
+
         return (new ReviewCollection($reviews))->additional([
-            'average' => $average
+            'average' => $average,
+            'hasUserReviewed' => $hasUserReviewed
         ]);
 
     }

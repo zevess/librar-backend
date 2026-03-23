@@ -19,8 +19,11 @@ class ReservationCollection extends ResourceCollection
                 return [
                     'id' => $reservation->id,
                     'book' => $reservation->book,
-                    'reserved_by' => $reservation->reserved_by,
+                    'reservedBy' => $reservation->reservedBy,
                     'status' => $reservation->status,
+                    'expiresAt' => $reservation->expires_at,
+                    'issuedAt' => $reservation->issued_at,
+                    'acceptedAt' => $reservation->accepted_at
                 ];
             })
         ];

@@ -3,12 +3,10 @@
 namespace App\Services;
 
 use App\Exceptions\ApiException;
-use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use App\Repositories\Interfaces\AuthRepositoryInterface;
 use App\Services\Interfaces\AuthServiceInterface;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 
 class AuthService implements AuthServiceInterface
 {

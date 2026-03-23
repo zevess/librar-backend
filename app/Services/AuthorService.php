@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\Exceptions\ApiException;
 use App\Models\Author;
-use App\Models\Book;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Services\Interfaces\AuthorServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
@@ -23,6 +23,14 @@ class AuthorService implements AuthorServiceInterface
         return $this->authorRepository->all();
     }
 
+    public function getPaginated(?array $data): LengthAwarePaginator
+    {
+        $data['q'] = Str::slug($data['q'] ?? '');
+        $perPage = $data['perPage'] ?? 10;
+
+        return $this->authorRepository->getPaginated($data, $perPage);
+    }
+
     public function getById(int $id): ?Author
     {
         $author = $this->authorRepository->find($id);
@@ -34,9 +42,9 @@ class AuthorService implements AuthorServiceInterface
         return $author;
     }
 
-    public function getBySlug(string $slug, int $id): ?Author
+    public function getBySlugAndId(string $slug, int $id): ?Author
     {
-        $author = $this->authorRepository->findBySlug($slug, $id);
+        $author = $this->authorRepository->findBySlugAndId($slug, $id);
 
         if (!$author) {
             throw new ApiException("Автор не найден");
@@ -74,5 +82,14 @@ class AuthorService implements AuthorServiceInterface
         }
 
         return $this->authorRepository->delete($author);
+    }
+
+    public function restore(int $id): bool
+    {
+        $author = Author::withTrashed()->find($id);
+        if (!$author) {
+            throw new ApiException("Удаленный автор не найден");
+        }
+        return $this->authorRepository->restore($author);
     }
 }

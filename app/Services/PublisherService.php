@@ -6,6 +6,7 @@ use App\Exceptions\ApiException;
 use App\Models\Publisher;
 use App\Repositories\Interfaces\PublisherRepositoryInterface;
 use App\Services\Interfaces\PublisherServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
@@ -51,6 +52,14 @@ class PublisherService implements PublisherServiceInterface
         return $publisher;
     }
 
+    public function getPaginated(?array $data): LengthAwarePaginator
+    {
+        $data['q'] = Str::slug($data['q'] ?? '');
+        $perPage = $data['perPage'] ?? 10;
+
+        return $this->publisherRepository->getPaginated($data, $perPage);
+    }
+
 
     public function create(array $data): Publisher
     {
@@ -86,5 +95,14 @@ class PublisherService implements PublisherServiceInterface
         }
 
         return $this->publisherRepository->delete($publisher);
+    }
+
+    public function restore(int $id): bool
+    {
+        $publisher = Publisher::withTrashed()->find($id);
+        if (!$publisher) {
+            throw new ApiException("Удаленное издательство не найдено");
+        }
+        return $this->publisherRepository->restore($publisher);
     }
 }

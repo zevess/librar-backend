@@ -8,6 +8,7 @@ use App\Models\Reservation;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 
@@ -26,7 +27,7 @@ class ReservationService implements ReservationServiceInterface
     {
         return $this->reservationRepository->all();
     }
-    
+
     public function getById(int $id): ?Reservation
     {
         $reservation = $this->reservationRepository->find($id);
@@ -36,7 +37,7 @@ class ReservationService implements ReservationServiceInterface
         return $reservation;
     }
 
-     public function getFiltered(?array $data): Collection
+    public function getFiltered(?array $data): Collection
     {
         $reservations = $this->reservationRepository->findFiltered($data);
 
@@ -45,6 +46,12 @@ class ReservationService implements ReservationServiceInterface
         }
 
         return $reservations;
+    }
+
+    public function getPaginated(?array $data): LengthAwarePaginator
+    {
+        $perPage = $data['perPage'] ?? 10;
+        return $this->reservationRepository->getPaginated($data, $perPage);
     }
 
     public function reserve(int $bookId, int $userId): Reservation
@@ -57,7 +64,7 @@ class ReservationService implements ReservationServiceInterface
         }
 
         $isReserved = $this->reservationRepository->findFiltered([
-            'book_id' => $bookId,
+            'bookId' => $bookId,
             'status' => ReservationStatus::RESERVED->value
         ])->first();
 
@@ -66,7 +73,7 @@ class ReservationService implements ReservationServiceInterface
         }
 
         $isIssued = $this->reservationRepository->findFiltered([
-            'book_id' => $bookId,
+            'bookId' => $bookId,
             'status' => ReservationStatus::ISSUED->value
         ])->first();
 
@@ -90,6 +97,7 @@ class ReservationService implements ReservationServiceInterface
             throw new ApiException('Бронь не найдена');
         }
 
+        Gate::authorize('update', $reservedBook);
 
         $data['status'] = ReservationStatus::CANCELED->value;
         $data['expires_at'] = null;
@@ -157,16 +165,25 @@ class ReservationService implements ReservationServiceInterface
 
         foreach ($activeReservations as $reservation) {
             if ($reservation->expires_at < now()) {
-                $reservation->status = ReservationStatus::COMPLETED->value;
+                $reservation->status = ReservationStatus::CANCELED->value;
                 $reservation->save();
             }
         }
 
-        return $activeReservations;
+        return true;
     }
 
     public function update(Reservation $reservation, array $data): Reservation
     {
         return $this->reservationRepository->update($reservation, $data);
+    }
+
+    public function delete(int $id): bool
+    {
+        $reservation = $this->reservationRepository->find($id);
+        if (!$reservation) {
+            throw new ApiException("Бронь не найдена");
+        }
+        return $this->reservationRepository->delete($reservation);
     }
 }

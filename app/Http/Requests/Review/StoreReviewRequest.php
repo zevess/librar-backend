@@ -22,7 +22,7 @@ class StoreReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'book_id' => ['required', 'numeric'],
+            // 'book_id' => ['required', 'numeric'],
             'text' => ['sometimes', 'string', 'max:1024'],
             'rating' => ['required', 'numeric', 'min:1', 'max:5']
         ];
@@ -31,7 +31,7 @@ class StoreReviewRequest extends FormRequest
     public function messages()
     {
         return [
-            'book_id.required' => 'Пожалуйста укажите id книги',
+            // 'book_id.required' => 'Пожалуйста укажите id книги',
             'rating.required' => 'Пожалуйста укажите оценку'
         ];
     }

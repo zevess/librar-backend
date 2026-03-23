@@ -6,7 +6,7 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\User\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 
@@ -40,7 +40,7 @@ class UserController extends Controller
         $user = $this->userService->update($id, $request->validated());
         return new UserResource($user);
     }
-//22|9djAgLUKPidVWKRB0my9nO1vgMDWWNo4GX4VJ4Gc104fbace
+
     public function updateRole(Request $request, int $id)
     {
         $role = UserRole::from($request->input('role'));

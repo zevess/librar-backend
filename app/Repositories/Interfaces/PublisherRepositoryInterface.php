@@ -3,6 +3,7 @@
 namespace App\Repositories\Interfaces;
 
 use App\Models\Publisher;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface PublisherRepositoryInterface
@@ -17,7 +18,11 @@ interface PublisherRepositoryInterface
 
     public function findBySlugAndId(string $slug, int $id): ?Publisher;
 
+    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
+
     public function update(Publisher $publisher, array $data): Publisher;
 
     public function delete(Publisher $publisher): bool;
+
+    public function restore(Publisher $publisher): bool;
 }

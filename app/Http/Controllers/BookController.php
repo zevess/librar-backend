@@ -20,7 +20,7 @@ class BookController extends Controller
 
     public function index(GetBookRequest $request): BookCollection
     {
-        $books = $this->bookService->getPaginated($request->validated(), 12);
+        $books = $this->bookService->getPaginated($request->validated());
         return new BookCollection($books);
     }
 
@@ -31,7 +31,7 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
-    public function showBySlug(string $slug, int $id): BookResource
+    public function showBySlugAndId(string $slug, int $id): BookResource
     {
         $book = $this->bookService->getBySlugAndId($slug, $id);
 

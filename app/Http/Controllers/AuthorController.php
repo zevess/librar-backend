@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Author\GetAuthorRequest;
 use App\Http\Requests\Author\StoreAuthorRequest;
 use App\Http\Requests\Author\UpdateAuthorRequest;
 use App\Http\Resources\Author\AuthorCollection;
@@ -18,10 +19,9 @@ class AuthorController extends Controller
     ) {
     }
 
-    public function index(): AuthorCollection
+    public function index(GetAuthorRequest $request): AuthorCollection
     {
-        $authors = $this->authorService->getAll();
-
+        $authors = $this->authorService->getPaginated($request->validated());
         return new AuthorCollection($authors);
     }
 
@@ -39,9 +39,9 @@ class AuthorController extends Controller
         return new AuthorResource($author);
     }
 
-    public function showBySlug(string $slug, int $id): AuthorResource
+    public function showBySlugAndId(string $slug, int $id): AuthorResource
     {
-        $author = $this->authorService->getBySlug($slug, $id);
+        $author = $this->authorService->getBySlugAndId($slug, $id);
         return new AuthorResource($author);
     }
 
@@ -56,8 +56,18 @@ class AuthorController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $this->authorService->delete($id);
-
         return response()->json(["message" => "Удалено"], 200);
+    }
 
+    public function restore(int $id): JsonResponse
+    {
+        $restored = $this->authorService->restore($id);
+        if (!$restored) {
+            return response()->json(["message" => "Ошибка при восстановлении"], 404);
+        }
+
+        return response()->json([
+            "message" => "Восстановлено"
+        ]);
     }
 }

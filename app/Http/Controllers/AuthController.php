@@ -102,7 +102,6 @@ class AuthController extends Controller
     {
         $user = $request->user();
         $user->currentAccessToken()->delete();
-        // $user->tokens()
         return response()->json([
             'message' => 'Вы успешно вышли'
         ]);

@@ -10,7 +10,7 @@ class Publisher extends Model
 {
     use SoftDeletes;
 
-   protected $fillable = [
+    protected $fillable = [
         'name',
         'slug',
         'description',

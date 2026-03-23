@@ -10,7 +10,7 @@ interface BookServiceInterface
 {
     public function getAll(): Collection;
 
-    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
+    public function getPaginated(?array $data): LengthAwarePaginator;
 
     public function getById(int $id): ?Book;
 

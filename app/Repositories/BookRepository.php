@@ -26,6 +26,7 @@ class BookRepository implements BookRepositoryInterface
         $genres = $data['genres'];
         $category = $data['category'] ?? '';
         $publishers = $data['publishers'];
+        $bookId = $data['bookId'] ?? '';
 
         $result = Book::with(['author', 'genres', 'publisher', 'category', 'activeReservations'])
 
@@ -47,6 +48,9 @@ class BookRepository implements BookRepositoryInterface
             })
             ->when($category, function ($query) use ($category) {
                 $query->where('category_id', $category);
+            })
+            ->when($bookId, function ($query) use ($bookId) {
+                $query->where('id', $bookId);
             });
 
         return $result->paginate($perPage)->withQueryString();

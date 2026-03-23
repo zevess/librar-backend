@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Enums\ReservationStatus;
 use App\Models\Reservation;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class ReservationRepository implements ReservationRepositoryInterface
@@ -19,53 +20,43 @@ class ReservationRepository implements ReservationRepositoryInterface
         return Reservation::find($id);
     }
 
-    // public function findByUserId(int $userId): Collection
-    // {
-    //     return Reservation::where('reserved_by', $userId)->get();
-    // }
-
-    // public function findByBookId(int $bookId): Collection
-    // {
-    //     return Reservation::where('book_id', $bookId)->get();
-    // }
-
-    // public function findByStatus(ReservationStatus $status): Collection
-    // {
-    //     return Reservation::where('status', $status)->get();
-    // }
-
-    // public function findByBookIdAndStatus(int $bookId, ReservationStatus $status): ?Reservation
-    // {
-    //     return Reservation::where('book_id', $bookId)->where('status', $status)->first();
-    // }
-
     public function findFiltered(?array $data): Collection
     {
-        $userId = $data['user_id'] ?? '';
+        $userId = $data['userId'] ?? '';
         $id = $data['id'] ?? '';
         $status = isset($data['status']) ? ReservationStatus::from($data['status']) : null;
-        $bookId = $data['book_id'] ?? '';
+        $bookId = $data['bookId'] ?? '';
 
         return Reservation::with(['book', 'reservedBy'])
-            ->when($id, fn($q) => $q->where('id', $id))
-            ->when($userId, fn($q) => $q->where('reserved_by', $userId))
-            ->when($status, fn($q) => $q->where('status', $status->value))
             ->when($bookId, fn($q) => $q->where('book_id', $bookId))
+            ->when($status, fn($q) => $q->where('status', $status))
+            ->when($id, fn($q) => $q->where('id', $id))
+            ->when($userId, fn($q) => $q->where('userId', $userId))
             ->get();
     }
 
-    // public function findByUser(int $userId, ?ReservationStatus $status = null, ?int $bookId = null): Collection
-    // {
-    //     return Reservation::where('reserved_by', $userId)
-    //         ->when($status, fn($q) => $q->where('status', $status->value))
-    //         ->when($bookId, fn($q) => $q->where('book_id', $bookId))
-    //         ->get();
-    // }
+    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
+    {
+        $user = $data['user'] ?? '';
+        $userId = $data['userId'] ?? '';
+        $id = $data['id'] ?? '';
+        $bookId = $data['bookId'] ?? '';
+        $status = isset($data['status']) ? ReservationStatus::from($data['status']) : null;
 
-    // public function findByBookIdAndUserId(int $bookId, int $userId): ?Reservation
-    // {
-    //     return Reservation::where('book_id', $bookId)::where('reserved_by', $userId);
-    // }
+        $result = Reservation::with(['book', 'reservedBy'])
+            ->when($id, fn($q) => $q->where('id', $id))
+            ->when($user, function ($query) use ($user) {
+                $query->whereHas('reservedBy', function ($q) use ($user) {
+                    $q->where('email', 'like', "%{$user}%");
+                });
+            })
+            ->when($status, fn($q) => $q->where('status', $status->value))
+            ->when($bookId, fn($q) => $q->where('book_id', $bookId))
+            ->when($userId, fn($q) => $q->where('reserved_by', $userId))
+            ->latest();
+
+        return $result->paginate($perPage)->withQueryString();
+    }
 
     public function create(array $data): Reservation
     {
@@ -76,5 +67,10 @@ class ReservationRepository implements ReservationRepositoryInterface
     {
         $reservation->update($data);
         return $reservation;
+    }
+
+    public function delete(Reservation $reservation): bool
+    {
+        return $reservation->delete();
     }
 }
