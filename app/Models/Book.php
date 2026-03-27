@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\BookStatus;
 use App\Enums\ReservationStatus;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,6 +65,10 @@ class Book extends Model
             $query->where('status', ReservationStatus::RESERVED->value)
                 ->orWhere('status', ReservationStatus::ISSUED->value);
         });
+    }
 
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'follows');
     }
 }

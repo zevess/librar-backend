@@ -10,12 +10,14 @@ use App\Http\Resources\Publisher\PublisherResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class BookResource extends BaseResource
 {
 
     public function toArray(Request $request): array
     {
+        $userId = Auth::guard('sanctum')->id();
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -26,7 +28,8 @@ class BookResource extends BaseResource
             'publisher' => new PublisherResource($this->publisher),
             'category' => new CategoryResource($this->category),
             'genres' => new GenreCollection($this->genres),
-            'isAvailable' => $this->activeReservations->isEmpty()
+            'isAvailable' => $this->activeReservations->isEmpty(),
+            'isFollowed' => $this->followers->where('pivot.user_id', $userId)->isNotEmpty()
         ];
     }
 }

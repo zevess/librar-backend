@@ -9,7 +9,7 @@ use App\Http\Resources\Book\BookCollection;
 use App\Http\Resources\Book\BookResource;
 use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -31,10 +31,9 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
-    public function showBySlugAndId(string $slug, int $id): BookResource
+    public function showBySlugAndId(string $slug, int $id)
     {
         $book = $this->bookService->getBySlugAndId($slug, $id);
-
         return new BookResource($book);
     }
 

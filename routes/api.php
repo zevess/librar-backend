@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PublisherController;
@@ -36,13 +37,21 @@ Route::prefix('books')->group(function () {
         Route::post('/{id}/restore', [BookController::class, 'restore']);
     });
 
-
     Route::get('/', [BookController::class, 'index']);
     Route::get('/{slug}-{id}', [BookController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [BookController::class, 'show']);
     Route::get('/{id}/reviews', [ReviewController::class, 'showByBook']);
-    Route::post('/{id}/reviews', [ReviewController::class, 'store'])->middleware('auth:sanctum');
-    Route::post('/{bookId}/reserve', [ReservationController::class, 'reserve'])->middleware('auth:sanctum');
+    Route::get('/{id}/followers', [FollowController::class, 'showByBook']);
+
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/{id}/reviews', [ReviewController::class, 'store']);
+        Route::post('/{bookId}/reserve', [ReservationController::class, 'reserve']);
+        Route::post('/{bookId}/follow', [FollowController::class, 'store']);
+        Route::delete('/{bookId}/unfollow', [FollowController::class, 'destroy']);
+        Route::get('/{bookId}/is-followed', [FollowController::class, 'isFollowed']);
+
+    });
 
 });
 
@@ -119,6 +128,11 @@ Route::prefix('reviews')->group(function () {
     Route::get('/', [ReviewController::class, 'index']);
     Route::get('/{id}', [ReviewController::class, 'show']);
 });
+
+Route::prefix('follows')->middleware('auth:sanctum')->group(function () {
+    Route::get('/{userId}', [FollowController::class, 'showByUser']);
+});
+
 
 Route::post('/upload-image', [ImageController::class, 'store']);
 

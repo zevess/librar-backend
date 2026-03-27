@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Services\Interfaces\AuthServiceInterface;
 use Illuminate\Http\JsonResponse;
@@ -44,11 +45,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me(Request $request): JsonResponse
+    public function me(Request $request): JsonResponse|UserResource
     {
-        return response()->json([
-            'user' => $request->user(),
-        ]);
+        return new UserResource($request->user());
     }
 
     public function forgotPassword(Request $request): JsonResponse

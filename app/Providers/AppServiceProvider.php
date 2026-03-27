@@ -6,11 +6,13 @@ use App\Repositories\AuthorRepository;
 use App\Repositories\AuthRepository;
 use App\Repositories\BookRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\FollowRepository;
 use App\Repositories\GenreRepository;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\AuthRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Interfaces\FollowRepositoryInterface;
 use App\Repositories\Interfaces\GenreRepositoryInterface;
 use App\Repositories\Interfaces\PublisherRepositoryInterface;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
@@ -24,11 +26,13 @@ use App\Services\AuthorService;
 use App\Services\AuthService;
 use App\Services\BookService;
 use App\Services\CategoryService;
+use App\Services\FollowService;
 use App\Services\GenreService;
 use App\Services\Interfaces\AuthorServiceInterface;
 use App\Services\Interfaces\AuthServiceInterface;
 use App\Services\Interfaces\BookServiceInterface;
 use App\Services\Interfaces\CategoryServiceInterface;
+use App\Services\Interfaces\FollowServiceInterface;
 use App\Services\Interfaces\GenreServiceInterface;
 use App\Services\Interfaces\PublisherServiceInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
@@ -52,10 +56,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(AuthorRepositoryInterface::class, AuthorRepository::class);
         $this->app->bind(AuthorServiceInterface::class, AuthorService::class);
-    
+
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(UserServiceInterface::class, UserService::class);
-    
+
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
 
@@ -73,6 +77,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(ReviewServiceInterface::class, ReviewService::class);
         $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
+
+        $this->app->bind(FollowServiceInterface::class, FollowService::class);
+        $this->app->bind(FollowRepositoryInterface::class, FollowRepository::class);
     }
 
     /**

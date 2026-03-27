@@ -6,7 +6,10 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use App\Notifications\PasswordReset;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -44,4 +47,10 @@ class User extends Authenticatable
     {
         $this->notify(PasswordReset::create($token));
     }
+
+    public function follows(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class, 'follows');
+    }
+
 }

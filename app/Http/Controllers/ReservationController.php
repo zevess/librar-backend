@@ -36,7 +36,7 @@ class ReservationController extends Controller
     public function showByUser(int $userId)
     {
         $data['userId'] = $userId;
-        $reservations = $this->reservationService->getPaginated($data, 2);
+        $reservations = $this->reservationService->getPaginated($data);
         return new ReservationCollection($reservations);
     }
 
