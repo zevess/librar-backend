@@ -48,9 +48,9 @@ class User extends Authenticatable
         $this->notify(PasswordReset::create($token));
     }
 
-    public function follows(): BelongsToMany
+    public function subscriptions(): BelongsToMany
     {
-        return $this->belongsToMany(Book::class, 'follows');
+        return $this->belongsToMany(Book::class, 'subscriptions');
     }
 
 }

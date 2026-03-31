@@ -17,10 +17,12 @@ use App\Repositories\Interfaces\GenreRepositoryInterface;
 use App\Repositories\Interfaces\PublisherRepositoryInterface;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
 use App\Repositories\Interfaces\ReviewRepositoryInterface;
+use App\Repositories\Interfaces\SubscriptionRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\PublisherRepository;
 use App\Repositories\ReservationRepository;
 use App\Repositories\ReviewRepository;
+use App\Repositories\SubscriptionRepository;
 use App\Repositories\UserRepository;
 use App\Services\AuthorService;
 use App\Services\AuthService;
@@ -37,10 +39,12 @@ use App\Services\Interfaces\GenreServiceInterface;
 use App\Services\Interfaces\PublisherServiceInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
 use App\Services\Interfaces\ReviewServiceInterface;
+use App\Services\Interfaces\SubscriptionServiceInterface;
 use App\Services\Interfaces\UserServiceInterface;
 use App\Services\PublisherService;
 use App\Services\ReservationService;
 use App\Services\ReviewService;
+use App\Services\SubscriptionService;
 use App\Services\UserService;
 use Illuminate\Support\ServiceProvider;
 
@@ -80,6 +84,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(FollowServiceInterface::class, FollowService::class);
         $this->app->bind(FollowRepositoryInterface::class, FollowRepository::class);
+
+        $this->app->bind(SubscriptionServiceInterface::class, SubscriptionService::class);
+        $this->app->bind(SubscriptionRepositoryInterface::class, SubscriptionRepository::class);
     }
 
     /**

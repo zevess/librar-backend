@@ -17,9 +17,10 @@ class UserResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'name'=> $this->name,
+            'name' => $this->name,
             'email' => $this->email,
-            'role' => $this->role
+            'role' => $this->role,
+            'notifications' => $this->unreadNotifications()->count()
         ];
     }
 }

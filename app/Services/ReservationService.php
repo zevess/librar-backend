@@ -5,8 +5,11 @@ namespace App\Services;
 use App\Enums\ReservationStatus;
 use App\Exceptions\ApiException;
 use App\Models\Reservation;
+use App\Models\User;
+use App\Notifications\SubscriptionNotification;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
+use App\Repositories\Interfaces\SubscriptionRepositoryInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -19,7 +22,8 @@ class ReservationService implements ReservationServiceInterface
 
     public function __construct(
         private ReservationRepositoryInterface $reservationRepository,
-        private BookRepositoryInterface $bookRepository
+        private BookRepositoryInterface $bookRepository,
+        private SubscriptionRepositoryInterface $subscriptionRepository
     ) {
     }
 
@@ -153,6 +157,16 @@ class ReservationService implements ReservationServiceInterface
 
         $data['status'] = ReservationStatus::COMPLETED->value;
         $data['accepted_at'] = now();
+        $notifiableUsers = $this->subscriptionRepository->findByBook($issuedBook->book->id)->pluck('user');
+        foreach ($notifiableUsers as $user) {
+            User::find($user->id)->notify(new SubscriptionNotification($issuedBook->book));
+        }
+
+        // $updatedBook = $this->reservationRepository->update($issuedBook, $data);
+        // $data['notifiableUsers'] = $notifiableUsers;
+        // $data['updatedBook'] = $updatedBook;
+        // return $data;
+        // return [$notifiableUsers, $updatedBook];
 
         return $this->reservationRepository->update($issuedBook, $data);
     }

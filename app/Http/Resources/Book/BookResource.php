@@ -29,7 +29,7 @@ class BookResource extends BaseResource
             'category' => new CategoryResource($this->category),
             'genres' => new GenreCollection($this->genres),
             'isAvailable' => $this->activeReservations->isEmpty(),
-            'isFollowed' => $this->followers->where('pivot.user_id', $userId)->isNotEmpty()
+            'isSubscribed' => $this->subscribers->where('pivot.user_id', $userId)->isNotEmpty()
         ];
     }
 }

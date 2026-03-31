@@ -8,9 +8,11 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -25,6 +27,8 @@ Route::prefix('auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('notifications', [NotificationController::class, 'showByUser']);
+        Route::put('notifications/read', [NotificationController::class, 'readNotifications']);
     });
 });
 
@@ -41,16 +45,14 @@ Route::prefix('books')->group(function () {
     Route::get('/{slug}-{id}', [BookController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [BookController::class, 'show']);
     Route::get('/{id}/reviews', [ReviewController::class, 'showByBook']);
-    Route::get('/{id}/followers', [FollowController::class, 'showByBook']);
+    Route::get('/{id}/subscribers', [SubscriptionController::class, 'showByBook']);
 
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{id}/reviews', [ReviewController::class, 'store']);
         Route::post('/{bookId}/reserve', [ReservationController::class, 'reserve']);
-        Route::post('/{bookId}/follow', [FollowController::class, 'store']);
-        Route::delete('/{bookId}/unfollow', [FollowController::class, 'destroy']);
-        Route::get('/{bookId}/is-followed', [FollowController::class, 'isFollowed']);
-
+        Route::post('/{bookId}/subscribe', [SubscriptionController::class, 'store']);
+        Route::delete('/{bookId}/unsubscribe', [SubscriptionController::class, 'destroy']);
     });
 
 });
@@ -129,8 +131,8 @@ Route::prefix('reviews')->group(function () {
     Route::get('/{id}', [ReviewController::class, 'show']);
 });
 
-Route::prefix('follows')->middleware('auth:sanctum')->group(function () {
-    Route::get('/{userId}', [FollowController::class, 'showByUser']);
+Route::prefix('subscriptions')->middleware('auth:sanctum')->group(function () {
+    Route::get('/{userId}', [SubscriptionController::class, 'showByUser']);
 });
 
 

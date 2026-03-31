@@ -67,8 +67,8 @@ class Book extends Model
         });
     }
 
-    public function followers(): BelongsToMany
+    public function subscribers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'follows');
+        return $this->belongsToMany(User::class, 'subscriptions');
     }
 }

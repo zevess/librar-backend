@@ -77,8 +77,6 @@ class ReservationController extends Controller
     public function accept(int $id): ReservationResource|JsonResponse
     {
         $reservation = $this->reservationService->accept($id);
-        $reservation->load('book');
-
         return response()->json([
             "message" => "Книга принята",
             "reservation" => new ReservationResource($reservation)
