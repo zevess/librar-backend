@@ -82,9 +82,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ReviewServiceInterface::class, ReviewService::class);
         $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
 
-        $this->app->bind(FollowServiceInterface::class, FollowService::class);
-        $this->app->bind(FollowRepositoryInterface::class, FollowRepository::class);
-
         $this->app->bind(SubscriptionServiceInterface::class, SubscriptionService::class);
         $this->app->bind(SubscriptionRepositoryInterface::class, SubscriptionRepository::class);
     }

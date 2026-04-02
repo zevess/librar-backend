@@ -42,10 +42,9 @@ class PasswordReset extends Notification
     {
         return (new MailMessage)
             ->subject('Сброс пароля ' . config('app.name'))
-            ->greeting('Сброс пароля')
-            ->line('Для сброса пароля перейдите по ссылке ниже:')
-            ->action('Сбросить пароль', $this->resetUrl($notifiable))
-            ->salutation('С уважением, ' . config('app.name'));
+            ->view('emails.password-reset', [
+                'resetUrl' => $this->resetUrl($notifiable)
+            ]);
     }
 
     protected function resetUrl(object $notifiable)

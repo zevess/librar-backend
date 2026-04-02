@@ -8,6 +8,8 @@ use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Services\Interfaces\AuthServiceInterface;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -48,6 +50,45 @@ class AuthController extends Controller
     public function me(Request $request): JsonResponse|UserResource
     {
         return new UserResource($request->user());
+    }
+
+    public function sendVerification(Request $request): JsonResponse
+    {
+        $request->user()->sendEmailVerificationNotification();
+        return response()->json([
+            'success' => true,
+            'message' => "Письмо с подтверждением почты успешно отправлено"
+        ], 201);
+    }
+
+    public function verifyEmail(Request $request, $id, $hash)
+    {
+        $user = User::findOrFail($id);
+        if (!hash_equals($hash, sha1($user->getEmailForVerification()))) {
+            return response()->json([
+                'success' => false,
+                'message' => "Неверная ссылка подтверждения"
+            ], 400);
+        }
+
+        if (!$request->hasValidSignature()) {
+            return response()->json([
+                'success' => false,
+                'message' => "Устаревшая или невалидная ссылка"
+            ], 400);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                'success' => false,
+                'message' => "Аккаунт уже подтвержден"
+            ], 400);
+        }
+        $user->markEmailAsVerified();
+        return response()->json([
+            'success' => true,
+            'message' => "Аккаунт подтвержден"
+        ]);
     }
 
     public function forgotPassword(Request $request): JsonResponse

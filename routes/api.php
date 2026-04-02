@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\FollowController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\NotificationController;
@@ -29,6 +28,11 @@ Route::prefix('auth')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('notifications', [NotificationController::class, 'showByUser']);
         Route::put('notifications/read', [NotificationController::class, 'readNotifications']);
+    });
+
+    Route::prefix('email')->group(function () {
+        Route::post('send-verification', [AuthController::class, 'sendVerification'])->middleware('auth:sanctum');
+        Route::get('verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
     });
 });
 

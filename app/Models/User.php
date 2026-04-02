@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Enums\UserRole;
+use App\Notifications\EmailVerify;
 use App\Notifications\PasswordReset;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -46,6 +45,11 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(PasswordReset::create($token));
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new EmailVerify());
     }
 
     public function subscriptions(): BelongsToMany

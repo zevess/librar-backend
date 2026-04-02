@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Сброс пароля </title>
+    <title>Подтверждение почты </title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #e7fefc; font-family: Helvetica, Arial, sans-serif;">
 
@@ -28,7 +28,7 @@
                                 <tr>
                                     <td align="left" style="font-size: 16px; line-height: 24px; color: #333333; padding-bottom: 20px;">
                                         <p style="margin: 0 0 10px 0;">Здравствуйте!</p>
-                                        <p style="margin: 0;">Для сброса пароля нажмите на кнопку:</p>
+                                        <p style="margin: 0;">Для подтверждения пароля нажмите на кнопку:</p>
                                     </td>
                                 </tr>
                             </table>
@@ -39,8 +39,8 @@
                                         <table border="0" cellspacing="0" cellpadding="0">
                                             <tr>
                                                 <td align="center" style="border-radius: 6px;" bgcolor="#d1ebe9">
-                                                    <a href="{{ $resetUrl }}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #333333; text-decoration: none; border-radius: 6px; padding: 12px 24px; border: 1px solid #d1ebe9; display: inline-block; font-weight: 600;">
-                                                        Сбросить
+                                                    <a href="{{ $verifyUrl }}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #333333; text-decoration: none; border-radius: 6px; padding: 12px 24px; border: 1px solid #d1ebe9; display: inline-block; font-weight: 600;">
+                                                        Подтвердить
                                                     </a>
                                                 </td>
                                             </tr>
@@ -52,8 +52,8 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 30px; border-top: 1px solid #e4e4e7; padding-top: 20px;">
                                 <tr>
                                     <td align="center" style="font-size: 12px; line-height: 18px; color: #a1a1aa;">
-                                        Если у вас проблемы при клике на кнопку "Сбросить", скопируйте и вставьте ссылку ниже в ваш браузер:<br>
-                                        <a href="{{ $resetUrl }}" style="color: #a1a1aa; text-decoration: underline;">{{ $resetUrl }}</a>
+                                        Если у вас проблемы при клике на кнопку "Подтвердить", скопируйте и вставьте ссылку ниже в ваш браузер:<br>
+                                        <a href="{{ $verifyUrl }}" style="color: #a1a1aa; text-decoration: underline;">{{ $verifyUrl }}</a>
                                     </td>
                                 </tr>
                             </table>

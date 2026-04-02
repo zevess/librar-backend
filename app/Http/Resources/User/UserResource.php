@@ -20,7 +20,8 @@ class UserResource extends BaseResource
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role,
-            'notifications' => $this->unreadNotifications()->count()
+            'notifications' => $this->unreadNotifications()->count(),
+            'isVerified' => $this->hasVerifiedEmail()
         ];
     }
 }
