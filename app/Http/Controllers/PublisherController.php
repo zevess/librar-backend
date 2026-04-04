@@ -41,6 +41,13 @@ class PublisherController extends Controller
 
     }
 
+    public function getByQuery(Request $request)
+    {
+        $query = $request->input('q');
+        $publishers = $this->publisherService->getByQuery($query);
+        return new PublisherCollection($publishers);
+    }
+
     public function store(StorePublisherRequest $request): PublisherResource
     {
         $publisher = $this->publisherService->create($request->validated());

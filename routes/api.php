@@ -17,22 +17,22 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function () {
 
     Route::middleware('guest')->group(function () {
-        Route::post('register', [AuthController::class, 'register']);
-        Route::post('login', [AuthController::class, 'login']);
-        Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
-        Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+        Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('me', [AuthController::class, 'me']);
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::get('notifications', [NotificationController::class, 'showByUser']);
-        Route::put('notifications/read', [NotificationController::class, 'readNotifications']);
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/notifications', [NotificationController::class, 'showByUser']);
+        Route::put('/notifications/read', [NotificationController::class, 'readNotifications']);
     });
 
     Route::prefix('email')->group(function () {
-        Route::post('send-verification', [AuthController::class, 'sendVerification'])->middleware('auth:sanctum');
-        Route::get('verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
+        Route::post('/send-verification', [AuthController::class, 'sendVerification'])->middleware('auth:sanctum');
+        Route::get('/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
     });
 });
 
@@ -94,6 +94,7 @@ Route::prefix('reservations')->group(function () {
 
 Route::prefix('publishers')->group(function () {
     Route::get('/', [PublisherController::class, 'index']);
+    Route::get('/query', [PublisherController::class, 'getByQuery']);
     Route::get('/get', [PublisherController::class, 'getAll']);
     Route::get('/{slug}-{id}', [PublisherController::class, 'showBySlug'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [PublisherController::class, 'show']);
@@ -108,6 +109,7 @@ Route::prefix('publishers')->group(function () {
 
 Route::prefix('categories')->group(function () {
     Route::get('/', [CategoryController::class, 'index']);
+    Route::get('/query', [CategoryController::class, 'getByQuery']);
     Route::get('/{id}', [CategoryController::class, 'show']);
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
@@ -119,6 +121,7 @@ Route::prefix('categories')->group(function () {
 
 Route::prefix('authors')->group(function () {
     Route::get('/', [AuthorController::class, 'index']);
+    Route::get('/query', [AuthorController::class, 'getByQuery']);
     Route::get('/{slug}-{id}', [AuthorController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [AuthorController::class, 'show']);
 

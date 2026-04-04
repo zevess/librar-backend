@@ -32,6 +32,11 @@ class AuthorRepository implements AuthorRepositoryInterface
         return $result->paginate($perPage)->withQueryString();
     }
 
+    public function getBySlug(?string $slug): Collection
+    {
+        return Author::query()->where('slug', 'like', "%{$slug}%")->take(10)->get();
+    }
+
     public function create(array $data): Author
     {
         return Author::create($data);

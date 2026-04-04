@@ -31,6 +31,17 @@ class AuthorService implements AuthorServiceInterface
         return $this->authorRepository->getPaginated($data, $perPage);
     }
 
+    public function getByQuery(?string $query): Collection
+    {
+        $slug = Str::slug($query);
+
+        $authors = $this->authorRepository->getBySlug($slug);
+        if (!$authors) {
+            throw new ApiException("Авторы не найдены");
+        }
+        return $authors;
+    }
+
     public function getById(int $id): ?Author
     {
         $author = $this->authorRepository->find($id);

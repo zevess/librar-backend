@@ -28,6 +28,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         return Category::where('slug', $slug)->first();
     }
 
+    public function getBySlug(?string $slug): Collection
+    {
+        return Category::query()->where('slug', 'like', "%{$slug}%")->take(10)->get();
+    }
+
     public function update(Category $category, array $data): Category
     {
         $category->update($data);

@@ -16,6 +16,8 @@ interface AuthorRepositoryInterface
 
     public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
 
+    public function getBySlug(?string $slug): Collection;
+
     public function create(array $data): Author;
 
     public function update(Author $author, array $data): Author;

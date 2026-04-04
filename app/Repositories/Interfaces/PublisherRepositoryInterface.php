@@ -20,6 +20,8 @@ interface PublisherRepositoryInterface
 
     public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
 
+    public function getBySlug(?string $slug): Collection;
+
     public function update(Publisher $publisher, array $data): Publisher;
 
     public function delete(Publisher $publisher): bool;

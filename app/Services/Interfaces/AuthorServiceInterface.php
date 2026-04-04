@@ -15,6 +15,7 @@ interface AuthorServiceInterface
     public function getBySlugAndId(string $slug, int $id): ?Author;
 
     public function getPaginated(?array $data): LengthAwarePaginator;
+    public function getByQuery(?string $query): Collection;
 
     public function create(array $data): Author;
 

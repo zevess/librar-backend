@@ -33,6 +33,13 @@ class CategoryController extends Controller
         return new CategoryResource($category);
     }
 
+    public function getByQuery(Request $request)
+    {
+        $query = $request->input('q');
+        $categories = $this->categoryService->getByQuery($query);
+        return new CategoryCollection($categories);
+    }
+
     public function store(StoreCategoryRequest $request): CategoryResource
     {
         $category = $this->categoryService->create($request->validated());

@@ -20,6 +20,8 @@ interface PublisherServiceInterface
 
     public function getPaginated(?array $data): LengthAwarePaginator;
 
+    public function getByQuery(?string $query): Collection;
+
     public function update(int $id, array $data): Publisher;
 
     public function delete(int $id): bool;

@@ -15,6 +15,8 @@ interface CategoryServiceInterface
 
     public function getBySlug(string $slug): Category;
 
+    public function getByQuery(?string $query): Collection;
+
     public function update(int $id, array $data): Category;
 
     public function delete(int $id): bool;

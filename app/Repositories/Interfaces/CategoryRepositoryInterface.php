@@ -15,6 +15,8 @@ interface CategoryRepositoryInterface
 
     public function findBySlug(string $slug): ?Category;
 
+    public function getBySlug(?string $slug): Collection;
+
     public function update(Category $category, array $data): Category;
 
     public function delete(Category $category): bool;

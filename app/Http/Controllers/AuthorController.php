@@ -45,6 +45,12 @@ class AuthorController extends Controller
         return new AuthorResource($author);
     }
 
+    public function getByQuery(Request $request)
+    {
+        $query = $request->input('q');
+        $authors = $this->authorService->getByQuery($query);
+        return new AuthorCollection($authors);
+    }
 
     public function update(UpdateAuthorRequest $request, int $id): AuthorResource|JsonResponse
     {

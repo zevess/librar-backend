@@ -16,8 +16,8 @@ class CategoryService implements CategoryServiceInterface
      */
     public function __construct(
         private CategoryRepositoryInterface $categoryRepository
-    )
-    {}
+    ) {
+    }
 
     public function getAll(): Collection
     {
@@ -27,7 +27,7 @@ class CategoryService implements CategoryServiceInterface
     public function getById(int $id): Category
     {
         $category = $this->categoryRepository->find($id);
-        if(!$category){
+        if (!$category) {
             throw new ApiException('Категория не найдена');
         }
         return $category;
@@ -36,20 +36,31 @@ class CategoryService implements CategoryServiceInterface
     public function getBySlug(string $slug): Category
     {
         $category = $this->categoryRepository->findBySlug($slug);
-        if(!$category){
+        if (!$category) {
             throw new ApiException('Категория не найдена');
         }
         return $category;
     }
 
+    public function getByQuery(?string $query): Collection
+    {
+        $slug = Str::slug($query);
+
+        $categories = $this->categoryRepository->getBySlug($slug);
+        if (!$categories) {
+            throw new ApiException("Категории не найдены");
+        }
+        return $categories;
+    }
+
     public function create(array $data): Category
     {
-        
+
         $slug = Str::slug($data['name']);
         $data['slug'] = $slug;
-        
+
         $category = $this->categoryRepository->findBySlug($slug);
-        if($category){
+        if ($category) {
             throw new ApiException('Категория уже существует');
         }
 
@@ -59,7 +70,7 @@ class CategoryService implements CategoryServiceInterface
     public function update(int $id, array $data): Category
     {
         $category = $this->categoryRepository->find($id);
-        if(!$category){
+        if (!$category) {
             throw new ApiException('Категория не найдена');
         }
 
@@ -72,7 +83,7 @@ class CategoryService implements CategoryServiceInterface
     public function delete(int $id): bool
     {
         $category = $this->categoryRepository->find($id);
-        if(!$category){
+        if (!$category) {
             throw new ApiException('Категория не найдена');
         }
 
