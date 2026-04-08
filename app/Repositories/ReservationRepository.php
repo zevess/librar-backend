@@ -37,7 +37,7 @@ class ReservationRepository implements ReservationRepositoryInterface
 
     public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
     {
-        $user = $data['user'] ?? '';
+        $user = $data['email'] ?? '';
         $userId = $data['userId'] ?? '';
         $id = $data['id'] ?? '';
         $bookId = $data['bookId'] ?? '';

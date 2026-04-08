@@ -8,7 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface UserRepositoryInterface
 {
-    public function getPaginated(int $perPage): LengthAwarePaginator;
+    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
 
     public function find(int $id): ?User;
 

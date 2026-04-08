@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Reservation;
+namespace App\Http\Requests\User;
 
-use App\Enums\ReservationStatus;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
-class ReservationRequest extends FormRequest
+class GetUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +22,13 @@ class ReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bookId' => ['sometimes'],
-            'email' => ['sometimes'],
-            'userId' => ['sometimes'],
+            'q' => ['sometimes'],
             'id' => ['sometimes'],
-            'status' => ['sometimes'],
+            'role' => ['sometimes'],
+            'email' => ['sometimes'],
             'perPage' => ['sometimes'],
+            'sort' => ['sometimes'],
+            'order' => ['sometimes']
         ];
     }
 }

@@ -23,7 +23,6 @@ class SubscriptionController extends Controller
     public function showByBook(int $bookId)
     {
         $bookFollowers = $this->subscriptionService->getBookSubscribers($bookId);
-        // return $bookFollowers;
         return new UserCollection($bookFollowers);
     }
 

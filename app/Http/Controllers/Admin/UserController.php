@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\GetUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -17,9 +19,10 @@ class UserController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(GetUserRequest $request)
     {
-        return $this->userService->getPaginated(25);
+        $users = $this->userService->getPaginated($request->validated());
+        return new UserCollection($users);
     }
 
     public function store(StoreUserRequest $request)
@@ -36,9 +39,9 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, int $id)
     {
-        $user = $this->userService->getById($id);
         $user = $this->userService->update($id, $request->validated());
-        return new UserResource($user);
+        return $user;
+        // return new UserResource($user);
     }
 
     public function updateRole(Request $request, int $id)

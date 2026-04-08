@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Interfaces\UserServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Gate;
 
 class UserService implements UserServiceInterface
 {
@@ -19,9 +20,10 @@ class UserService implements UserServiceInterface
     ) {
     }
 
-    public function getPaginated(int $perPage): LengthAwarePaginator
+    public function getPaginated(?array $data): LengthAwarePaginator
     {
-        return $this->userRepository->getPaginated($perPage);
+        $perPage = $data['perPage'] ?? 10;
+        return $this->userRepository->getPaginated($data, $perPage);
     }
 
     public function getById(int $id): ?User
@@ -55,12 +57,20 @@ class UserService implements UserServiceInterface
         return $this->userRepository->updateRole($id, $role);
     }
 
-    public function update(int $id, array $data): ?User
+    public function update(int $id, array $data)
     {
         $user = $this->userRepository->find($id);
-
         if (!$user) {
             throw new ApiException("Пользователь не найден");
+        }
+
+        $isSameUser = auth()->id() === $user->id;
+        $isEditorAdmin = auth()->user()->role->value === UserRole::ADMIN->value;
+        // Gate::authorize('update', $user);
+        $isRoleChanging = $data['role'] !== $user->role->value;
+
+        if ($isSameUser && $isEditorAdmin && $isRoleChanging) {
+            throw new ApiException('Свою роль изменить нельзя');
         }
 
         return $this->userRepository->update($user, $data);
@@ -77,6 +87,11 @@ class UserService implements UserServiceInterface
 
         if (!$user) {
             throw new ApiException("Пользователь не найден");
+        }
+        $isSameUser = auth()->id() === $user->id;
+        $isEditorAdmin = auth()->user()->role->value === UserRole::ADMIN->value;
+        if ($isSameUser && $isEditorAdmin) {
+            throw new ApiException('Себя удалить нельзя');
         }
 
         return $this->userRepository->delete($user);

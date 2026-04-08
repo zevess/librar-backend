@@ -27,6 +27,10 @@ class BookRepository implements BookRepositoryInterface
         $category = $data['category'] ?? '';
         $publishers = $data['publishers'];
         $bookId = $data['bookId'] ?? '';
+        $sortColumn = $data['sort'] ?? '';
+        $sortOrder = $data['order'] ?? 'desc';
+        $allowed = ['created_at', 'title'];
+        $column = in_array($sortColumn, $allowed) ? $sortColumn : 'created_at';
 
         $result = Book::with(['author', 'genres', 'publisher', 'category', 'activeReservations', 'subscribers'])
 
@@ -51,7 +55,8 @@ class BookRepository implements BookRepositoryInterface
             })
             ->when($bookId, function ($query) use ($bookId) {
                 $query->where('id', $bookId);
-            });
+            })
+            ->orderBy($column, $sortOrder);
 
         return $result->paginate($perPage)->withQueryString();
     }

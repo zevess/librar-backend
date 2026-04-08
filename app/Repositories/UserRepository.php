@@ -9,15 +9,28 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class UserRepository implements UserRepositoryInterface
 {
-    
-    public function getPaginated(int $perPage): LengthAwarePaginator
+
+    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
     {
-        return User::latest()->paginate($perPage);
+        $userId = $data['id'] ?? '';
+        $search = $data['q'] ?? '';
+        $email = $data['email'] ?? '';
+        $role = $data['role'] ?? '';
+        $result = User::when($userId, function ($query) use ($userId) {
+            $query->where('id', $userId);
+        })->when($search, function ($query) use ($search) {
+            $query->where('name', $search);
+        })->when($email, function ($query) use ($email) {
+            $query->where('email', $email);
+        })->when($role, function ($query) use ($role) {
+            $query->where('role', $role);
+        })->orderBy('role');
+        return $result->paginate($perPage)->withQueryString();
     }
 
     public function find(int $id): ?User
     {
-        return User::find($id);
+        return User::findOrFail($id);
     }
 
     public function findByEmail(string $email): ?User

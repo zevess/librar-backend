@@ -162,12 +162,6 @@ class ReservationService implements ReservationServiceInterface
             User::find($user->id)->notify(new SubscriptionNotification($issuedBook->book));
         }
 
-        // $updatedBook = $this->reservationRepository->update($issuedBook, $data);
-        // $data['notifiableUsers'] = $notifiableUsers;
-        // $data['updatedBook'] = $updatedBook;
-        // return $data;
-        // return [$notifiableUsers, $updatedBook];
-
         return $this->reservationRepository->update($issuedBook, $data);
     }
 
