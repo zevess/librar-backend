@@ -19,7 +19,7 @@ class AuthService implements AuthServiceInterface
     public function register(array $data)
     {
         $user = User::query()
-            ->where('email', $data['email'])
+            ->where('email', $data['email'])->withTrashed()
             ->first();
 
         if ($user) {

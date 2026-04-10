@@ -40,8 +40,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, int $id)
     {
         $user = $this->userService->update($id, $request->validated());
-        return $user;
-        // return new UserResource($user);
+        return new UserResource($user);
     }
 
     public function updateRole(Request $request, int $id)

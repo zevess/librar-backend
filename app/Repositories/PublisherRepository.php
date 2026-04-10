@@ -38,7 +38,7 @@ class PublisherRepository implements PublisherRepositoryInterface
     {
         $search = $data['q'] ?? '';
         $id = $data['id'] ?? '';
-        $result = Publisher::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"));
+        $result = Publisher::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed();
         return $result->paginate($perPage)->withQueryString();
     }
 

@@ -39,7 +39,7 @@ class ReservationPolicy
      */
     public function update(User $user, Reservation $reservation): bool
     {
-        return $user->id === $reservation->reserved_by || $user->role === (UserRole::ADMIN || UserRole::LIBRARIAN);
+        return $user->id === $reservation->reserved_by || $user->role->value === (UserRole::ADMIN->value) || $user->role->value === (UserRole::LIBRARIAN->value);
     }
 
     /**

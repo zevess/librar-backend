@@ -21,7 +21,8 @@ class UserCollection extends ResourceCollection
                     'name' => $user->name,
                     'email' => $user->email,
                     'role' => $user->role,
-                    'isVerified' => (bool) $user->email_verified_at
+                    'isVerified' => (bool) $user->email_verified_at,
+                    'isDeleted' => (bool) $user->deleted_at
                 ];
             })
         ];

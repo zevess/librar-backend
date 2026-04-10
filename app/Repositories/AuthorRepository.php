@@ -28,7 +28,7 @@ class AuthorRepository implements AuthorRepositoryInterface
     {
         $search = $data['q'] ?? '';
         $id = $data['id'] ?? '';
-        $result = Author::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"));
+        $result = Author::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed();
         return $result->paginate($perPage)->withQueryString();
     }
 

@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class AuthorCollection extends ResourceCollection
 {
-   
+
     public function toArray(Request $request): array
     {
         return [
@@ -17,6 +17,7 @@ class AuthorCollection extends ResourceCollection
                     'name' => $author->name,
                     'slug' => $author->slug,
                     'description' => $author->description,
+                    'isDeleted' => (bool) $author->deleted_at
                 ];
             })
         ];

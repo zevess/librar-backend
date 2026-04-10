@@ -24,7 +24,7 @@ class UserRepository implements UserRepositoryInterface
             $query->where('email', $email);
         })->when($role, function ($query) use ($role) {
             $query->where('role', $role);
-        })->orderBy('role');
+        })->withTrashed()->orderBy('role');
         return $result->paginate($perPage)->withQueryString();
     }
 

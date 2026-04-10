@@ -21,6 +21,7 @@ class PublisherCollection extends ResourceCollection
                     'name' => $publisher->name,
                     'slug' => $publisher->slug,
                     'description' => $publisher->description,
+                    'isDeleted' => (bool) $publisher->deleted_at
                 ];
             })
         ];

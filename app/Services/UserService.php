@@ -66,7 +66,6 @@ class UserService implements UserServiceInterface
 
         $isSameUser = auth()->id() === $user->id;
         $isEditorAdmin = auth()->user()->role->value === UserRole::ADMIN->value;
-        // Gate::authorize('update', $user);
         $isRoleChanging = $data['role'] !== $user->role->value;
 
         if ($isSameUser && $isEditorAdmin && $isRoleChanging) {
