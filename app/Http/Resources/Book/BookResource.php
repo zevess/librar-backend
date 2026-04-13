@@ -28,8 +28,9 @@ class BookResource extends BaseResource
             'publisher' => new PublisherResource($this->publisher),
             'category' => new CategoryResource($this->category),
             'genres' => new GenreCollection($this->genres),
+            'isDeleted' => (bool) $this->deleted_at,
             'isAvailable' => $this->activeReservations->isEmpty(),
-            'isSubscribed' => $this->subscribers->where('pivot.user_id', $userId)->isNotEmpty()
+            'isSubscribed' => $this->subscribers->where('pivot.user_id', $userId)->isNotEmpty(),
         ];
     }
 }

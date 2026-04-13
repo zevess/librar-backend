@@ -18,7 +18,7 @@ interface PublisherRepositoryInterface
 
     public function findBySlugAndId(string $slug, int $id): ?Publisher;
 
-    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
+    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator;
 
     public function getBySlug(?string $slug): Collection;
 

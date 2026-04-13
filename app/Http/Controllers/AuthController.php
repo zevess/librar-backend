@@ -28,7 +28,7 @@ class AuthController extends Controller
 
         $user = $this->authService->register($request->validated());
 
-        $token = $user->createToken('api_token', [], now()->addDay())->plainTextToken;
+        $token = $user->createToken('api_token', ["*"], now()->addDay())->plainTextToken;
 
         return response()->json([
             'user' => $user,
@@ -39,7 +39,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         $user = $this->authService->login($request->validated());
-        $token = $user->createToken('api_token', [], now()->addDay())->plainTextToken;
+        $token = $user->createToken('api_token', ["*"], now()->addDay())->plainTextToken;
 
         return response()->json([
             'user' => $user,

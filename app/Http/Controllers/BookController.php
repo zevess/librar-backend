@@ -24,6 +24,12 @@ class BookController extends Controller
         return new BookCollection($books);
     }
 
+    public function adminPaginated(GetBookRequest $request): BookCollection
+    {
+        $books = $this->bookService->getPaginated($request->validated(), true);
+        return new BookCollection($books);
+    }
+
     public function show(int $id): BookResource
     {
         $book = $this->bookService->getById($id);

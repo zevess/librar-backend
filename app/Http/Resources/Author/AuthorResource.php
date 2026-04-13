@@ -18,9 +18,10 @@ class AuthorResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'name'=> $this->name,
-            'slug'=> $this->slug,
+            'name' => $this->name,
+            'slug' => $this->slug,
             'description' => $this->description,
+            'isDeleted' => (bool) $this->deleted_at,
             'books' => new BookCollection($this->whenLoaded('books')),
         ];
     }

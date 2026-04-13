@@ -19,9 +19,8 @@ class BookRepository implements BookRepositoryInterface
         return Book::with(['activeReservations', 'author', 'category', 'genres', 'publisher'])->find($id);
     }
 
-    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
+    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator
     {
-
         $search = $data['q'] ?? '';
         $genres = $data['genres'];
         $category = $data['category'] ?? '';
@@ -30,9 +29,10 @@ class BookRepository implements BookRepositoryInterface
         $sortColumn = $data['sort'] ?? '';
         $sortOrder = $data['order'] ?? 'desc';
         $allowed = ['created_at', 'title'];
+        $status = $data['status'] ?? '';
         $column = in_array($sortColumn, $allowed) ? $sortColumn : 'created_at';
 
-        $result = Book::with(['author', 'genres', 'publisher', 'category', 'activeReservations', 'subscribers'])
+        $result = Book::with(['author', 'genres', 'publisher', 'category', 'activeReservations', 'subscribers', 'reservation'])
 
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
@@ -56,6 +56,17 @@ class BookRepository implements BookRepositoryInterface
             ->when($bookId, function ($query) use ($bookId) {
                 $query->where('id', $bookId);
             })
+            ->when($status === 'reserved', fn($q) => $q->whereHas(
+                'reservation',
+                fn($q) =>
+                $q->whereIn('status', ['reserved', 'issued'])
+            ))
+            ->when($status === 'available', fn($q) => $q->whereDoesntHave(
+                'reservation',
+                fn($q) =>
+                $q->whereIn('status', ['reserved', 'issued'])
+            ))
+            ->withTrashed($includeTrashed)
             ->orderBy($column, $sortOrder);
 
         return $result->paginate($perPage)->withQueryString();

@@ -30,9 +30,10 @@ class GetBookRequest extends FormRequest
             'publishers' => ['sometimes', 'array'],
             'isAvailable' => ['sometimes', 'boolean'],
             'bookId' => ['sometimes'],
+            'status' => ['sometimes'],
             'perPage' => ['sometimes'],
             'sort' => ['sometimes'],
-            'order' => ['sometimes']
+            'order' => ['sometimes'],
         ];
     }
 }

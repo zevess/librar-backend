@@ -23,12 +23,11 @@ class AuthorService implements AuthorServiceInterface
         return $this->authorRepository->all();
     }
 
-    public function getPaginated(?array $data): LengthAwarePaginator
+    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator
     {
         $data['q'] = Str::slug($data['q'] ?? '');
         $perPage = $data['perPage'] ?? 10;
-
-        return $this->authorRepository->getPaginated($data, $perPage);
+        return $this->authorRepository->getPaginated($data, $perPage, $includeTrashed);
     }
 
     public function getByQuery(?string $query): Collection

@@ -145,8 +145,13 @@ Route::prefix('subscriptions')->middleware('auth:sanctum')->group(function () {
 
 Route::post('/upload-image', [ImageController::class, 'store']);
 
-Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::prefix('users')->group(function () {
+Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
+    Route::get('authors', [AuthorController::class, 'adminPaginated']);
+    Route::get('books', [BookController::class, 'adminPaginated']);
+    Route::get('publishers', [PublisherController::class, 'adminPaginated']);
+
+
+    Route::prefix('users')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
         Route::get('/', [UserController::class, 'index']);
         Route::post('/', [UserController::class, 'store']);
 

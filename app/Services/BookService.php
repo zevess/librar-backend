@@ -29,14 +29,14 @@ class BookService implements BookServiceInterface
         return $this->bookRepository->all();
     }
 
-    public function getPaginated(?array $data): LengthAwarePaginator
+    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator
     {
         $data['q'] = Str::slug($data['q'] ?? '');
         $data['genres'] = array_map('intval', $data['genres'] ?? []);
         $data['publishers'] = array_map('intval', $data['publishers'] ?? []);
         $perPage = $data['perPage'] ?? 10;
 
-        return $this->bookRepository->getPaginated($data, $perPage);
+        return $this->bookRepository->getPaginated($data, $perPage, $includeTrashed);
     }
 
     public function getById(int $id): ?Book

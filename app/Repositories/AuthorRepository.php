@@ -24,11 +24,11 @@ class AuthorRepository implements AuthorRepositoryInterface
         return Author::with('books')->where('id', $id)->where('slug', $slug)->first();
     }
 
-    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
+    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator
     {
         $search = $data['q'] ?? '';
         $id = $data['id'] ?? '';
-        $result = Author::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed();
+        $result = Author::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed($includeTrashed);
         return $result->paginate($perPage)->withQueryString();
     }
 

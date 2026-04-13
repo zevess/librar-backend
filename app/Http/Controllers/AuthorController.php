@@ -25,6 +25,12 @@ class AuthorController extends Controller
         return new AuthorCollection($authors);
     }
 
+    public function adminPaginated(GetAuthorRequest $request): AuthorCollection
+    {
+        $authors = $this->authorService->getPaginated($request->validated(), true);
+        return new AuthorCollection($authors);
+    }
+
     public function store(StoreAuthorRequest $request): AuthorResource
     {
         $data = $request->validated();

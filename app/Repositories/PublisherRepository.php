@@ -34,11 +34,11 @@ class PublisherRepository implements PublisherRepositoryInterface
         return Publisher::with('books')->where('slug', $slug)->where('id', $id)->first();
     }
 
-    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator
+    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator
     {
         $search = $data['q'] ?? '';
         $id = $data['id'] ?? '';
-        $result = Publisher::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed();
+        $result = Publisher::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed($includeTrashed);
         return $result->paginate($perPage)->withQueryString();
     }
 

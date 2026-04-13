@@ -21,7 +21,8 @@ class UserResource extends BaseResource
             'email' => $this->email,
             'role' => $this->role,
             'notifications' => $this->unreadNotifications()->count(),
-            'isVerified' => $this->hasVerifiedEmail()
+            'isVerified' => $this->hasVerifiedEmail(),
+            'isDeleted' => (bool) $this->deleted_at
         ];
     }
 }

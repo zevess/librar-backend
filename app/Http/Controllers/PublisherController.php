@@ -22,6 +22,12 @@ class PublisherController extends Controller
         return new PublisherCollection($publishers);
     }
 
+    public function adminPaginated(GetPublisherRequest $request)
+    {
+        $publishers = $this->publisherService->getPaginated($request->validated(), true);
+        return new PublisherCollection($publishers);
+    }
+
     public function getAll()
     {
         $publishers = $this->publisherService->getAll();

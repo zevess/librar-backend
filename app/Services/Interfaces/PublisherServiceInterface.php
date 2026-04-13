@@ -18,7 +18,7 @@ interface PublisherServiceInterface
 
     public function getBySlugAndId(string $slug, int $id): Publisher;
 
-    public function getPaginated(?array $data): LengthAwarePaginator;
+    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator;
 
     public function getByQuery(?string $query): Collection;
 
