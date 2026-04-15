@@ -72,6 +72,11 @@ class BookRepository implements BookRepositoryInterface
         return $result->paginate($perPage)->withQueryString();
     }
 
+    public function getBySlug(?string $slug): Collection
+    {
+        return Book::query()->where('slug', 'like', "%{$slug}%")->take(5)->get();
+    }
+
     public function findBySlugAndId(string $slug, int $id): ?Book
     {
         return Book::where('slug', $slug)->where('id', $id)->first();

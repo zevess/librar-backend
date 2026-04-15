@@ -45,6 +45,7 @@ Route::prefix('books')->group(function () {
         Route::post('/{id}/restore', [BookController::class, 'restore']);
     });
 
+    Route::get('/query', [BookController::class, 'getByQuery']);
     Route::get('/', [BookController::class, 'index']);
     Route::get('/{slug}-{id}', [BookController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [BookController::class, 'show']);
@@ -143,12 +144,12 @@ Route::prefix('subscriptions')->middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::post('/upload-image', [ImageController::class, 'store']);
+Route::post('/upload-image', [ImageController::class, 'store'])->middleware(['auth:sanctum', 'role:admin,librarian']);
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
-    Route::get('authors', [AuthorController::class, 'adminPaginated']);
-    Route::get('books', [BookController::class, 'adminPaginated']);
-    Route::get('publishers', [PublisherController::class, 'adminPaginated']);
+    Route::get('/authors', [AuthorController::class, 'adminPaginated']);
+    Route::get('/books', [BookController::class, 'adminPaginated']);
+    Route::get('/publishers', [PublisherController::class, 'adminPaginated']);
 
 
     Route::prefix('users')->middleware(['auth:sanctum', 'role:admin'])->group(function () {

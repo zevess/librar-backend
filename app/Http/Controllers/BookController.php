@@ -9,6 +9,7 @@ use App\Http\Resources\Book\BookCollection;
 use App\Http\Resources\Book\BookResource;
 use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
@@ -27,6 +28,13 @@ class BookController extends Controller
     public function adminPaginated(GetBookRequest $request): BookCollection
     {
         $books = $this->bookService->getPaginated($request->validated(), true);
+        return new BookCollection($books);
+    }
+
+    public function getByQuery(Request $request)
+    {
+        $query = $request->input('q');
+        $books = $this->bookService->getByQuery($query);
         return new BookCollection($books);
     }
 

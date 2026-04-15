@@ -12,6 +12,8 @@ interface BookServiceInterface
 
     public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator;
 
+    public function getByQuery(?string $query): Collection;
+
     public function getById(int $id): ?Book;
 
     public function getBySlugAndId(string $slug, int $id): ?Book;

@@ -39,6 +39,17 @@ class BookService implements BookServiceInterface
         return $this->bookRepository->getPaginated($data, $perPage, $includeTrashed);
     }
 
+    public function getByQuery(?string $query): Collection
+    {
+        $slug = Str::slug($query);
+
+        $books = $this->bookRepository->getBySlug($slug);
+        if (!$books) {
+            throw new ApiException("Книги не найдены");
+        }
+        return $books;
+    }
+
     public function getById(int $id): ?Book
     {
         $book = $this->bookRepository->find($id);

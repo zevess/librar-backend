@@ -26,19 +26,21 @@ class SubscriptionNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
     }
 
     /**
      * Get the mail representation of the notification.
      */
-    // public function toMail(object $notifiable): MailMessage
-    // {
-    //     return (new MailMessage)
-    //         ->line('The introduction to the notification.')
-    //         ->action('Notification Action', url('/'))
-    //         ->line('Thank you for using our application!');
-    // }
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('Книга снова доступна ' . config('app.name'))
+            ->view('emails.subscription-notification', [
+                'bookTitle' => $this->book->title,
+                'bookUrl' => $this->bookUrl($notifiable)
+            ]);
+    }
 
     public function toDatabase(object $notifiable): array
     {
@@ -49,6 +51,12 @@ class SubscriptionNotification extends Notification
             'title' => $this->book->title,
             'image' => $this->book->image
         ];
+    }
+
+    public function bookUrl(object $notifiable)
+    {
+        $frontendUrl = env('VITE_APP_URL');
+        return url($frontendUrl . '/book/' . $this->book->slug . '-' . $this->book->id);
     }
 
     /**
