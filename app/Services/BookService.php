@@ -86,15 +86,17 @@ class BookService implements BookServiceInterface
     {
         $slug = Str::slug($data['title']);
         $data['slug'] = $slug;
+        $authorId = $data['author_id'];
 
         $existingCategory = $this->categoryRepository->find($data['category_id']);
         if (!$existingCategory) {
             throw new ApiException('Категория не найдена');
         }
-
-        $existingAuthor = $this->authorRepository->find($data['author_id']);
-        if (!$existingAuthor) {
-            throw new ApiException('Автор не найден');
+        if ($authorId) {
+            $existingAuthor = $this->authorRepository->find($authorId);
+            if (!$existingAuthor) {
+                throw new ApiException('Автор не найден');
+            }
         }
 
         $existingPublisher = $this->publisherRepository->find($data['publisher_id']);
@@ -107,6 +109,8 @@ class BookService implements BookServiceInterface
 
     public function update(int $id, array $data): ?Book
     {
+        $authorId = $data['author_id'];
+
         $book = $this->bookRepository->find($id);
         if (!$book) {
             throw new ApiException("Книга не найдена");
@@ -121,9 +125,11 @@ class BookService implements BookServiceInterface
         if (!$existingPublisher) {
             throw new ApiException('Издатель не найден');
         }
-        $existingAuthor = $this->authorRepository->find($data['author_id']);
-        if (!$existingAuthor) {
-            throw new ApiException('Автор не найден');
+        if ($authorId) {
+            $existingAuthor = $this->authorRepository->find($authorId);
+            if (!$existingAuthor) {
+                throw new ApiException('Автор не найден');
+            }
         }
 
 

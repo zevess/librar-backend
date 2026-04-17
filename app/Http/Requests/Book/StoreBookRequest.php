@@ -25,9 +25,9 @@ class StoreBookRequest extends FormRequest
             'title' => ['required', 'min:1'],
             'slug' => 'nullable',
             'description' => ['required', 'min:10'],
-            'image' => 'nullable',
-            // 'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
-            'author_id' => ['required', 'numeric'],
+            // 'image' => 'nullable',
+            'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
+            'author_id' => ['sometimes', 'nullable', 'numeric'],
             'publisher_id' => ['required', 'numeric'],
             'category_id' => ['required', 'numeric']
         ];
@@ -42,12 +42,5 @@ class StoreBookRequest extends FormRequest
             'publisher_id.required' => 'Пожайлуста укажите id издательства',
             'category_id.required' => 'Пожайлуста укажите id категории',
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'is_published' => $this->boolean('is_published'),
-        ]);
     }
 }
