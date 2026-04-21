@@ -6,6 +6,7 @@ use App\Exceptions\ApiException;
 use App\Models\Category;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Services\Interfaces\CategoryServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
@@ -22,6 +23,13 @@ class CategoryService implements CategoryServiceInterface
     public function getAll(): Collection
     {
         return $this->categoryRepository->all();
+    }
+
+    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator
+    {
+        $data['q'] = Str::slug($data['q'] ?? '');
+        $perPage = $data['perPage'] ?? 10;
+        return $this->categoryRepository->getPaginated($data, $perPage, $includeTrashed);
     }
 
     public function getById(int $id): Category
@@ -88,5 +96,15 @@ class CategoryService implements CategoryServiceInterface
         }
 
         return $this->categoryRepository->delete($category);
+    }
+
+    public function restore(int $id): bool
+    {
+        $category = Category::withTrashed()->find($id);
+        if (!$category) {
+            throw new ApiException("Удаленная категория не найдена");
+        }
+
+        return $this->categoryRepository->restore($category);
     }
 }

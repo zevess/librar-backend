@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Category;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class CategoryRepository implements CategoryRepositoryInterface
@@ -28,6 +29,14 @@ class CategoryRepository implements CategoryRepositoryInterface
         return Category::where('slug', $slug)->first();
     }
 
+    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator
+    {
+        $search = $data['q'] ?? '';
+        $id = $data['id'] ?? '';
+        $result = Category::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed($includeTrashed);
+        return $result->paginate($perPage)->withQueryString();
+    }
+
     public function getBySlug(?string $slug): Collection
     {
         return Category::query()->where('slug', 'like', "%{$slug}%")->take(10)->get();
@@ -42,5 +51,10 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function delete(Category $category): bool
     {
         return $category->delete();
+    }
+
+    public function restore(Category $category): bool
+    {
+        return $category->restore();
     }
 }

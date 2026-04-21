@@ -25,7 +25,7 @@ class BookRepository implements BookRepositoryInterface
         $genres = $data['genres'];
         $category = $data['category'] ?? '';
         $publishers = $data['publishers'];
-        $bookId = $data['bookId'] ?? '';
+        $id = $data['id'] ?? '';
         $sortColumn = $data['sort'] ?? '';
         $sortOrder = $data['order'] ?? 'desc';
         $allowed = ['created_at', 'title'];
@@ -53,8 +53,8 @@ class BookRepository implements BookRepositoryInterface
             ->when($category, function ($query) use ($category) {
                 $query->where('category_id', $category);
             })
-            ->when($bookId, function ($query) use ($bookId) {
-                $query->where('id', $bookId);
+            ->when($id, function ($query) use ($id) {
+                $query->where('id', $id);
             })
             ->when($status === 'reserved', fn($q) => $q->whereHas(
                 'reservation',
@@ -74,7 +74,14 @@ class BookRepository implements BookRepositoryInterface
 
     public function getBySlug(?string $slug): Collection
     {
-        return Book::query()->where('slug', 'like', "%{$slug}%")->take(5)->get();
+        return Book::query()->when($slug !== '', function ($query) use ($slug) {
+            $query->where(function ($q) use ($slug) {
+                $q->where('slug', 'like', "%{$slug}%")
+                    ->orWhereHas('author', function ($author) use ($slug) {
+                        $author->where('slug', 'like', "%{$slug}%");
+                    });
+            });
+        })->take(5)->get();
     }
 
     public function findBySlugAndId(string $slug, int $id): ?Book

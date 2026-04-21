@@ -3,6 +3,7 @@
 namespace App\Repositories\Interfaces;
 
 use App\Models\Category;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface CategoryRepositoryInterface
@@ -15,9 +16,14 @@ interface CategoryRepositoryInterface
 
     public function findBySlug(string $slug): ?Category;
 
+    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator;
+
     public function getBySlug(?string $slug): Collection;
 
     public function update(Category $category, array $data): Category;
 
     public function delete(Category $category): bool;
+
+    public function restore(Category $category): bool;
+
 }

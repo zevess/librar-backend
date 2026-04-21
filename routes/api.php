@@ -62,35 +62,18 @@ Route::prefix('books')->group(function () {
 
 });
 
-Route::prefix('genres')->group(function () {
+Route::prefix('authors')->group(function () {
+    Route::get('/', [AuthorController::class, 'index']);
+    Route::get('/query', [AuthorController::class, 'getByQuery']);
+    Route::get('/{slug}-{id}', [AuthorController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
+    Route::get('/{id}', [AuthorController::class, 'show']);
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
-        Route::post('/', [GenreController::class, 'store']);
-        Route::put('/{id}', [GenreController::class, 'update']);
-        Route::post('/attach/{bookId}', [GenreController::class, 'attach']);
-        Route::delete('/detach/{bookId}', [GenreController::class, 'detach']);
-        Route::delete('/{id}', [GenreController::class, 'destroy']);
+        Route::post('/', [AuthorController::class, 'store']);
+        Route::put('/{id}', [AuthorController::class, 'update']);
+        Route::delete('/{id}', [AuthorController::class, 'destroy']);
+        Route::post('/{id}/restore', [AuthorController::class, 'restore']);
     });
-
-    Route::get('/', [GenreController::class, 'index']);
-    Route::get('/{id}', [GenreController::class, 'show']);
-});
-
-Route::prefix('reservations')->group(function () {
-
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/{id}', [ReservationController::class, 'show']);
-        Route::get('/user/{userId}', [ReservationController::class, 'showByUser']);
-        Route::post('/{id}/cancel', [ReservationController::class, 'cancel']);
-    });
-
-    Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
-        Route::get('/', [ReservationController::class, 'index']);
-        Route::post('/{id}/issue', [ReservationController::class, 'issue']);
-        Route::post('/{id}/accept', [ReservationController::class, 'accept']);
-        Route::put('/cancel-expired', [ReservationController::class, 'cancelExpired']);
-    });
-
 });
 
 Route::prefix('publishers')->group(function () {
@@ -117,20 +100,37 @@ Route::prefix('categories')->group(function () {
         Route::post('/', [CategoryController::class, 'store']);
         Route::put('/{id}', [CategoryController::class, 'update']);
         Route::delete('/{id}', [CategoryController::class, 'destroy']);
+        Route::post('/{id}/restore', [CategoryController::class, 'restore']);
     });
 });
 
-Route::prefix('authors')->group(function () {
-    Route::get('/', [AuthorController::class, 'index']);
-    Route::get('/query', [AuthorController::class, 'getByQuery']);
-    Route::get('/{slug}-{id}', [AuthorController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
-    Route::get('/{id}', [AuthorController::class, 'show']);
+Route::prefix('genres')->group(function () {
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
-        Route::post('/', [AuthorController::class, 'store']);
-        Route::put('/{id}', [AuthorController::class, 'update']);
-        Route::delete('/{id}', [AuthorController::class, 'destroy']);
-        Route::post('/{id}/restore', [AuthorController::class, 'restore']);
+        Route::post('/', [GenreController::class, 'store']);
+        Route::put('/{id}', [GenreController::class, 'update']);
+        Route::post('/attach/{bookId}', [GenreController::class, 'attach']);
+        Route::delete('/detach/{bookId}', [GenreController::class, 'detach']);
+        Route::delete('/{id}', [GenreController::class, 'destroy']);
+        Route::post('/{id}/restore', [GenreController::class, 'restore']);
+    });
+
+    Route::get('/', [GenreController::class, 'index']);
+    Route::get('/{id}', [GenreController::class, 'show']);
+});
+
+Route::prefix('reservations')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/{id}', [ReservationController::class, 'show']);
+        Route::get('/user/{userId}', [ReservationController::class, 'showByUser']);
+        Route::post('/{id}/cancel', [ReservationController::class, 'cancel']);
+    });
+
+    Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
+        Route::get('/', [ReservationController::class, 'index']);
+        Route::post('/{id}/issue', [ReservationController::class, 'issue']);
+        Route::post('/{id}/accept', [ReservationController::class, 'accept']);
+        Route::put('/cancel-expired', [ReservationController::class, 'cancelExpired']);
     });
 });
 
@@ -150,6 +150,8 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin,librarian'])->gr
     Route::get('/authors', [AuthorController::class, 'adminPaginated']);
     Route::get('/books', [BookController::class, 'adminPaginated']);
     Route::get('/publishers', [PublisherController::class, 'adminPaginated']);
+    Route::get('/genres', [GenreController::class, 'adminPaginated']);
+    Route::get('/categories', [CategoryController::class, 'adminPaginated']);
 
 
     Route::prefix('users')->middleware(['auth:sanctum', 'role:admin'])->group(function () {

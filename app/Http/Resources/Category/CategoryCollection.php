@@ -20,7 +20,8 @@ class CategoryCollection extends ResourceCollection
                     'id' => $category->id,
                     'name' => $category->name,
                     'slug' => $category->slug,
-                    // 'description' => $category->description,
+                    'description' => $category->description,
+                    'isDeleted' => (bool) $category->deleted_at,
                 ];
             })
         ];

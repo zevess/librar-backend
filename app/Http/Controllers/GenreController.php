@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Book\AttachBookGenresRequest;
+use App\Http\Requests\Genre\GetGenreRequest;
 use App\Http\Resources\Genre\GenreCollection;
 use App\Http\Resources\Genre\GenreResource;
 use App\Services\Interfaces\GenreServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class GenreController extends Controller
@@ -19,6 +21,12 @@ class GenreController extends Controller
     {
         $query = $request->input('q');
         $genres = $this->genreService->getByQuery($query);
+        return new GenreCollection($genres);
+    }
+
+    public function adminPaginated(GetGenreRequest $request): GenreCollection
+    {
+        $genres = $this->genreService->getPaginated($request->validated(), true);
         return new GenreCollection($genres);
     }
 
@@ -71,5 +79,15 @@ class GenreController extends Controller
             "message" => "Удалено"
         ], 200);
     }
+    public function restore(int $id): GenreResource|JsonResponse
+    {
+        $restored = $this->genreService->restore($id);
+        if (!$restored) {
+            return response()->json(["message" => "Ошибка при восстановлении"], 404);
+        }
 
+        return response()->json([
+            "message" => "Восстановлено"
+        ]);
+    }
 }

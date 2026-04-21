@@ -20,6 +20,7 @@ class CategoryResource extends BaseResource
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
+            'isDeleted' => (bool) $this->deleted_at,
         ];
     }
 }

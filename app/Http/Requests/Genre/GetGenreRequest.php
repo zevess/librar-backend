@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Book;
+namespace App\Http\Requests\Genre;
 
-use App\Enums\BookStatus;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
-class GetBookRequest extends FormRequest
+class GetGenreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,15 +23,8 @@ class GetBookRequest extends FormRequest
     {
         return [
             'q' => ['sometimes'],
-            'genres' => ['sometimes', 'array'],
-            'category' => ['sometimes', 'numeric'],
-            'publishers' => ['sometimes', 'array'],
-            'isAvailable' => ['sometimes', 'boolean'],
             'id' => ['sometimes'],
-            'status' => ['sometimes'],
-            'perPage' => ['sometimes'],
-            'sort' => ['sometimes'],
-            'order' => ['sometimes'],
+            'perPage' => ['sometimes']
         ];
     }
 }

@@ -18,7 +18,9 @@ class GenreResource extends BaseResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'slug' => $this->slug
+            'slug' => $this->slug,
+            'isDeleted' => (bool) $this->deleted_at,
+
         ];
     }
 }

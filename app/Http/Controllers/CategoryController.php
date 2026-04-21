@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Category\GetCategoryRequest;
 use App\Http\Requests\Category\StoreCategoryRequest;
 use App\Http\Resources\Category\CategoryCollection;
 use App\Http\Resources\Category\CategoryResource;
 use App\Services\Interfaces\CategoryServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -33,6 +35,12 @@ class CategoryController extends Controller
         return new CategoryResource($category);
     }
 
+    public function adminPaginated(GetCategoryRequest $request): CategoryCollection
+    {
+        $categories = $this->categoryService->getPaginated($request->validated(), true);
+        return new CategoryCollection($categories);
+    }
+
     public function getByQuery(Request $request)
     {
         $query = $request->input('q');
@@ -57,6 +65,18 @@ class CategoryController extends Controller
         $this->categoryService->delete($id);
         return response()->json([
             "message" => "Удалено"
+        ]);
+    }
+
+    public function restore(int $id): CategoryResource|JsonResponse
+    {
+        $restored = $this->categoryService->restore($id);
+        if (!$restored) {
+            return response()->json(["message" => "Ошибка при восстановлении"], 404);
+        }
+
+        return response()->json([
+            "message" => "Восстановлено"
         ]);
     }
 }

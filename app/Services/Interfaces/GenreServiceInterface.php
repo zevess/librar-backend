@@ -3,6 +3,7 @@
 namespace App\Services\Interfaces;
 
 use App\Models\Genre;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface GenreServiceInterface
@@ -10,6 +11,7 @@ interface GenreServiceInterface
     public function getAll(): Collection;
 
     public function getById(int $id): Genre;
+    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator;
 
     public function getByQuery(?string $query): Collection;
 
@@ -22,4 +24,7 @@ interface GenreServiceInterface
     public function detachFromBook(int $bookId, array $genres): bool;
 
     public function delete(int $id): bool;
+
+    public function restore(int $id): bool;
+
 }

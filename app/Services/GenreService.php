@@ -7,6 +7,7 @@ use App\Models\Genre;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\GenreRepositoryInterface;
 use App\Services\Interfaces\GenreServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
@@ -24,6 +25,13 @@ class GenreService implements GenreServiceInterface
     public function getAll(): Collection
     {
         return $this->genreRepository->all();
+    }
+
+    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator
+    {
+        $data['q'] = Str::slug($data['q'] ?? '');
+        $perPage = $data['perPage'] ?? 20;
+        return $this->genreRepository->getPaginated($data, $perPage, $includeTrashed);
     }
 
     public function getById(int $id): Genre
@@ -128,6 +136,16 @@ class GenreService implements GenreServiceInterface
             throw new ApiException("Жанр не найден");
         }
         return $this->genreRepository->delete($genre);
+    }
+
+    public function restore(int $id): bool
+    {
+        $genre = Genre::withTrashed()->find($id);
+        if (!$genre) {
+            throw new ApiException("Удаленный жанр не найден");
+        }
+
+        return $this->genreRepository->restore($genre);
     }
 
 }

@@ -15,12 +15,12 @@ class GenreCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->transform(function ($category) {
+            'data' => $this->collection->transform(function ($genre) {
                 return [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'slug' => $category->slug,
-                    // 'description' => $category->description,
+                    'id' => $genre->id,
+                    'name' => $genre->name,
+                    'slug' => $genre->slug,
+                    'isDeleted' => (bool) $genre->deleted_at,
                 ];
             })
         ];
