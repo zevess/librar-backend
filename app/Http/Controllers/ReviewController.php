@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Review\GetReviewRequest;
 use App\Http\Requests\Review\StoreReviewRequest;
 use App\Http\Resources\Review\ReviewCollection;
 use App\Http\Resources\Review\ReviewResource;
@@ -19,6 +20,12 @@ class ReviewController extends Controller
     {
         $reviews = $this->reviewService->getAll();
         return $reviews;
+    }
+
+    public function adminPaginated(GetReviewRequest $request): ReviewCollection
+    {
+        $reviews = $this->reviewService->getPaginated($request->validated(), true);
+        return new ReviewCollection($reviews);
     }
 
     public function show(int $id)
@@ -43,7 +50,12 @@ class ReviewController extends Controller
             'average' => $average,
             'hasUserReviewed' => $hasUserReviewed
         ]);
+    }
 
+    public function showByUser(int $userId)
+    {
+        $reviews = $this->reviewService->getByUser($userId);
+        return new ReviewCollection($reviews);
     }
 
     public function store(int $bookId, StoreReviewRequest $request)
@@ -52,11 +64,29 @@ class ReviewController extends Controller
         return $review;
     }
 
+    public function update(int $id, StoreReviewRequest $request): ReviewResource
+    {
+        $review = $this->reviewService->update($id, $request->validated());
+        return new ReviewResource($review);
+    }
+
     public function destroy(int $id)
     {
         $this->reviewService->delete($id);
         return response()->json([
             "message" => "Удалено"
+        ]);
+    }
+
+    public function restore(int $id)
+    {
+        $restored = $this->reviewService->restore($id);
+        if (!$restored) {
+            return response()->json(["message" => "Ошибка при восстановлении"], 404);
+        }
+
+        return response()->json([
+            "message" => "Восстановлено"
         ]);
     }
 }

@@ -32,6 +32,12 @@ class CategoryService implements CategoryServiceInterface
         return $this->categoryRepository->getPaginated($data, $perPage, $includeTrashed);
     }
 
+    public function getAdminFiltered(?array $data): Collection
+    {
+        $data['q'] = Str::slug($data['q'] ?? '');
+        return $this->categoryRepository->getAdminFiltered($data);
+    }
+
     public function getById(int $id): Category
     {
         $category = $this->categoryRepository->find($id);

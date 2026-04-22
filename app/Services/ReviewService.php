@@ -6,7 +6,10 @@ use App\Exceptions\ApiException;
 use App\Models\Review;
 use App\Repositories\Interfaces\ReviewRepositoryInterface;
 use App\Services\Interfaces\ReviewServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class ReviewService implements ReviewServiceInterface
 {
@@ -41,6 +44,12 @@ class ReviewService implements ReviewServiceInterface
         return $this->reviewRepository->findByUser($userId);
     }
 
+    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator
+    {
+        $perPage = $data['perPage'] ?? 10;
+        return $this->reviewRepository->getPaginated($data, $perPage, $includeTrashed);
+    }
+
     public function create(int $userId, int $bookId, array $data): Review
     {
         $existingReview = $this->reviewRepository->findByBookAndUser($bookId, $userId);
@@ -60,6 +69,9 @@ class ReviewService implements ReviewServiceInterface
         if (!$review) {
             throw new ApiException('Отзыв не найден');
         }
+
+        Gate::authorize('update', $review);
+
         return $this->reviewRepository->update($review, $data);
     }
 
@@ -70,5 +82,15 @@ class ReviewService implements ReviewServiceInterface
             throw new ApiException('Отзыв не найден');
         }
         return $this->reviewRepository->delete($review);
+    }
+
+    public function restore(int $id): bool
+    {
+        $review = Review::withTrashed()->find($id);
+        if (!$review) {
+            throw new ApiException("Удаленный отзыв не найден");
+        }
+
+        return $this->reviewRepository->restore($review);
     }
 }

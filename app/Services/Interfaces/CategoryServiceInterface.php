@@ -14,6 +14,8 @@ interface CategoryServiceInterface
 
     public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator;
 
+    public function getAdminFiltered(?array $data): Collection;
+
     public function getById(int $id): Category;
 
     public function getBySlug(string $slug): Category;

@@ -16,6 +16,8 @@ interface GenreRepositoryInterface
 
     public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator;
 
+    public function getAdminFiltered(?array $data): Collection;
+
     public function getBySlug(?string $slug): Collection;
 
     public function findBySlug(string $slug): ?Genre;

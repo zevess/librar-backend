@@ -30,6 +30,12 @@ class GenreController extends Controller
         return new GenreCollection($genres);
     }
 
+    public function adminFiltered(GetGenreRequest $request): GenreCollection
+    {
+        $genres = $this->genreService->getAdminFiltered($request->validated());
+        return new GenreCollection($genres);
+    }
+
     public function show($id): GenreResource
     {
         $genre = $this->genreService->getById($id);

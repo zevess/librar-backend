@@ -34,6 +34,12 @@ class GenreService implements GenreServiceInterface
         return $this->genreRepository->getPaginated($data, $perPage, $includeTrashed);
     }
 
+    public function getAdminFiltered(?array $data): Collection
+    {
+        $data['q'] = Str::slug($data['q'] ?? '');
+        return $this->genreRepository->getAdminFiltered($data);
+    }
+
     public function getById(int $id): Genre
     {
         $genre = $this->genreRepository->find($id);
@@ -46,7 +52,6 @@ class GenreService implements GenreServiceInterface
     public function getByQuery(?string $query): Collection
     {
         $slug = Str::slug($query);
-
         $genres = $this->genreRepository->getBySlug($slug);
         if (!$genres) {
             throw new ApiException("Жанры не найдены");

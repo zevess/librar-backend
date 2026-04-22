@@ -41,6 +41,12 @@ class CategoryController extends Controller
         return new CategoryCollection($categories);
     }
 
+    public function adminFiltered(GetCategoryRequest $request): CategoryCollection
+    {
+        $categories = $this->categoryService->getAdminFiltered($request->validated());
+        return new CategoryCollection($categories);
+    }
+
     public function getByQuery(Request $request)
     {
         $query = $request->input('q');

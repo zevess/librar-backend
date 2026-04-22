@@ -37,6 +37,14 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $result->paginate($perPage)->withQueryString();
     }
 
+    public function getAdminFiltered(?array $data): Collection
+    {
+        $search = $data['q'] ?? '';
+        $id = $data['id'] ?? '';
+        $result = Category::query()->when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed()->get();
+        return $result;
+    }
+
     public function getBySlug(?string $slug): Collection
     {
         return Category::query()->where('slug', 'like', "%{$slug}%")->take(10)->get();

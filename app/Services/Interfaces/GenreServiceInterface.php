@@ -11,7 +11,10 @@ interface GenreServiceInterface
     public function getAll(): Collection;
 
     public function getById(int $id): Genre;
+
     public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator;
+
+    public function getAdminFiltered(?array $data): Collection;
 
     public function getByQuery(?string $query): Collection;
 

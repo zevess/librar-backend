@@ -137,6 +137,12 @@ Route::prefix('reservations')->group(function () {
 Route::prefix('reviews')->group(function () {
     Route::get('/', [ReviewController::class, 'index']);
     Route::get('/{id}', [ReviewController::class, 'show']);
+    Route::get('/user/{userId}', [ReviewController::class, 'showByUser']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::put('/{id}', [ReviewController::class, 'update']);
+        Route::delete('/{id}', [ReviewController::class, 'destroy']);
+        Route::post('/{id}/restore', [ReviewController::class, 'restore']);
+    });
 });
 
 Route::prefix('subscriptions')->middleware('auth:sanctum')->group(function () {
@@ -150,8 +156,9 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin,librarian'])->gr
     Route::get('/authors', [AuthorController::class, 'adminPaginated']);
     Route::get('/books', [BookController::class, 'adminPaginated']);
     Route::get('/publishers', [PublisherController::class, 'adminPaginated']);
-    Route::get('/genres', [GenreController::class, 'adminPaginated']);
-    Route::get('/categories', [CategoryController::class, 'adminPaginated']);
+    Route::get('/genres', [GenreController::class, 'adminFiltered']);
+    Route::get('/categories', [CategoryController::class, 'adminFiltered']);
+    Route::get('/reviews', [ReviewController::class, 'adminPaginated']);
 
 
     Route::prefix('users')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
