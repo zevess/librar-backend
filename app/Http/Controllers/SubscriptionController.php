@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Book\BookCollection;
+use App\Http\Resources\Book\BookSummaryCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Services\Interfaces\SubscriptionServiceInterface;
 use Illuminate\Http\Request;
@@ -16,8 +17,8 @@ class SubscriptionController extends Controller
 
     public function showByUser(int $userId)
     {
-        $userFollows = $this->subscriptionService->getUserSubscriptions($userId);
-        return new BookCollection($userFollows);
+        $userSubscriptions = $this->subscriptionService->getUserSubscriptions($userId);
+        return new BookSummaryCollection($userSubscriptions);
     }
 
     public function showByBook(int $bookId)

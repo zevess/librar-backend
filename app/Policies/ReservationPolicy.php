@@ -14,7 +14,7 @@ class ReservationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->role === (UserRole::ADMIN || UserRole::LIBRARIAN);
+        return $user->role->value === (UserRole::ADMIN->value || UserRole::LIBRARIAN->value);
     }
 
     /**
@@ -22,8 +22,8 @@ class ReservationPolicy
      */
     public function view(User $user, Reservation $reservation): bool
     {
-        return false;
-        // return $user->id === $reservation->reserved_by || $user->role === (UserRole::ADMIN || UserRole::LIBRARIAN);
+        // return false;
+        return $user->id === $reservation->reserved_by || $user->role->value === (UserRole::ADMIN->value) || $user->role->value === (UserRole::LIBRARIAN->value);
     }
 
     /**

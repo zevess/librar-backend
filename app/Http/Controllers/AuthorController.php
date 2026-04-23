@@ -7,8 +7,8 @@ use App\Http\Requests\Author\StoreAuthorRequest;
 use App\Http\Requests\Author\UpdateAuthorRequest;
 use App\Http\Resources\Author\AuthorCollection;
 use App\Http\Resources\Author\AuthorResource;
+use App\Http\Resources\Author\AuthorSummaryCollection;
 use App\Services\Interfaces\AuthorServiceInterface;
-use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -33,13 +33,11 @@ class AuthorController extends Controller
 
     public function store(StoreAuthorRequest $request): AuthorResource
     {
-        $data = $request->validated();
-
-        $author = $this->authorService->create($data);
+        $author = $this->authorService->create($request->validated());
         return new AuthorResource($author);
     }
 
-    public function show(int $id): AuthorResource|JsonResponse
+    public function show(int $id): AuthorResource
     {
         $author = $this->authorService->getById($id);
         return new AuthorResource($author);
@@ -51,16 +49,15 @@ class AuthorController extends Controller
         return new AuthorResource($author);
     }
 
-    public function getByQuery(Request $request)
+    public function getByQuery(Request $request): AuthorSummaryCollection
     {
         $query = $request->input('q');
         $authors = $this->authorService->getByQuery($query);
-        return new AuthorCollection($authors);
+        return new AuthorSummaryCollection($authors);
     }
 
-    public function update(UpdateAuthorRequest $request, int $id): AuthorResource|JsonResponse
+    public function update(UpdateAuthorRequest $request, int $id): AuthorResource
     {
-
         $author = $this->authorService->update($id, $request->validated());
         return new AuthorResource($author);
     }

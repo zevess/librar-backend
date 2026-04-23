@@ -7,6 +7,7 @@ use App\Http\Requests\Publisher\StorePublisherRequest;
 use App\Http\Resources\Publisher\PublisherCollection;
 use App\Http\Resources\Publisher\PublisherResource;
 use App\Services\Interfaces\PublisherServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PublisherController extends Controller
@@ -16,19 +17,19 @@ class PublisherController extends Controller
     ) {
     }
 
-    public function index(GetPublisherRequest $request)
+    public function index(GetPublisherRequest $request): PublisherCollection
     {
         $publishers = $this->publisherService->getPaginated($request->validated());
         return new PublisherCollection($publishers);
     }
 
-    public function adminPaginated(GetPublisherRequest $request)
+    public function adminPaginated(GetPublisherRequest $request): PublisherCollection
     {
         $publishers = $this->publisherService->getPaginated($request->validated(), true);
         return new PublisherCollection($publishers);
     }
 
-    public function getAll()
+    public function getAll(): PublisherCollection
     {
         $publishers = $this->publisherService->getAll();
         return new PublisherCollection($publishers);
@@ -47,7 +48,7 @@ class PublisherController extends Controller
 
     }
 
-    public function getByQuery(Request $request)
+    public function getByQuery(Request $request): PublisherCollection
     {
         $query = $request->input('q');
         $publishers = $this->publisherService->getByQuery($query);
@@ -67,7 +68,7 @@ class PublisherController extends Controller
         return new PublisherResource($publisher);
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $this->publisherService->delete($id);
         return response()->json([
@@ -75,7 +76,7 @@ class PublisherController extends Controller
         ]);
     }
 
-    public function restore(int $id)
+    public function restore(int $id): JsonResponse
     {
         $restored = $this->publisherService->restore($id);
         if (!$restored) {

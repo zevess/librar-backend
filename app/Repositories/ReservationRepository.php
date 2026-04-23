@@ -31,7 +31,7 @@ class ReservationRepository implements ReservationRepositoryInterface
             ->when($bookId, fn($q) => $q->where('book_id', $bookId))
             ->when($status, fn($q) => $q->where('status', $status))
             ->when($id, fn($q) => $q->where('id', $id))
-            ->when($userId, fn($q) => $q->where('userId', $userId))
+            ->when($userId, fn($q) => $q->where('reserved_by', $userId))
             ->get();
     }
 

@@ -4,14 +4,17 @@ namespace App\Http\Resources\Book;
 
 use App\Http\Resources\Author\AuthorSummaryResource;
 use App\Http\Resources\Category\CategorySummaryResource;
-use App\Http\Resources\Genre\GenreSummaryCollection;
 use App\Http\Resources\Publisher\PublisherSummaryResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class BookCollection extends ResourceCollection
+class BookSummaryCollection extends ResourceCollection
 {
-
+    /**
+     * Transform the resource collection into an array.
+     *
+     * @return array<int|string, mixed>
+     */
     public function toArray(Request $request): array
     {
         return [
@@ -22,14 +25,9 @@ class BookCollection extends ResourceCollection
                     'slug' => $book->slug,
                     'image' => $book->image,
                     'author' => $book->author ? new AuthorSummaryResource($book->author) : null,
-                    'publisher' => $book->publisher ? new PublisherSummaryResource($book->publisher) : null,
-                    'category' => $book->category ? new CategorySummaryResource($book->category) : null,
-                    'genres' => $book->genres ? new GenreSummaryCollection($book->genres) : null,
                     'isAvailable' => $book->activeReservations ? $book->activeReservations->isEmpty() : true,
-                    'isDeleted' => (bool) $book->deleted_at
                 ];
             })
         ];
     }
-
 }

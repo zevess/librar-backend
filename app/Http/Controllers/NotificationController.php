@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Notification\NotificationCollection;
-use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationController extends Controller
@@ -18,7 +17,7 @@ class NotificationController extends Controller
         return true;
     }
 
-    public function showByUser()
+    public function showByUser(): NotificationCollection
     {
         $notifications = DatabaseNotification::where('notifiable_id', auth()->id())->orderByDesc('created_at')->get();
         return new NotificationCollection($notifications);

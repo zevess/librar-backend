@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Genre;
+namespace App\Http\Resources\Book;
 
-use App\Http\Resources\BaseResource;
+use App\Http\Resources\Author\AuthorSummaryResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GenreResource extends BaseResource
+class BookSummaryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +17,11 @@ class GenreResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'title' => $this->title,
             'slug' => $this->slug,
-            'isDeleted' => (bool) $this->deleted_at,
+            // 'description' => $this->description,
+            'image' => $this->image,
+            // 'author' => $this->author ? new AuthorSummaryResource($this->author) : null,
         ];
     }
 }

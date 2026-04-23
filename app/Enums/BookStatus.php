@@ -10,7 +10,4 @@ enum BookStatus: string
 
     case RESERVED = "reserved";
 
-    // case ABSENT = "absent";
-
-    // case ISSUED = "issued";
 }

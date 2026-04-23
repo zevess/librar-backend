@@ -23,40 +23,31 @@ class ReservationController extends Controller
         return new ReservationCollection($reservations);
     }
 
-    public function show(int $id): ReservationResource|JsonResponse
+    public function show(int $id): ReservationResource
     {
         $reservation = $this->reservationService->getById($id);
-
-        $reservation->load('book');
-        $reservation->load('reservedBy');
-
         return new ReservationResource($reservation);
     }
 
-    public function showByUser(int $userId)
+    public function showByUser(int $userId): ReservationCollection
     {
         $data['userId'] = $userId;
-        $reservations = $this->reservationService->getPaginated($data);
+        $reservations = $this->reservationService->getByUser($userId);
         return new ReservationCollection($reservations);
     }
 
     public function reserve(int $bookId): ReservationResource|JsonResponse
     {
         $reservation = $this->reservationService->reserve($bookId, auth()->id());
-
-        $reservation->load('book');
-
         return response()->json([
             "message" => "Книга забронирована",
             "reservation" => new ReservationResource($reservation)
         ]);
     }
 
-    public function cancel(int $id)
+    public function cancel(int $id): ReservationResource|JsonResponse
     {
         $reservation = $this->reservationService->cancel($id);
-        $reservation->load('book');
-
         return response()->json([
             "message" => "Бронь отменена",
             "reservation" => new ReservationResource($reservation)
@@ -66,8 +57,6 @@ class ReservationController extends Controller
     public function issue(int $id): ReservationResource|JsonResponse
     {
         $reservation = $this->reservationService->issue($id);
-        $reservation->load('book');
-
         return response()->json([
             "message" => "Книга выдана",
             "reservation" => new ReservationResource($reservation)

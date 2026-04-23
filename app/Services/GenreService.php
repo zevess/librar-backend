@@ -86,6 +86,8 @@ class GenreService implements GenreServiceInterface
 
     public function attachToBook(int $bookId, array $genres): bool
     {
+        $genres = array_map('intval', $genres ?: []);
+
         $book = $this->bookRepository->find($bookId);
         if (!$book) {
             throw new ApiException("Книга не найдена");
@@ -111,6 +113,8 @@ class GenreService implements GenreServiceInterface
 
     public function detachFromBook(int $bookId, array $genres): bool
     {
+        $genres = array_map('intval', $genres ?: []);
+
         $book = $this->bookRepository->find($bookId);
         if (!$book) {
             throw new ApiException("Книга не найдена");

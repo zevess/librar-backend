@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Book\AttachBookGenresRequest;
 use App\Http\Requests\Genre\GetGenreRequest;
 use App\Http\Resources\Genre\GenreCollection;
 use App\Http\Resources\Genre\GenreResource;
@@ -51,41 +50,39 @@ class GenreController extends Controller
 
     }
 
-    public function update(int $genreId, Request $request)
+    public function update(int $genreId, Request $request): GenreResource
     {
         $data['name'] = $request->input('name');
         $genre = $this->genreService->update($genreId, $data);
         return new GenreResource($genre);
     }
 
-    public function attach(Request $request, int $bookId)
+    public function attach(Request $request, int $bookId): JsonResponse
     {
-        $genres = array_map('intval', $request->input('genres') ?: []);
-
+        $genres = $request->input('genres');
         $this->genreService->attachToBook($bookId, $genres);
         return response()->json([
             "message" => "Жанры присвоены"
         ], 200);
     }
 
-    public function detach(Request $request, int $bookId)
+    public function detach(Request $request, int $bookId): JsonResponse
     {
-        $genres = array_map('intval', $request->input('genres') ?: []);
-
+        $genres = $request->input('genres');
         $this->genreService->detachFromBook($bookId, $genres);
         return response()->json([
             "message" => "Жанры удалены"
         ], 200);
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $this->genreService->delete($id);
         return response()->json([
             "message" => "Удалено"
         ], 200);
     }
-    public function restore(int $id): GenreResource|JsonResponse
+    public function restore(int $id): JsonResponse
     {
         $restored = $this->genreService->restore($id);
         if (!$restored) {

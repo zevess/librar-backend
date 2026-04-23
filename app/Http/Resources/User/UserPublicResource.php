@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Genre;
+namespace App\Http\Resources\User;
 
 use App\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GenreResource extends BaseResource
+class UserPublicResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -18,8 +18,6 @@ class GenreResource extends BaseResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'slug' => $this->slug,
-            'isDeleted' => (bool) $this->deleted_at,
         ];
     }
 }

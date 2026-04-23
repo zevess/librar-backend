@@ -6,6 +6,7 @@ use App\Http\Requests\Category\GetCategoryRequest;
 use App\Http\Requests\Category\StoreCategoryRequest;
 use App\Http\Resources\Category\CategoryCollection;
 use App\Http\Resources\Category\CategoryResource;
+use App\Http\Resources\Category\CategorySummaryCollection;
 use App\Services\Interfaces\CategoryServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,10 +18,10 @@ class CategoryController extends Controller
     ) {
     }
 
-    public function index(): CategoryCollection
+    public function index(): CategorySummaryCollection
     {
         $categories = $this->categoryService->getAll();
-        return new CategoryCollection($categories);
+        return new CategorySummaryCollection($categories);
     }
 
     public function show(int $id): CategoryResource
@@ -47,11 +48,11 @@ class CategoryController extends Controller
         return new CategoryCollection($categories);
     }
 
-    public function getByQuery(Request $request)
+    public function getByQuery(Request $request): CategorySummaryCollection
     {
         $query = $request->input('q');
         $categories = $this->categoryService->getByQuery($query);
-        return new CategoryCollection($categories);
+        return new CategorySummaryCollection($categories);
     }
 
     public function store(StoreCategoryRequest $request): CategoryResource
@@ -66,7 +67,7 @@ class CategoryController extends Controller
         return new CategoryResource($category);
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $this->categoryService->delete($id);
         return response()->json([
@@ -74,7 +75,7 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function restore(int $id): CategoryResource|JsonResponse
+    public function restore(int $id): JsonResponse
     {
         $restored = $this->categoryService->restore($id);
         if (!$restored) {

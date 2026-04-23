@@ -19,11 +19,11 @@ class ReviewRepository implements ReviewRepositoryInterface
     }
     public function findByBook(int $bookId): Collection
     {
-        return Review::with('user')->where('book_id', $bookId)->get();
+        return Review::where('book_id', $bookId)->with('user')->get();
     }
     public function findByUser(int $userId): Collection
     {
-        return Review::where('user_id', $userId)->get();
+        return Review::where('user_id', $userId)->with('book')->get();
     }
 
     public function findByBookAndUser(int $bookId, int $userId): ?Review

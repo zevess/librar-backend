@@ -16,6 +16,8 @@ interface ReservationServiceInterface
 
     public function getPaginated(?array $data): LengthAwarePaginator;
 
+    public function getByUser(int $userId): Collection;
+
     public function reserve(int $bookId, int $userId): Reservation;
 
     public function cancel(int $reservationId): Reservation;

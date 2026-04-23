@@ -2,13 +2,10 @@
 
 namespace App\Http\Resources\Publisher;
 
-use App\Http\Resources\BaseResource;
-use App\Http\Resources\Book\BookCollection;
-use App\Http\Resources\Book\BookSummaryCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PublisherResource extends BaseResource
+class PublisherSummaryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,9 +18,6 @@ class PublisherResource extends BaseResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'description' => $this->description,
-            'isDeleted' => (bool) $this->deleted_at,
-            'books' => $this->books ? new BookSummaryCollection($this->books) : null,
         ];
     }
 }

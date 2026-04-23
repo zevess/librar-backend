@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources\Genre;
 
-use App\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GenreResource extends BaseResource
+class GenreSummaryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +18,6 @@ class GenreResource extends BaseResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'isDeleted' => (bool) $this->deleted_at,
         ];
     }
 }

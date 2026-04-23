@@ -8,8 +8,6 @@ use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Services\Interfaces\AuthServiceInterface;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -49,7 +47,9 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse|UserResource
     {
-        return new UserResource($request->user());
+        return (new UserResource($request->user()))->additional([
+            'notifications' => $request->user()->unreadNotifications()->count()
+        ]);
     }
 
     public function sendVerification(Request $request): JsonResponse
@@ -61,7 +61,7 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function verifyEmail(Request $request, $id, $hash)
+    public function verifyEmail(Request $request, $id, $hash): JsonResponse
     {
         $user = User::findOrFail($id);
         if (!hash_equals($hash, sha1($user->getEmailForVerification()))) {
@@ -138,7 +138,7 @@ class AuthController extends Controller
         ], 400);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $user = $request->user();
         $user->currentAccessToken()->delete();

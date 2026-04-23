@@ -6,6 +6,8 @@ use App\Http\Requests\Review\GetReviewRequest;
 use App\Http\Requests\Review\StoreReviewRequest;
 use App\Http\Resources\Review\ReviewCollection;
 use App\Http\Resources\Review\ReviewResource;
+use App\Http\Resources\Review\ReviewSummaryCollection;
+use App\Http\Resources\Review\ReviewSummaryResource;
 use App\Services\Interfaces\ReviewServiceInterface;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,10 +18,10 @@ class ReviewController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(): ReviewCollection
     {
         $reviews = $this->reviewService->getAll();
-        return $reviews;
+        return new ReviewCollection($reviews);
     }
 
     public function adminPaginated(GetReviewRequest $request): ReviewCollection
@@ -28,16 +30,15 @@ class ReviewController extends Controller
         return new ReviewCollection($reviews);
     }
 
-    public function show(int $id)
+    public function show(int $id): ReviewResource
     {
         $review = $this->reviewService->getById($id);
         return new ReviewResource($review);
     }
 
-    public function showByBook(int $bookId)
+    public function showByBook(int $bookId): ReviewSummaryCollection
     {
         $reviews = $this->reviewService->getByBook($bookId);
-        $reviews->load('user');
         $average = $reviews->avg('rating');
 
         $userId = Auth::guard('sanctum')->id();
@@ -46,7 +47,7 @@ class ReviewController extends Controller
             $hasUserReviewed = $reviews->where('user_id', $userId)->isNotEmpty();
         }
 
-        return (new ReviewCollection($reviews))->additional([
+        return (new ReviewSummaryCollection($reviews))->additional([
             'average' => $average,
             'hasUserReviewed' => $hasUserReviewed
         ]);
@@ -55,7 +56,9 @@ class ReviewController extends Controller
     public function showByUser(int $userId)
     {
         $reviews = $this->reviewService->getByUser($userId);
-        return new ReviewCollection($reviews);
+        // return ReviewResource::collection($reviews);
+        // return ReviewSummaryResource::collection($reviews);
+        return new ReviewSummaryCollection($reviews);
     }
 
     public function store(int $bookId, StoreReviewRequest $request)

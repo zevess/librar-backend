@@ -58,6 +58,21 @@ class ReservationService implements ReservationServiceInterface
         return $this->reservationRepository->getPaginated($data, $perPage);
     }
 
+    public function getByUser(int $userId): Collection
+    {
+        $reservations = $this->reservationRepository->findFiltered([
+            'userId' => $userId
+        ]);
+
+        if ($reservations->isEmpty()) {
+            throw new ApiException('Брони не найдены');
+        }
+
+        Gate::authorize('view', $reservations->first());
+
+        return $reservations;
+    }
+
     public function reserve(int $bookId, int $userId): Reservation
     {
 
