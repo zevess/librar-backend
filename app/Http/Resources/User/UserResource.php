@@ -15,12 +15,13 @@ class UserResource extends BaseResource
      */
     public function toArray(Request $request): array
     {
+        $isSameUser = $request->user() && $request->user()->is($this->resource);
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role,
-            // 'notifications' => $this->unreadNotifications()->count(),
+            'notifications' => $this->when($isSameUser, $this->unreadNotifications()->count()),
             'isVerified' => $this->hasVerifiedEmail(),
             'isDeleted' => (bool) $this->deleted_at
         ];

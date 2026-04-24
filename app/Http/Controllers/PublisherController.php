@@ -6,6 +6,8 @@ use App\Http\Requests\Publisher\GetPublisherRequest;
 use App\Http\Requests\Publisher\StorePublisherRequest;
 use App\Http\Resources\Publisher\PublisherCollection;
 use App\Http\Resources\Publisher\PublisherResource;
+use App\Http\Resources\Publisher\PublisherSummaryCollection;
+use App\Http\Resources\Publisher\PublisherSummaryResource;
 use App\Services\Interfaces\PublisherServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,10 +31,10 @@ class PublisherController extends Controller
         return new PublisherCollection($publishers);
     }
 
-    public function getAll(): PublisherCollection
+    public function getAll(): PublisherSummaryCollection
     {
         $publishers = $this->publisherService->getAll();
-        return new PublisherCollection($publishers);
+        return new PublisherSummaryCollection($publishers);
     }
 
     public function show(int $id): PublisherResource
@@ -41,31 +43,31 @@ class PublisherController extends Controller
         return new PublisherResource($publisher);
     }
 
-    public function showBySlug(string $slug, int $id): PublisherResource
+    public function showBySlugAndId(string $slug, int $id): PublisherResource
     {
         $publisher = $this->publisherService->getBySlugAndId($slug, $id);
         return new PublisherResource($publisher);
 
     }
 
-    public function getByQuery(Request $request): PublisherCollection
+    public function getByQuery(Request $request): PublisherSummaryCollection
     {
         $query = $request->input('q');
         $publishers = $this->publisherService->getByQuery($query);
-        return new PublisherCollection($publishers);
+        return new PublisherSummaryCollection($publishers);
     }
 
-    public function store(StorePublisherRequest $request): PublisherResource
+    public function store(StorePublisherRequest $request): PublisherSummaryResource
     {
         $publisher = $this->publisherService->create($request->validated());
-        return new PublisherResource($publisher);
+        return new PublisherSummaryResource($publisher);
 
     }
 
-    public function update(int $id, StorePublisherRequest $request): PublisherResource
+    public function update(int $id, StorePublisherRequest $request): PublisherSummaryResource
     {
         $publisher = $this->publisherService->update($id, $request->validated());
-        return new PublisherResource($publisher);
+        return new PublisherSummaryResource($publisher);
     }
 
     public function destroy(int $id): JsonResponse

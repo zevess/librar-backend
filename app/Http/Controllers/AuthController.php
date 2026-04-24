@@ -47,9 +47,7 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse|UserResource
     {
-        return (new UserResource($request->user()))->additional([
-            'notifications' => $request->user()->unreadNotifications()->count()
-        ]);
+        return new UserResource($request->user());
     }
 
     public function sendVerification(Request $request): JsonResponse

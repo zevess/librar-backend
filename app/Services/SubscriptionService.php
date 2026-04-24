@@ -7,6 +7,7 @@ use App\Models\Subscription;
 use App\Repositories\Interfaces\SubscriptionRepositoryInterface;
 use App\Services\Interfaces\SubscriptionServiceInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class SubscriptionService implements SubscriptionServiceInterface
 {
@@ -30,6 +31,8 @@ class SubscriptionService implements SubscriptionServiceInterface
         if (!$books) {
             throw new ApiException("Подписки не найдены");
         }
+        Gate::authorize('view', $follows->first());
+
         return $books;
     }
 

@@ -3,6 +3,9 @@
 namespace App\Http\Resources\Book;
 
 use App\Http\Resources\Author\AuthorSummaryResource;
+use App\Http\Resources\Category\CategorySummaryResource;
+use App\Http\Resources\Genre\GenreSummaryCollection;
+use App\Http\Resources\Publisher\PublisherSummaryResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,9 +22,9 @@ class BookSummaryResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-            // 'description' => $this->description,
             'image' => $this->image,
-            // 'author' => $this->author ? new AuthorSummaryResource($this->author) : null,
+            'author' => new AuthorSummaryResource($this->whenLoaded('author')),
+            'isAvailable' => $this->activeReservations ? $this->activeReservations->isEmpty() : false,
         ];
     }
 }

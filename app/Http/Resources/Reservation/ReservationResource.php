@@ -3,11 +3,9 @@
 namespace App\Http\Resources\Reservation;
 
 use App\Http\Resources\BaseResource;
-use App\Http\Resources\Book\BookResource;
+use App\Http\Resources\Book\BookSummaryResource;
 use App\Http\Resources\User\UserResource;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReservationResource extends BaseResource
 {
@@ -20,9 +18,12 @@ class ReservationResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'book' => new BookResource($this->whenLoaded('book')),
-            'reserved_by' => new UserResource($this->whenLoaded('reservedBy')),
+            'book' => new BookSummaryResource($this->whenLoaded('book')),
+            'reservedBy' => new UserResource($this->whenLoaded('reservedBy')),
             'status' => $this->status,
+            'expiresAt' => $this->expires_at,
+            'issuedAt' => $this->issued_at,
+            'acceptedAt' => $this->accepted_at
         ];
     }
 }

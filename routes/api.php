@@ -43,6 +43,7 @@ Route::prefix('books')->group(function () {
         Route::put('/{id}', [BookController::class, 'update']);
         Route::delete('/{id}', [BookController::class, 'destroy']);
         Route::post('/{id}/restore', [BookController::class, 'restore']);
+        Route::get('/{id}/subscribers', [SubscriptionController::class, 'showByBook']);
     });
 
     Route::get('/query', [BookController::class, 'getByQuery']);
@@ -50,8 +51,6 @@ Route::prefix('books')->group(function () {
     Route::get('/{slug}-{id}', [BookController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [BookController::class, 'show']);
     Route::get('/{id}/reviews', [ReviewController::class, 'showByBook']);
-    Route::get('/{id}/subscribers', [SubscriptionController::class, 'showByBook']);
-
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/{id}/reviews', [ReviewController::class, 'store']);
@@ -80,7 +79,7 @@ Route::prefix('publishers')->group(function () {
     Route::get('/', [PublisherController::class, 'index']);
     Route::get('/query', [PublisherController::class, 'getByQuery']);
     Route::get('/get', [PublisherController::class, 'getAll']);
-    Route::get('/{slug}-{id}', [PublisherController::class, 'showBySlug'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
+    Route::get('/{slug}-{id}', [PublisherController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
     Route::get('/{id}', [PublisherController::class, 'show']);
 
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
@@ -138,7 +137,7 @@ Route::prefix('reviews')->group(function () {
     Route::get('/', [ReviewController::class, 'index']);
     Route::get('/{id}', [ReviewController::class, 'show']);
     Route::get('/user/{userId}', [ReviewController::class, 'showByUser']);
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
         Route::put('/{id}', [ReviewController::class, 'update']);
         Route::delete('/{id}', [ReviewController::class, 'destroy']);
         Route::post('/{id}/restore', [ReviewController::class, 'restore']);
@@ -165,7 +164,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin,librarian'])->gr
         Route::get('/', [UserController::class, 'index']);
         Route::post('/', [UserController::class, 'store']);
 
-        Route::get('/{id}', action: [UserController::class, 'show']);
+        Route::get('/{id}', [UserController::class, 'show']);
         Route::put('/{id}', [UserController::class, 'update']);
         Route::put('/role/{id}', [UserController::class, 'updateRole']);
 

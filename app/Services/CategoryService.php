@@ -25,19 +25,6 @@ class CategoryService implements CategoryServiceInterface
         return $this->categoryRepository->all();
     }
 
-    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator
-    {
-        $data['q'] = Str::slug($data['q'] ?? '');
-        $perPage = $data['perPage'] ?? 10;
-        return $this->categoryRepository->getPaginated($data, $perPage, $includeTrashed);
-    }
-
-    public function getAdminFiltered(?array $data): Collection
-    {
-        $data['q'] = Str::slug($data['q'] ?? '');
-        return $this->categoryRepository->getAdminFiltered($data);
-    }
-
     public function getById(int $id): Category
     {
         $category = $this->categoryRepository->find($id);
@@ -54,6 +41,19 @@ class CategoryService implements CategoryServiceInterface
             throw new ApiException('Категория не найдена');
         }
         return $category;
+    }
+
+    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator
+    {
+        $data['q'] = Str::slug($data['q'] ?? '');
+        $perPage = $data['perPage'] ?? 10;
+        return $this->categoryRepository->getPaginated($data, $perPage, $includeTrashed);
+    }
+
+    public function getAdminFiltered(?array $data): Collection
+    {
+        $data['q'] = Str::slug($data['q'] ?? '');
+        return $this->categoryRepository->getAdminFiltered($data);
     }
 
     public function getByQuery(?string $query): Collection

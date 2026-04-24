@@ -8,11 +8,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface UserRepositoryInterface
 {
-    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
-
     public function find(int $id): ?User;
 
     public function findByEmail(string $email): ?User;
+    public function getPaginated(?array $data, int $perPage): LengthAwarePaginator;
 
     public function updateRole(int $id, UserRole $role): ?User;
 

@@ -13,11 +13,6 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
         return Subscription::get();
     }
 
-    public function create(array $data): Subscription
-    {
-        return Subscription::create($data);
-    }
-
     public function find(int $id): Subscription
     {
         return Subscription::findOrFail($id);
@@ -31,6 +26,11 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
     public function findByBook(int $bookId): Collection
     {
         return Subscription::with(['user'])->where('book_id', $bookId)->get();
+    }
+
+    public function create(array $data): Subscription
+    {
+        return Subscription::create($data);
     }
 
     public function update(Subscription $subscription, array $data): Subscription

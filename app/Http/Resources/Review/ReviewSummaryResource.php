@@ -20,9 +20,9 @@ class ReviewSummaryResource extends JsonResource
             'id' => $this->id,
             'text' => $this->text,
             'rating' => $this->rating,
-            'created_at' => $this->created_at,
-            // 'user' => new UserPublicResource($this->whenLoaded('user')),
-            'book' => new BookSummaryResource($this->book),
+            'createdAt' => $this->created_at,
+            'user' => new UserPublicResource($this->whenLoaded('user')),
+            'book' => new BookSummaryResource($this->whenLoaded('book')),
         ];
     }
 }

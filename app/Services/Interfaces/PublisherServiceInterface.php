@@ -10,8 +10,6 @@ interface PublisherServiceInterface
 {
     public function getAll(): Collection;
 
-    public function create(array $data): Publisher;
-
     public function getById(int $id): Publisher;
 
     public function getBySlug(string $slug): Publisher;
@@ -21,6 +19,8 @@ interface PublisherServiceInterface
     public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator;
 
     public function getByQuery(?string $query): Collection;
+
+    public function create(array $data): Publisher;
 
     public function update(int $id, array $data): Publisher;
 

@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Reservation\ReservationRequest;
-use App\Http\Requests\Reservation\StoreReservationRequest;
 use App\Http\Resources\Reservation\ReservationCollection;
 use App\Http\Resources\Reservation\ReservationResource;
 use App\Services\Interfaces\ReservationServiceInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
@@ -31,7 +29,6 @@ class ReservationController extends Controller
 
     public function showByUser(int $userId): ReservationCollection
     {
-        $data['userId'] = $userId;
         $reservations = $this->reservationService->getByUser($userId);
         return new ReservationCollection($reservations);
     }

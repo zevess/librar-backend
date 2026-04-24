@@ -3,26 +3,26 @@
 namespace App\Policies;
 
 use App\Enums\UserRole;
-use App\Models\Reservation;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ReservationPolicy
+class SubscriptionPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->role->value === (UserRole::ADMIN->value || UserRole::LIBRARIAN->value);
+        return false;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Reservation $reservation): bool
+    public function view(User $user, Subscription $subscription): bool
     {
-        return $user->id === $reservation->reserved_by || $user->role->value === (UserRole::ADMIN->value) || $user->role->value === (UserRole::LIBRARIAN->value);
+        return $user->id === $subscription->user_id || $user->role->value === (UserRole::ADMIN->value) || $user->role->value === (UserRole::LIBRARIAN->value);
     }
 
     /**
@@ -36,15 +36,15 @@ class ReservationPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Reservation $reservation): bool
+    public function update(User $user, Subscription $subscription): bool
     {
-        return $user->id === $reservation->reserved_by || $user->role->value === (UserRole::ADMIN->value) || $user->role->value === (UserRole::LIBRARIAN->value);
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Reservation $reservation): bool
+    public function delete(User $user, Subscription $subscription): bool
     {
         return false;
     }
@@ -52,7 +52,7 @@ class ReservationPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Reservation $reservation): bool
+    public function restore(User $user, Subscription $subscription): bool
     {
         return false;
     }
@@ -60,7 +60,7 @@ class ReservationPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Reservation $reservation): bool
+    public function forceDelete(User $user, Subscription $subscription): bool
     {
         return false;
     }

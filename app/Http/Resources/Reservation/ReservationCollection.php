@@ -2,11 +2,6 @@
 
 namespace App\Http\Resources\Reservation;
 
-use App\Http\Resources\Book\BookSummaryResource;
-use App\Http\Resources\User\UserPublicCollection;
-use App\Http\Resources\User\UserPublicResource;
-use App\Http\Resources\User\UserResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ReservationCollection extends ResourceCollection
@@ -16,20 +11,5 @@ class ReservationCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
-    public function toArray(Request $request): array
-    {
-        return [
-            'data' => $this->collection->transform(function ($reservation) {
-                return [
-                    'id' => $reservation->id,
-                    'book' => $reservation->book ? new BookSummaryResource($reservation->book) : null,
-                    'reservedBy' => $reservation->reservedBy ? new UserResource($reservation->reservedBy) : null,
-                    'status' => $reservation->status,
-                    'expiresAt' => $reservation->expires_at,
-                    'issuedAt' => $reservation->issued_at,
-                    'acceptedAt' => $reservation->accepted_at
-                ];
-            })
-        ];
-    }
+    public $collects = ReservationResource::class;
 }

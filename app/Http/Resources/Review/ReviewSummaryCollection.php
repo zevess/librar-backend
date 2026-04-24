@@ -14,19 +14,6 @@ class ReviewSummaryCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
-    public function toArray(Request $request): array
-    {
-        return [
-            'data' => $this->collection->transform(function ($review) {
-                return [
-                    'id' => $review->id,
-                    'text' => $review->text,
-                    'rating' => $review->rating,
-                    'created_at' => $review->created_at,
-                    'user' => $review->user ? new UserPublicResource($review->user) : null,
-                    'book' => $review->book ? new BookSummaryResource($review->book) : null,
-                ];
-            }),
-        ];
-    }
+    public $collects = ReviewSummaryResource::class;
+
 }

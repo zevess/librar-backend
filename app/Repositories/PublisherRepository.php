@@ -21,17 +21,17 @@ class PublisherRepository implements PublisherRepositoryInterface
 
     public function find(int $id): ?Publisher
     {
-        return Publisher::find($id);
+        return Publisher::with(['books', 'books.author', 'books.activeReservations'])->find($id);
     }
 
     public function findBySlug(string $slug): ?Publisher
     {
-        return Publisher::where('slug', $slug)->first();
+        return Publisher::with(['books', 'books.author', 'books.activeReservations'])->where('slug', $slug)->first();
     }
 
     public function findBySlugAndId(string $slug, int $id): ?Publisher
     {
-        return Publisher::with('books')->where('slug', $slug)->where('id', $id)->first();
+        return Publisher::with(['books', 'books.author', 'books.activeReservations'])->where('slug', $slug)->where('id', $id)->first();
     }
 
     public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator

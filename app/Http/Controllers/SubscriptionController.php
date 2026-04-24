@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Book\BookCollection;
 use App\Http\Resources\Book\BookSummaryCollection;
-use App\Http\Resources\User\UserCollection;
+use App\Http\Resources\User\UserPublicCollection;
 use App\Services\Interfaces\SubscriptionServiceInterface;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class SubscriptionController extends Controller
 {
@@ -15,31 +14,33 @@ class SubscriptionController extends Controller
     ) {
     }
 
-    public function showByUser(int $userId)
+    public function showByUser(int $userId): BookSummaryCollection
     {
         $userSubscriptions = $this->subscriptionService->getUserSubscriptions($userId);
         return new BookSummaryCollection($userSubscriptions);
     }
 
-    public function showByBook(int $bookId)
+    public function showByBook(int $bookId): UserPublicCollection
     {
-        $bookFollowers = $this->subscriptionService->getBookSubscribers($bookId);
-        return new UserCollection($bookFollowers);
+        $bookSubscribers = $this->subscriptionService->getBookSubscribers($bookId);
+        return new UserPublicCollection($bookSubscribers);
     }
 
-    public function store(int $bookId)
+    public function store(int $bookId): JsonResponse
     {
         $userId = auth()->id();
-        $follow = $this->subscriptionService->subscribe($userId, $bookId);
-        return $follow;
+        $this->subscriptionService->subscribe($userId, $bookId);
+        return response()->json([
+            'message' => "Вы подписались к книге"
+        ]);
     }
 
-    public function destroy(int $bookId)
+    public function destroy(int $bookId): JsonResponse
     {
         $userId = auth()->id();
         $this->subscriptionService->unsubscribe($userId, $bookId);
         return response()->json([
-            'message' => "Отписался"
+            'message' => "Вы отписались от книги"
         ]);
     }
 }

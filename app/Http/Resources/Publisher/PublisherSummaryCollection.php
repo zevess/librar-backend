@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Publisher;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class UserPublicCollection extends ResourceCollection
+class PublisherSummaryCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,10 +15,11 @@ class UserPublicCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->transform(function ($user) {
+            'data' => $this->collection->transform(function ($publisher) {
                 return [
-                    'id' => $user->id,
-                    'name' => $user->name,
+                    'id' => $publisher->id,
+                    'name' => $publisher->name,
+                    'slug' => $publisher->slug,
                 ];
             })
         ];

@@ -23,7 +23,7 @@ class PublisherResource extends BaseResource
             'slug' => $this->slug,
             'description' => $this->description,
             'isDeleted' => (bool) $this->deleted_at,
-            'books' => $this->books ? new BookSummaryCollection($this->books) : null,
+            'books' => new BookSummaryCollection($this->whenLoaded('books')),
         ];
     }
 }

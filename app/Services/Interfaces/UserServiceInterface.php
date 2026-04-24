@@ -8,11 +8,11 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface UserServiceInterface
 {
-    public function getPaginated(?array $data): LengthAwarePaginator;
-
     public function getById(int $id): ?User;
 
     public function getByEmail(string $email): ?User;
+
+    public function getPaginated(?array $data): LengthAwarePaginator;
 
     public function changeRole(int $id, UserRole $role): User;
 

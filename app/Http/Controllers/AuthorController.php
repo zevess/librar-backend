@@ -8,6 +8,7 @@ use App\Http\Requests\Author\UpdateAuthorRequest;
 use App\Http\Resources\Author\AuthorCollection;
 use App\Http\Resources\Author\AuthorResource;
 use App\Http\Resources\Author\AuthorSummaryCollection;
+use App\Http\Resources\Author\AuthorSummaryResource;
 use App\Services\Interfaces\AuthorServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -31,10 +32,10 @@ class AuthorController extends Controller
         return new AuthorCollection($authors);
     }
 
-    public function store(StoreAuthorRequest $request): AuthorResource
+    public function store(StoreAuthorRequest $request): AuthorSummaryResource
     {
         $author = $this->authorService->create($request->validated());
-        return new AuthorResource($author);
+        return new AuthorSummaryResource($author);
     }
 
     public function show(int $id): AuthorResource
@@ -56,10 +57,10 @@ class AuthorController extends Controller
         return new AuthorSummaryCollection($authors);
     }
 
-    public function update(UpdateAuthorRequest $request, int $id): AuthorResource
+    public function update(UpdateAuthorRequest $request, int $id): AuthorSummaryResource
     {
         $author = $this->authorService->update($id, $request->validated());
-        return new AuthorResource($author);
+        return new AuthorSummaryResource($author);
     }
 
     public function destroy(int $id): JsonResponse

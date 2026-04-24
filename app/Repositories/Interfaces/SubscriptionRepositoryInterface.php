@@ -9,13 +9,13 @@ interface SubscriptionRepositoryInterface
 {
     public function all(): Collection;
 
-    public function create(array $data): Subscription;
-
     public function find(int $id): Subscription;
 
     public function findByUser(int $userId): Collection;
 
     public function findByBook(int $bookId): Collection;
+
+    public function create(array $data): Subscription;
 
     public function update(Subscription $subscription, array $data): Subscription;
 

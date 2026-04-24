@@ -16,12 +16,12 @@ class AuthorRepository implements AuthorRepositoryInterface
 
     public function find(int $id): ?Author
     {
-        return Author::with('books')->find($id);
+        return Author::with(['books', 'books.author', 'books.activeReservations'])->find($id);
     }
 
     public function findBySlugAndId(string $slug, int $id): ?Author
     {
-        return Author::with('books')->where('id', $id)->where('slug', $slug)->first();
+        return Author::with(['books', 'books.author', 'books.activeReservations'])->where('id', $id)->where('slug', $slug)->first();
     }
 
     public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator

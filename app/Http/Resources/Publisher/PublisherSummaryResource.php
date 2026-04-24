@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources\Publisher;
 
+use App\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PublisherSummaryResource extends JsonResource
+class PublisherSummaryResource extends BaseResource
 {
     /**
      * Transform the resource into an array.

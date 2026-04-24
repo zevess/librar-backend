@@ -24,6 +24,11 @@ class GenreRepository implements GenreRepositoryInterface
         return Genre::findOrFail($id);
     }
 
+    public function findBySlug(string $slug): ?Genre
+    {
+        return Genre::where('slug', $slug)->first();
+    }
+
     public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator
     {
         $search = $data['q'] ?? '';
@@ -43,11 +48,6 @@ class GenreRepository implements GenreRepositoryInterface
     public function getBySlug(?string $slug): Collection
     {
         return Genre::query()->where('slug', 'like', "%{$slug}%")->get();
-    }
-
-    public function findBySlug(string $slug): ?Genre
-    {
-        return Genre::where('slug', $slug)->first();
     }
 
     public function update(Genre $genre, array $data): Genre

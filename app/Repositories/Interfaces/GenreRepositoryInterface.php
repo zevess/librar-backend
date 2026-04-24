@@ -14,13 +14,13 @@ interface GenreRepositoryInterface
 
     public function find(int $id): Genre;
 
+    public function findBySlug(string $slug): ?Genre;
+
     public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator;
 
     public function getAdminFiltered(?array $data): Collection;
 
     public function getBySlug(?string $slug): Collection;
-
-    public function findBySlug(string $slug): ?Genre;
 
     public function update(Genre $genre, array $data): Genre;
 

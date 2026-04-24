@@ -9,6 +9,7 @@ use App\Http\Resources\Review\ReviewResource;
 use App\Http\Resources\Review\ReviewSummaryCollection;
 use App\Http\Resources\Review\ReviewSummaryResource;
 use App\Services\Interfaces\ReviewServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
@@ -53,18 +54,16 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function showByUser(int $userId)
+    public function showByUser(int $userId): ReviewSummaryCollection
     {
         $reviews = $this->reviewService->getByUser($userId);
-        // return ReviewResource::collection($reviews);
-        // return ReviewSummaryResource::collection($reviews);
         return new ReviewSummaryCollection($reviews);
     }
 
-    public function store(int $bookId, StoreReviewRequest $request)
+    public function store(int $bookId, StoreReviewRequest $request): ReviewResource
     {
         $review = $this->reviewService->create(auth()->id(), $bookId, $request->validated());
-        return $review;
+        return new ReviewResource($review);
     }
 
     public function update(int $id, StoreReviewRequest $request): ReviewResource
@@ -73,7 +72,7 @@ class ReviewController extends Controller
         return new ReviewResource($review);
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $this->reviewService->delete($id);
         return response()->json([
@@ -81,7 +80,7 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function restore(int $id)
+    public function restore(int $id): JsonResponse
     {
         $restored = $this->reviewService->restore($id);
         if (!$restored) {

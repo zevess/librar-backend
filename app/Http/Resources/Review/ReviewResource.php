@@ -23,7 +23,7 @@ class ReviewResource extends BaseResource
             'id' => $this->id,
             'text' => $this->text,
             'rating' => $this->rating,
-            'created_at' => $this->created_at,
+            'createdAt' => $this->created_at,
             'user' => new UserPublicResource($this->whenLoaded('user')),
             'book' => new BookSummaryResource($this->whenLoaded('book')),
             'isDeleted' => (bool) $this->deleted_at
