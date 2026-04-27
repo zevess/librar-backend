@@ -28,7 +28,7 @@ class SubscriptionService implements SubscriptionServiceInterface
     {
         $follows = $this->subscriptionRepository->findByUser($userId);
         $books = $follows->pluck('book');
-        if (!$books) {
+        if ($books->isEmpty()) {
             throw new ApiException("Подписки не найдены");
         }
         Gate::authorize('view', $follows->first());

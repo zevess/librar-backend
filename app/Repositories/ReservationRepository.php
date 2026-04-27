@@ -32,6 +32,7 @@ class ReservationRepository implements ReservationRepositoryInterface
             ->when($status, fn($q) => $q->where('status', $status))
             ->when($id, fn($q) => $q->where('id', $id))
             ->when($userId, fn($q) => $q->where('reserved_by', $userId))
+            ->latest()
             ->get();
     }
 

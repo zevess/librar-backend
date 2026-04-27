@@ -52,7 +52,7 @@ Route::prefix('books')->group(function () {
     Route::get('/{id}', [BookController::class, 'show']);
     Route::get('/{id}/reviews', [ReviewController::class, 'showByBook']);
 
-    Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::middleware(['auth:sanctum', 'isVerified'])->group(function () {
         Route::post('/{id}/reviews', [ReviewController::class, 'store']);
         Route::post('/{bookId}/reserve', [ReservationController::class, 'reserve']);
         Route::post('/{bookId}/subscribe', [SubscriptionController::class, 'store']);

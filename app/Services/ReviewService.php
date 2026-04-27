@@ -35,12 +35,20 @@ class ReviewService implements ReviewServiceInterface
 
     public function getByBook(int $bookId): Collection
     {
-        return $this->reviewRepository->findByBook($bookId);
+        $reviews = $this->reviewRepository->findByBook($bookId);
+        if ($reviews->isEmpty()) {
+            throw new ApiException('Отзывы не найдены');
+        }
+        return $reviews;
     }
 
     public function getByUser(int $userId): Collection
     {
-        return $this->reviewRepository->findByUser($userId);
+        $reviews = $this->reviewRepository->findByUser($userId);
+        if ($reviews->isEmpty()) {
+            throw new ApiException('Отзывы не найдены');
+        }
+        return $reviews;
     }
 
     public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator

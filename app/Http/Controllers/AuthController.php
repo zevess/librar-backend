@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ApiException;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
@@ -91,10 +92,14 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request): JsonResponse
     {
-        $request->validate(['email' => 'required|email']);
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        $email = $request->validate(['email' => 'required|email']);
+
+        $isUserExists = User::query()->where('email', $email)->withTrashed()->first();
+        if (!$isUserExists) {
+            throw new ApiException("Пользователь с такой почтой не существует");
+        }
+
+        $status = Password::sendResetLink($email);
 
         if ($status === Password::ResetLinkSent) {
             return response()->json([

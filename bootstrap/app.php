@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'verified' => EnsureEmailIsVerified::class
+            'isVerified' => EnsureEmailIsVerified::class
         ]);
     })
     ->withMiddleware(function (Middleware $middleware): void {
