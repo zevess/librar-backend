@@ -25,8 +25,7 @@ class StoreBookRequest extends FormRequest
             'title' => ['required', 'min:1'],
             'slug' => 'nullable',
             'description' => ['required', 'min:10'],
-            // 'image' => 'nullable',
-            'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
+            'image' => ['sometimes', 'string'],
             'author_id' => ['sometimes', 'nullable', 'numeric'],
             'publisher_id' => ['required', 'numeric'],
             'category_id' => ['required', 'numeric']
