@@ -4,7 +4,21 @@ namespace App\Http\Resources\Genre;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-
+use OpenApi\Attributes as OA;
+#[OA\Schema(
+    schema: 'GenreSummaryCollection',
+    properties: [
+        new OA\Property(
+            property: 'data',
+            type: 'array',
+            description: 'Список жанров',
+            items: new OA\Items(
+                ref: '#/components/schemas/GenreSummaryResource'
+            )
+        ),
+    ],
+    type: 'object'
+)]
 class GenreSummaryCollection extends ResourceCollection
 {
     /**

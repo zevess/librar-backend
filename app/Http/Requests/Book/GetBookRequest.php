@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Book;
 
-use App\Enums\BookStatus;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
 class GetBookRequest extends FormRequest
 {

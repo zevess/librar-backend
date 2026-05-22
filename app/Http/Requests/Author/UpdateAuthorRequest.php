@@ -3,7 +3,16 @@
 namespace App\Http\Requests\Author;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'UpdateAuthorRequest',
+    properties: [
+        new OA\Property(property: 'name', type: 'string', example: 'Имя автора'),
+        new OA\Property(property: 'description', type: 'string', example: 'Описание автора'),
+    ],
+    type: 'object'
+)]
 class UpdateAuthorRequest extends FormRequest
 {
     /**

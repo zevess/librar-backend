@@ -1,0 +1,2010 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Librar API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/authors": {
+            "get": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Получение авторов",
+                "operationId": "getAuthors",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AuthorsResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Создать автора",
+                "operationId": "createAuthor",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreBookRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/AuthorSummaryResponse"
+                    }
+                }
+            }
+        },
+        "/api/admin/authors": {
+            "get": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Получение авторов для админа",
+                "operationId": "getAdminAuthors",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AuthorsResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/authors/{id}": {
+            "get": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Получение автора по ID",
+                "operationId": "getAuthorById",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AuthorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "изменить автора",
+                "operationId": "updateAuthor",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAuthorRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/AuthorSummaryResponse"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Удалить автора",
+                "operationId": "deleteAuthor",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Удалено"
+                    }
+                }
+            }
+        },
+        "/api/authors/{slug}-{id}": {
+            "get": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Получение автора по Slug и ID",
+                "operationId": "getAuthorBySlugAndId",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SlugInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AuthorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/authors/query": {
+            "get": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Получение авторов по имени",
+                "operationId": "getAuthorsByQuery",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AuthorsSummaryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/authors/{id}/restore": {
+            "delete": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Восстановить автора",
+                "operationId": "restoreAuthor",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Восстановлено"
+                    }
+                }
+            }
+        },
+        "/api/books": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Получение книг",
+                "operationId": "getBooks",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CategoryQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GenresQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PublishersQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/StatusQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/OrderQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/BooksSummaryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Создать книгу",
+                "operationId": "createBook",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreBookRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/BookResponse"
+                    }
+                }
+            }
+        },
+        "/api/admin/books": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Получение книг для админа",
+                "operationId": "getAdminBooks",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CategoryQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GenresQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PublishersQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/StatusQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/OrderQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/BooksSummaryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/books/query": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Получение книг по названию",
+                "operationId": "getBooksByQuery",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/BooksSummaryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/books/{id}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Получение книги по ID",
+                "operationId": "getBookById",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/BookResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Изменить книгу",
+                "operationId": "updateBook",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateBookRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/BookResponse"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Удалить книгу",
+                "operationId": "deleteBook",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Удалено"
+                    }
+                }
+            }
+        },
+        "/api/books/{slug}-{id}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Получение книги по Slug и ID",
+                "operationId": "getBookBySlugAndId",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SlugInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/BookResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/books/{id}/restore": {
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Восстановить книгу",
+                "operationId": "restoreBook",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Восстановлено"
+                    }
+                }
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Получение категорий",
+                "operationId": "getCategories",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/CategoriesSummaryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Создать категорию",
+                "operationId": "createCategory",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/CategoryResponse"
+                    }
+                }
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Получение категории по ID",
+                "operationId": "getCategoryById",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/CategoryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Изменить категорию",
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/CategoryResponse"
+                    }
+                }
+            }
+        },
+        "/api/admin/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Получение категории для админа",
+                "operationId": "getAdminCategories",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/CategoriesResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/categories/query": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Получение категории для админа",
+                "operationId": "getCategoriesByQuery",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/CategoriesResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/category/{id}": {
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Удалить категорию",
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Удалено"
+                    }
+                }
+            }
+        },
+        "/api/category/{id}/restore": {
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Восстановить категорию",
+                "operationId": "restoreCategory",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Восстановлено"
+                    }
+                }
+            }
+        },
+        "/api/genres": {
+            "get": {
+                "tags": [
+                    "Genres"
+                ],
+                "summary": "Получение жанров",
+                "operationId": "getGenres",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GenresResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Genres"
+                ],
+                "summary": "Изменить жанр",
+                "operationId": "updateGenre",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/GenreResponse"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Genres"
+                ],
+                "summary": "Создать жанр",
+                "operationId": "createGenre",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/GenreResponse"
+                    }
+                }
+            }
+        },
+        "/api/admin/genres": {
+            "get": {
+                "tags": [
+                    "Genres"
+                ],
+                "summary": "Получение жанров для админа",
+                "operationId": "getAdminGenres",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GenresResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/genres/{id}": {
+            "get": {
+                "tags": [
+                    "Genres"
+                ],
+                "summary": "Получение жанра",
+                "operationId": "getGenreById",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GenreResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Genres"
+                ],
+                "summary": "Удалить жанр",
+                "operationId": "deleteGenre",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Удалено"
+                    }
+                }
+            }
+        },
+        "/api/genres/attach/{bookId}": {
+            "post": {
+                "tags": [
+                    "Genres"
+                ],
+                "summary": "Добавить жанр к книге",
+                "operationId": "attachGenre",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/bookIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GenresQuery"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Жанры присвоены"
+                    }
+                }
+            }
+        },
+        "/api/genres/detach/{bookId}": {
+            "delete": {
+                "tags": [
+                    "Genres"
+                ],
+                "summary": "Удалить жанр из книге",
+                "operationId": "detachGenre",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/bookIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GenresQuery"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Жанры удалены"
+                    }
+                }
+            }
+        },
+        "/api/genres/{id}/restore": {
+            "post": {
+                "tags": [
+                    "Genres"
+                ],
+                "summary": "Восстановить жанр",
+                "operationId": "restoreGenre",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Восстановлено"
+                    }
+                }
+            }
+        },
+        "/api/publishers": {
+            "get": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Получение издательств",
+                "operationId": "getPublishers",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PublishersResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Создать издателя",
+                "operationId": "createPublisher",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePublisherRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/PublisherSummaryResponse"
+                    }
+                }
+            }
+        },
+        "/api/admin/publishers": {
+            "get": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Получение издательств",
+                "operationId": "getAdminPublishers",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PublishersResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/publishers/get": {
+            "get": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Получение всех издательств",
+                "operationId": "getAllPublishers",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PublishersSummaryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/publishers/{id}": {
+            "get": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Получение издательства",
+                "operationId": "getPublisherById",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PublisherResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Изменить издателя",
+                "operationId": "updatePublisher",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePublisherRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/PublisherSummaryResponse"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Удалить издателя",
+                "operationId": "deletePublisher",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Удалено"
+                    }
+                }
+            }
+        },
+        "/api/publishers/{slug}-{id}": {
+            "get": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Получение издательства",
+                "operationId": "getPublisherBySlugAndId",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SlugInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PublisherResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/publishers/query": {
+            "get": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Поиск издательств",
+                "operationId": "getPublishersByQuery",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PublishersSummaryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/publishers/{id}/restore": {
+            "post": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Восстановить издателя",
+                "operationId": "restorePublisher",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Восстановлено"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "StoreAuthorRequest": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Имя автора"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Описание автора"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateAuthorRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Имя автора"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Описание автора"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreBookRequest": {
+                "required": [
+                    "title",
+                    "description",
+                    "publisher_id",
+                    "category_id"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Название книги"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Описание книги"
+                    },
+                    "image": {
+                        "type": "string",
+                        "example": "Ссылка на изображение"
+                    },
+                    "author_id": {
+                        "type": "numeric",
+                        "example": "Id автора"
+                    },
+                    "publisher_id": {
+                        "type": "numeric",
+                        "example": "Id издателя"
+                    },
+                    "category_id": {
+                        "type": "numeric",
+                        "example": "Id категории"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateBookRequest": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Название книги"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Описание книги"
+                    },
+                    "image": {
+                        "type": "string",
+                        "example": "Ссылка на изображение"
+                    },
+                    "remove_image": {
+                        "type": "boolean"
+                    },
+                    "author_id": {
+                        "type": "numeric",
+                        "example": "Id автора"
+                    },
+                    "publisher_id": {
+                        "type": "numeric",
+                        "example": "Id издателя"
+                    },
+                    "category_id": {
+                        "type": "numeric",
+                        "example": "Id категории"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreCategoryRequest": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Название категории"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Описание категории"
+                    }
+                },
+                "type": "object"
+            },
+            "StorePublisherRequest": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Имя издателя"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Описание издателя"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthorCollection": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthorResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "books": {
+                        "$ref": "#/components/schemas/BookSummaryCollection"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthorSummaryCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список авторов",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AuthorSummaryResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "AuthorSummaryResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "BookCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список книг",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BookResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "BookResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/AuthorSummaryResource"
+                    },
+                    "publisher": {
+                        "$ref": "#/components/schemas/PublisherSummaryResource"
+                    },
+                    "genres": {
+                        "$ref": "#/components/schemas/GenreSummaryCollection"
+                    },
+                    "isAvailable": {
+                        "type": "boolean"
+                    },
+                    "isSubscribed": {
+                        "type": "boolean"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "BookSummaryCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список книг",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BookSummaryResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "BookSummaryResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/AuthorSummaryResource"
+                    },
+                    "isAvailable": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "CategoryCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список категорий",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CategoryResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CategoryResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "CategorySummaryCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список категорий",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CategorySummaryResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CategorySummaryResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "GenreCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список жанров",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GenreResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "GenreResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "GenreSummaryCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список жанров",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GenreSummaryResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "GenreSummaryResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "NotificationCollection": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "notifiableId": {
+                        "type": "integer"
+                    },
+                    "notificationData": {
+                        "type": "string"
+                    },
+                    "readAt": {
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "type": "integer"
+                    },
+                    "updatedAt": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "PublisherCollection": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "PublisherResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "books": {
+                        "$ref": "#/components/schemas/BookSummaryCollection"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "PublisherSummaryCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список издательств",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PublisherSummaryResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PublisherSummaryResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ReservationCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список броней",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReservationResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ReservationResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "book": {
+                        "$ref": "#/components/schemas/BookSummaryResource"
+                    },
+                    "reservedBy": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "expiresAt": {
+                        "type": "integer"
+                    },
+                    "issuedAt": {
+                        "type": "integer"
+                    },
+                    "acceptedAt": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "UserCollection": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "isVerified": {
+                        "type": "boolean"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "UserPublicCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список пользователей",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UserPublicResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UserPublicResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "notifications": {
+                        "type": "integer"
+                    },
+                    "isVerified": {
+                        "type": "boolean"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "AuthorResponse": {
+                "description": "Автор",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/AuthorResource"
+                        }
+                    }
+                }
+            },
+            "AuthorSummaryResponse": {
+                "description": "Автор",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/AuthorSummaryResource"
+                        }
+                    }
+                }
+            },
+            "AuthorsResponse": {
+                "description": "Авторы",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/AuthorCollection"
+                        }
+                    }
+                }
+            },
+            "AuthorsSummaryResponse": {
+                "description": "Авторы",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/AuthorSummaryCollection"
+                        }
+                    }
+                }
+            },
+            "BookResponse": {
+                "description": "Книга",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BookResource"
+                        }
+                    }
+                }
+            },
+            "BooksSummaryResponse": {
+                "description": "Книги",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BookSummaryCollection"
+                        }
+                    }
+                }
+            },
+            "CategoriesResponse": {
+                "description": "Категории",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/CategoryCollection"
+                        }
+                    }
+                }
+            },
+            "CategoriesSummaryResponse": {
+                "description": "Категории",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/CategorySummaryCollection"
+                        }
+                    }
+                }
+            },
+            "CategoryResponse": {
+                "description": "Категория",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/CategoryResource"
+                        }
+                    }
+                }
+            },
+            "GenreResponse": {
+                "description": "Жанр",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/GenreResource"
+                        }
+                    }
+                }
+            },
+            "GenresResponse": {
+                "description": "Жанры",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/GenreCollection"
+                        }
+                    }
+                }
+            },
+            "GenresSummaryResponse": {
+                "description": "Жанры",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/GenreSummaryCollection"
+                        }
+                    }
+                }
+            },
+            "NotFound": {
+                "description": "Не найдено"
+            },
+            "PublisherResponse": {
+                "description": "Издатель",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/PublisherResource"
+                        }
+                    }
+                }
+            },
+            "PublisherSummaryResponse": {
+                "description": "Издатель",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/PublisherSummaryResource"
+                        }
+                    }
+                }
+            },
+            "PublishersResponse": {
+                "description": "Издатели",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/PublisherCollection"
+                        }
+                    }
+                }
+            },
+            "PublishersSummaryResponse": {
+                "description": "Издатели",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/PublisherSummaryCollection"
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "CategoryQuery": {
+                "name": "category",
+                "in": "query",
+                "description": "Категория",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "GenresQuery": {
+                "name": "genres[]",
+                "in": "query",
+                "description": "Жанры",
+                "style": "form",
+                "explode": true,
+                "schema": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "IdInPath": {
+                "name": "id",
+                "in": "path",
+                "description": "ID ресурса",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "IdQuery": {
+                "name": "id",
+                "in": "query",
+                "description": "id ресурса",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "IsAvailableQuery": {
+                "name": "isAvailable",
+                "in": "query",
+                "description": "Доступность",
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "OrderQuery": {
+                "name": "order",
+                "in": "query",
+                "description": "Порядок",
+                "schema": {
+                    "type": "string",
+                    "default": "desc"
+                }
+            },
+            "PageQuery": {
+                "name": "page",
+                "in": "query",
+                "description": "Номер страницы",
+                "schema": {
+                    "type": "integer",
+                    "default": 1
+                }
+            },
+            "PerPageQuery": {
+                "name": "perPage",
+                "in": "query",
+                "description": "Сколько страниц",
+                "schema": {
+                    "type": "integer",
+                    "default": 10
+                }
+            },
+            "PublishersQuery": {
+                "name": "publishers[]",
+                "in": "query",
+                "description": "Издатели",
+                "style": "form",
+                "explode": true,
+                "schema": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "SearchQuery": {
+                "name": "q",
+                "in": "query",
+                "description": "Поиск ресурса",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "SlugInPath": {
+                "name": "slug",
+                "in": "path",
+                "description": "Slug ресурса",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "SortQuery": {
+                "name": "sort",
+                "in": "query",
+                "description": "Сортировка",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "StatusQuery": {
+                "name": "status",
+                "in": "query",
+                "description": "Статус",
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "reserved",
+                        "available",
+                        ""
+                    ]
+                }
+            },
+            "bookIdInPath": {
+                "name": "bookId",
+                "in": "path",
+                "description": "ID книги",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authors",
+            "description": "Authors"
+        },
+        {
+            "name": "Books",
+            "description": "Books"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Genres",
+            "description": "Genres"
+        },
+        {
+            "name": "Publishers",
+            "description": "Publishers"
+        }
+    ]
+}

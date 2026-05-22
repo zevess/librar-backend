@@ -4,7 +4,21 @@ namespace App\Http\Resources\Category;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-
+use OpenApi\Attributes as OA;
+#[OA\Schema(
+    schema: 'CategorySummaryCollection',
+    properties: [
+        new OA\Property(
+            property: 'data',
+            type: 'array',
+            description: 'Список категорий',
+            items: new OA\Items(
+                ref: '#/components/schemas/CategorySummaryResource'
+            )
+        ),
+    ],
+    type: 'object'
+)]
 class CategorySummaryCollection extends ResourceCollection
 {
     /**

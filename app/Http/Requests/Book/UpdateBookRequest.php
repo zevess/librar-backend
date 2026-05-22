@@ -3,6 +3,22 @@
 namespace App\Http\Requests\Book;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
+
+
+#[OA\Schema(
+    schema: 'UpdateBookRequest',
+    properties: [
+        new OA\Property(property: 'title', type: 'string', example: 'Название книги'),
+        new OA\Property(property: 'description', type: 'string', example: 'Описание книги'),
+        new OA\Property(property: 'image', type: 'string', example: 'Ссылка на изображение'),
+        new OA\Property(property: 'remove_image', type: 'boolean'),
+        new OA\Property(property: 'author_id', type: 'numeric', example: 'Id автора'),
+        new OA\Property(property: 'publisher_id', type: 'numeric', example: 'Id издателя'),
+        new OA\Property(property: 'category_id', type: 'numeric', example: 'Id категории'),
+    ],
+    type: 'object'
+)]
 
 class UpdateBookRequest extends FormRequest
 {
