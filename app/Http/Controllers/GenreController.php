@@ -36,11 +36,7 @@ class GenreController extends Controller
         return new GenreCollection($genres);
     }
 
-    public function adminPaginated(GetGenreRequest $request): GenreCollection
-    {
-        $genres = $this->genreService->getPaginated($request->validated(), true);
-        return new GenreCollection($genres);
-    }
+
 
     #[OA\Get(
         path: '/api/admin/genres',
@@ -63,6 +59,8 @@ class GenreController extends Controller
         return new GenreCollection($genres);
     }
 
+
+
     #[OA\Get(
         path: '/api/genres/{id}',
         operationId: 'getGenreById',
@@ -82,6 +80,8 @@ class GenreController extends Controller
         return new GenreResource($genre);
 
     }
+
+
 
     #[OA\Post(
         path: '/api/genres',
@@ -111,6 +111,8 @@ class GenreController extends Controller
         $genre = $this->genreService->create($genreName);
         return new GenreResource($genre);
     }
+
+
 
     #[OA\Put(
         path: '/api/genres',
@@ -147,7 +149,7 @@ class GenreController extends Controller
         operationId: 'attachGenre',
         tags: ['Genres'],
         parameters: [
-            new OA\Parameter(ref: '#/components/parameters/bookIdInPath'),
+            new OA\Parameter(ref: '#/components/parameters/BookIdInPath'),
             new OA\Parameter(ref: '#/components/parameters/GenresQuery'),
         ],
         responses: [
@@ -163,13 +165,15 @@ class GenreController extends Controller
         ], 200);
     }
 
+
+
     #[OA\Delete(
         path: '/api/genres/detach/{bookId}',
         summary: 'Удалить жанр из книге',
         operationId: 'detachGenre',
         tags: ['Genres'],
         parameters: [
-            new OA\Parameter(ref: '#/components/parameters/bookIdInPath'),
+            new OA\Parameter(ref: '#/components/parameters/BookIdInPath'),
             new OA\Parameter(ref: '#/components/parameters/GenresQuery'),
         ],
         responses: [
@@ -184,6 +188,8 @@ class GenreController extends Controller
             "message" => "Жанры удалены"
         ], 200);
     }
+
+
 
     #[OA\Delete(
         path: '/api/genres/{id}',
@@ -204,6 +210,8 @@ class GenreController extends Controller
             "message" => "Удалено"
         ], 200);
     }
+
+
 
     #[OA\Post(
         path: '/api/genres/{id}/restore',

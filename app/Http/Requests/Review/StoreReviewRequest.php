@@ -3,6 +3,17 @@
 namespace App\Http\Requests\Review;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
+
+#[OA\Schema(
+    schema: 'StoreReviewRequest',
+    required: ['rating'],
+    properties: [
+        new OA\Property(property: 'text', type: 'string', example: 'Текст отзыва'),
+        new OA\Property(property: 'rating', type: 'int', example: 'Оценка'),
+    ],
+    type: 'object'
+)]
 
 class StoreReviewRequest extends FormRequest
 {

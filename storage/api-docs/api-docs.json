@@ -5,6 +5,54 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Зарегистрироваться",
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/RegisterResponse"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Войти",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/LoginResponse"
+                    }
+                }
+            }
+        },
         "/api/authors": {
             "get": {
                 "tags": [
@@ -802,7 +850,7 @@
                 "operationId": "attachGenre",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/bookIdInPath"
+                        "$ref": "#/components/parameters/BookIdInPath"
                     },
                     {
                         "$ref": "#/components/parameters/GenresQuery"
@@ -824,7 +872,7 @@
                 "operationId": "detachGenre",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/bookIdInPath"
+                        "$ref": "#/components/parameters/BookIdInPath"
                     },
                     {
                         "$ref": "#/components/parameters/GenresQuery"
@@ -1082,10 +1130,245 @@
                     }
                 }
             }
+        },
+        "/api/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Получение отзывов",
+                "operationId": "getReviews",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReviewsResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/admin/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Получение отзывов для админа",
+                "operationId": "getAdminReviews",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SearchQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/BookIdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EmailQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReviewsResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/books/{bookId}/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Получение отзывов книги",
+                "operationId": "getBooksReviews",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/BookIdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReviewsSummaryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Создать отзыв",
+                "operationId": "createReview",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreReviewRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/ReviewResponse"
+                    }
+                }
+            }
+        },
+        "/api/reviews/user/{userId}": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Получение отзывов пользователя",
+                "operationId": "getUserReviews",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/UserIdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReviewsSummaryResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/api/reviews/{id}": {
+            "put": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Изменить отзыв",
+                "operationId": "updateReview",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreReviewRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/ReviewResponse"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Восстановить отзыв",
+                "operationId": "restoreReview",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Восстановлено"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Удалить отзыв",
+                "operationId": "deleteReview",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Удалено"
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "email пользователя"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "Пароль"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Имя пользователя"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "email пользователя"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "Пароль"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "example": "Подтвердите пароль"
+                    }
+                },
+                "type": "object"
+            },
             "StoreAuthorRequest": {
                 "required": [
                     "name"
@@ -1210,6 +1493,22 @@
                     "description": {
                         "type": "string",
                         "example": "Описание издателя"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreReviewRequest": {
+                "required": [
+                    "rating"
+                ],
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "example": "Текст отзыва"
+                    },
+                    "rating": {
+                        "type": "integer",
+                        "example": "Оценка"
                     }
                 },
                 "type": "object"
@@ -1611,6 +1910,79 @@
                 },
                 "type": "object"
             },
+            "ReviewCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список отзывов",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReviewResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ReviewResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "rating": {
+                        "type": "integer"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "book": {
+                        "$ref": "#/components/schemas/BookSummaryResource"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "createdAt": {
+                        "type": "integer"
+                    },
+                    "isDeleted": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "ReviewSummaryCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Список отзывов",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReviewSummaryResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ReviewSummaryResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "rating": {
+                        "type": "integer"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "book": {
+                        "$ref": "#/components/schemas/BookSummaryResource"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "createdAt": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "UserCollection": {
                 "properties": {
                     "id": {
@@ -1805,6 +2177,25 @@
                     }
                 }
             },
+            "LoginResponse": {
+                "description": "Успешная аутентификация",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "user": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                },
+                                "token": {
+                                    "description": "токен sanctum",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "NotFound": {
                 "description": "Не найдено"
             },
@@ -1847,15 +2238,89 @@
                         }
                     }
                 }
+            },
+            "RegisterResponse": {
+                "description": "Успешная регистрация",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "user": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                },
+                                "token": {
+                                    "description": "токен sanctum",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "ReviewResponse": {
+                "description": "Отзыв",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ReviewResource"
+                        }
+                    }
+                }
+            },
+            "ReviewsResponse": {
+                "description": "Отзывы",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ReviewCollection"
+                        }
+                    }
+                }
+            },
+            "ReviewsSummaryResponse": {
+                "description": "Отзывы",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ReviewSummaryCollection"
+                        }
+                    }
+                }
             }
         },
         "parameters": {
+            "BookIdInPath": {
+                "name": "bookId",
+                "in": "path",
+                "description": "ID книги",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "BookIdQuery": {
+                "name": "bookId",
+                "in": "query",
+                "description": "bookId ресурса",
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "CategoryQuery": {
                 "name": "category",
                 "in": "query",
                 "description": "Категория",
                 "schema": {
                     "type": "integer"
+                }
+            },
+            "EmailQuery": {
+                "name": "email",
+                "in": "query",
+                "description": "email ресурса",
+                "schema": {
+                    "type": "string"
                 }
             },
             "GenresQuery": {
@@ -1974,11 +2439,19 @@
                     ]
                 }
             },
-            "bookIdInPath": {
-                "name": "bookId",
+            "UserIdInPath": {
+                "name": "userId",
                 "in": "path",
-                "description": "ID книги",
+                "description": "ID пользователя",
                 "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "UserIdQuery": {
+                "name": "userId",
+                "in": "query",
+                "description": "userId ресурса",
                 "schema": {
                     "type": "integer"
                 }
@@ -1986,6 +2459,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
         {
             "name": "Authors",
             "description": "Authors"
@@ -2005,6 +2482,10 @@
         {
             "name": "Publishers",
             "description": "Publishers"
+        },
+        {
+            "name": "Reviews",
+            "description": "Reviews"
         }
     ]
 }

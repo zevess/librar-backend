@@ -5,13 +5,12 @@ namespace App\Http\Swagger\Parameters;
 use OpenApi\Attributes as OA;
 
 #[OA\Parameter(
-    parameter: 'BookIdInPath',
+    parameter: 'BookIdQuery',
     name: 'bookId',
-    in: 'path',
-    required: true,
-    description: 'ID книги',
+    in: 'query',
+    description: 'bookId ресурса',
     schema: new OA\Schema(type: 'integer')
 )]
-class BookIdInPath
+class BookIdQuery
 {
 }

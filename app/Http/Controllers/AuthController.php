@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
@@ -22,6 +23,20 @@ class AuthController extends Controller
     ) {
     }
 
+
+    #[OA\Post(
+        path: '/api/auth/register',
+        summary: 'Зарегистрироваться',
+        operationId: 'register',
+        tags: ['Auth'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/RegisterRequest')
+        ),
+        responses: [
+            new OA\Response(response: 201, ref: '#/components/responses/RegisterResponse'),
+        ]
+    )]
     public function register(RegisterRequest $request): JsonResponse
     {
 
@@ -35,6 +50,20 @@ class AuthController extends Controller
         ], 201);
     }
 
+
+    #[OA\Post(
+        path: '/api/auth/login',
+        summary: 'Войти',
+        operationId: 'login',
+        tags: ['Auth'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/LoginRequest')
+        ),
+        responses: [
+            new OA\Response(response: 201, ref: '#/components/responses/LoginResponse'),
+        ]
+    )]
     public function login(LoginRequest $request): JsonResponse
     {
         $user = $this->authService->login($request->validated());

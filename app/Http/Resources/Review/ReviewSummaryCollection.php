@@ -2,10 +2,22 @@
 
 namespace App\Http\Resources\Review;
 
-use App\Http\Resources\Book\BookSummaryResource;
-use App\Http\Resources\User\UserPublicResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use OpenApi\Attributes as OA;
+#[OA\Schema(
+    schema: 'ReviewSummaryCollection',
+    properties: [
+        new OA\Property(
+            property: 'data',
+            type: 'array',
+            description: 'Список отзывов',
+            items: new OA\Items(
+                ref: '#/components/schemas/ReviewSummaryResource'
+            )
+        ),
+    ],
+    type: 'object'
+)]
 
 class ReviewSummaryCollection extends ResourceCollection
 {

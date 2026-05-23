@@ -29,15 +29,15 @@ use OpenApi\Attributes as OA;
         ),
         new OA\Property(
             property: 'expiresAt',
-            type: 'int',
+            type: 'integer',
         ),
         new OA\Property(
             property: 'issuedAt',
-            type: 'int',
+            type: 'integer',
         ),
         new OA\Property(
             property: 'acceptedAt',
-            type: 'int',
+            type: 'integer',
         ),
     ],
     type: 'object'
