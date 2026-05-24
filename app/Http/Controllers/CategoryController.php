@@ -64,6 +64,9 @@ class CategoryController extends Controller
         operationId: 'getAdminCategories',
         tags: ['Categories'],
         summary: 'Получение категории для админа',
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
             new OA\Parameter(ref: '#/components/parameters/IdQuery'),
@@ -105,6 +108,9 @@ class CategoryController extends Controller
         summary: 'Создать категорию',
         operationId: 'createCategory',
         tags: ['Categories'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/StoreCategoryRequest')
@@ -131,7 +137,7 @@ class CategoryController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/StoreCategoryRequest')
         ),
         responses: [
-            new OA\Response(response: 201, ref: '#/components/responses/CategoryResponse'),
+            new OA\Response(response: 200, ref: '#/components/responses/CategoryResponse'),
         ]
     )]
     public function update(int $id, StoreCategoryRequest $request): CategoryResource
@@ -145,11 +151,14 @@ class CategoryController extends Controller
         summary: 'Удалить категорию',
         operationId: 'deleteCategory',
         tags: ['Categories'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: "Удалено"),
+            new OA\Response(response: 200, description: "Удалено"),
         ]
     )]
     public function destroy(int $id): JsonResponse
@@ -165,11 +174,14 @@ class CategoryController extends Controller
         summary: 'Восстановить категорию',
         operationId: 'restoreCategory',
         tags: ['Categories'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: "Восстановлено"),
+            new OA\Response(response: 200, description: "Восстановлено"),
         ]
     )]
     public function restore(int $id): JsonResponse

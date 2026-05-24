@@ -46,6 +46,9 @@ class PublisherController extends Controller
         operationId: 'getAdminPublishers',
         tags: ['Publishers'],
         summary: 'Получение издательств',
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
             new OA\Parameter(ref: '#/components/parameters/IdQuery'),
@@ -143,6 +146,9 @@ class PublisherController extends Controller
         summary: 'Создать издателя',
         operationId: 'createPublisher',
         tags: ['Publishers'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/StorePublisherRequest')
@@ -163,6 +169,9 @@ class PublisherController extends Controller
         summary: 'Изменить издателя',
         operationId: 'updatePublisher',
         tags: ['Publishers'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
@@ -171,7 +180,7 @@ class PublisherController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/StorePublisherRequest')
         ),
         responses: [
-            new OA\Response(response: 201, ref: '#/components/responses/PublisherSummaryResponse'),
+            new OA\Response(response: 200, ref: '#/components/responses/PublisherSummaryResponse'),
         ]
     )]
     public function update(int $id, StorePublisherRequest $request): PublisherSummaryResource
@@ -185,11 +194,14 @@ class PublisherController extends Controller
         summary: 'Удалить издателя',
         operationId: 'deletePublisher',
         tags: ['Publishers'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: 'Удалено'),
+            new OA\Response(response: 200, description: 'Удалено'),
         ]
     )]
     public function destroy(int $id): JsonResponse
@@ -205,11 +217,14 @@ class PublisherController extends Controller
         summary: 'Восстановить издателя',
         operationId: 'restorePublisher',
         tags: ['Publishers'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: 'Восстановлено'),
+            new OA\Response(response: 200, description: 'Восстановлено'),
         ]
     )]
     public function restore(int $id): JsonResponse

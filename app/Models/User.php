@@ -58,4 +58,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Book::class, 'subscriptions');
     }
 
+    public function refreshTokens(): HasMany
+    {
+        return $this->hasMany(RefreshToken::class);
+    }
+
 }

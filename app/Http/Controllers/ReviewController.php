@@ -46,6 +46,9 @@ class ReviewController extends Controller
         operationId: 'getAdminReviews',
         tags: ['Reviews'],
         summary: 'Получение отзывов для админа',
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
             new OA\Parameter(ref: '#/components/parameters/IdQuery'),
@@ -125,6 +128,9 @@ class ReviewController extends Controller
         summary: 'Создать отзыв',
         operationId: 'createReview',
         tags: ['Reviews'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/StoreReviewRequest')
@@ -144,6 +150,9 @@ class ReviewController extends Controller
         summary: 'Изменить отзыв',
         operationId: 'updateReview',
         tags: ['Reviews'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
@@ -152,7 +161,7 @@ class ReviewController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/StoreReviewRequest')
         ),
         responses: [
-            new OA\Response(response: 201, ref: '#/components/responses/ReviewResponse'),
+            new OA\Response(response: 200, ref: '#/components/responses/ReviewResponse'),
         ]
     )]
     public function update(int $id, StoreReviewRequest $request): ReviewResource
@@ -167,11 +176,14 @@ class ReviewController extends Controller
         summary: 'Удалить отзыв',
         operationId: 'deleteReview',
         tags: ['Reviews'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: 'Удалено'),
+            new OA\Response(response: 200, description: 'Удалено'),
         ]
     )]
     public function destroy(int $id): JsonResponse
@@ -187,11 +199,14 @@ class ReviewController extends Controller
         summary: 'Восстановить отзыв',
         operationId: 'restoreReview',
         tags: ['Reviews'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: 'Восстановлено'),
+            new OA\Response(response: 200, description: 'Восстановлено'),
         ]
     )]
     public function restore(int $id): JsonResponse

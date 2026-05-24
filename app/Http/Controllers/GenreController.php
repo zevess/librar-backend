@@ -43,6 +43,9 @@ class GenreController extends Controller
         operationId: 'getAdminGenres',
         tags: ['Genres'],
         summary: 'Получение жанров для админа',
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
             new OA\Parameter(ref: '#/components/parameters/IdQuery'),
@@ -88,6 +91,9 @@ class GenreController extends Controller
         summary: 'Создать жанр',
         operationId: 'createGenre',
         tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -119,6 +125,9 @@ class GenreController extends Controller
         summary: 'Изменить жанр',
         operationId: 'updateGenre',
         tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -133,7 +142,7 @@ class GenreController extends Controller
             )
         ),
         responses: [
-            new OA\Response(response: 201, ref: '#/components/responses/GenreResponse'),
+            new OA\Response(response: 200, ref: '#/components/responses/GenreResponse'),
         ]
     )]
     public function update(int $genreId, Request $request): GenreResource
@@ -148,12 +157,15 @@ class GenreController extends Controller
         summary: 'Добавить жанр к книге',
         operationId: 'attachGenre',
         tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/BookIdInPath'),
             new OA\Parameter(ref: '#/components/parameters/GenresQuery'),
         ],
         responses: [
-            new OA\Response(response: 201, description: 'Жанры присвоены'),
+            new OA\Response(response: 200, description: 'Жанры присвоены'),
         ]
     )]
     public function attach(Request $request, int $bookId): JsonResponse
@@ -172,12 +184,15 @@ class GenreController extends Controller
         summary: 'Удалить жанр из книге',
         operationId: 'detachGenre',
         tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/BookIdInPath'),
             new OA\Parameter(ref: '#/components/parameters/GenresQuery'),
         ],
         responses: [
-            new OA\Response(response: 201, description: 'Жанры удалены'),
+            new OA\Response(response: 200, description: 'Жанры удалены'),
         ]
     )]
     public function detach(Request $request, int $bookId): JsonResponse
@@ -196,11 +211,14 @@ class GenreController extends Controller
         summary: 'Удалить жанр',
         operationId: 'deleteGenre',
         tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: "Удалено"),
+            new OA\Response(response: 200, description: "Удалено"),
         ]
     )]
     public function destroy(int $id): JsonResponse
@@ -218,11 +236,14 @@ class GenreController extends Controller
         summary: 'Восстановить жанр',
         operationId: 'restoreGenre',
         tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: "Восстановлено"),
+            new OA\Response(response: 200, description: "Восстановлено"),
         ]
     )]
     public function restore(int $id): JsonResponse

@@ -15,9 +15,14 @@ use OpenApi\Attributes as OA;
                 ref: '#/components/schemas/UserResource'
             ),
             new OA\Property(
-                property: 'token',
+                property: 'accessToken',
                 type: 'string',
-                description: 'токен sanctum'
+                description: 'accessToken',
+            ),
+            new OA\Property(
+                property: 'refreshToken',
+                type: 'string',
+                description: 'refreshToken',
             )
         ]
     )

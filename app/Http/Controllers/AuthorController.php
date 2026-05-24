@@ -47,6 +47,9 @@ class AuthorController extends Controller
         operationId: 'getAdminAuthors',
         tags: ['Authors'],
         summary: 'Получение авторов для админа',
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
             new OA\Parameter(ref: '#/components/parameters/IdQuery'),
@@ -62,25 +65,6 @@ class AuthorController extends Controller
     {
         $authors = $this->authorService->getPaginated($request->validated(), true);
         return new AuthorCollection($authors);
-    }
-
-    #[OA\Post(
-        path: '/api/authors',
-        summary: 'Создать автора',
-        operationId: 'createAuthor',
-        tags: ['Authors'],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/StoreBookRequest')
-        ),
-        responses: [
-            new OA\Response(response: 201, ref: '#/components/responses/AuthorSummaryResponse'),
-        ]
-    )]
-    public function store(StoreAuthorRequest $request): AuthorSummaryResource
-    {
-        $author = $this->authorService->create($request->validated());
-        return new AuthorSummaryResource($author);
     }
 
     #[OA\Get(
@@ -142,11 +126,38 @@ class AuthorController extends Controller
         return new AuthorSummaryCollection($authors);
     }
 
+    
+    #[OA\Post(
+        path: '/api/authors',
+        summary: 'Создать автора',
+        operationId: 'createAuthor',
+        tags: ['Authors'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/StoreAuthorRequest')
+        ),
+        responses: [
+            new OA\Response(response: 201, ref: '#/components/responses/AuthorSummaryResponse'),
+        ]
+    )]
+    public function store(StoreAuthorRequest $request): AuthorSummaryResource
+    {
+        $author = $this->authorService->create($request->validated());
+        return new AuthorSummaryResource($author);
+    }
+
+
     #[OA\Put(
         path: '/api/authors/{id}',
         summary: 'изменить автора',
         operationId: 'updateAuthor',
         tags: ['Authors'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
@@ -154,7 +165,7 @@ class AuthorController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateAuthorRequest')
         ),
         responses: [
-            new OA\Response(response: 201, ref: '#/components/responses/AuthorSummaryResponse'),
+            new OA\Response(response: 200, ref: '#/components/responses/AuthorSummaryResponse'),
         ]
     )]
     public function update(UpdateAuthorRequest $request, int $id): AuthorSummaryResource
@@ -168,11 +179,14 @@ class AuthorController extends Controller
         summary: 'Удалить автора',
         operationId: 'deleteAuthor',
         tags: ['Authors'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: "Удалено"),
+            new OA\Response(response: 200, description: "Удалено"),
         ]
     )]
     public function destroy(int $id): JsonResponse
@@ -186,11 +200,14 @@ class AuthorController extends Controller
         summary: 'Восстановить автора',
         operationId: 'restoreAuthor',
         tags: ['Authors'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: "Восстановлено"),
+            new OA\Response(response: 200, description: "Восстановлено"),
         ]
     )]
     public function restore(int $id): JsonResponse

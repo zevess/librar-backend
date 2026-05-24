@@ -53,6 +53,93 @@
                 }
             }
         },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Обновить refresh токен",
+                "operationId": "refresh",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "refreshToken"
+                                ],
+                                "properties": {
+                                    "refreshToken": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Обновление токена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "accessToken": {
+                                            "description": "accessToken",
+                                            "type": "string"
+                                        },
+                                        "refreshToken": {
+                                            "description": "refreshToken",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Получение профиля",
+                "operationId": "me",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UserResponse"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Выйти",
+                "operationId": "logout",
+                "responses": {
+                    "201": {
+                        "description": "Вы успешно вышли"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/authors": {
             "get": {
                 "tags": [
@@ -91,7 +178,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/StoreBookRequest"
+                                "$ref": "#/components/schemas/StoreAuthorRequest"
                             }
                         }
                     }
@@ -100,7 +187,12 @@
                     "201": {
                         "$ref": "#/components/responses/AuthorSummaryResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/authors": {
@@ -131,7 +223,12 @@
                     "404": {
                         "$ref": "#/components/responses/NotFound"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/authors/{id}": {
@@ -176,10 +273,15 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "$ref": "#/components/responses/AuthorSummaryResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -193,10 +295,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Удалено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/authors/{slug}-{id}": {
@@ -259,10 +366,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Восстановлено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/books": {
@@ -333,7 +445,12 @@
                     "201": {
                         "$ref": "#/components/responses/BookResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/books": {
@@ -382,7 +499,12 @@
                     "404": {
                         "$ref": "#/components/responses/NotFound"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/books/query": {
@@ -450,10 +572,15 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "$ref": "#/components/responses/BookResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -467,10 +594,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Удалено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/books/{slug}-{id}": {
@@ -511,10 +643,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Восстановлено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/categories": {
@@ -553,7 +690,12 @@
                     "201": {
                         "$ref": "#/components/responses/CategoryResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/categories/{id}": {
@@ -598,7 +740,7 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "$ref": "#/components/responses/CategoryResponse"
                     }
                 }
@@ -629,7 +771,12 @@
                     "404": {
                         "$ref": "#/components/responses/NotFound"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/categories/query": {
@@ -667,10 +814,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Удалено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/category/{id}/restore": {
@@ -686,10 +838,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Восстановлено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/genres": {
@@ -738,10 +895,15 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "$ref": "#/components/responses/GenreResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -771,7 +933,12 @@
                     "201": {
                         "$ref": "#/components/responses/GenreResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/genres": {
@@ -799,7 +966,12 @@
                     "404": {
                         "$ref": "#/components/responses/NotFound"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/genres/{id}": {
@@ -835,10 +1007,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Удалено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/genres/attach/{bookId}": {
@@ -857,10 +1034,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Жанры присвоены"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/genres/detach/{bookId}": {
@@ -879,10 +1061,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Жанры удалены"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/genres/{id}/restore": {
@@ -898,10 +1085,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Восстановлено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/publishers": {
@@ -951,7 +1143,12 @@
                     "201": {
                         "$ref": "#/components/responses/PublisherSummaryResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/publishers": {
@@ -979,7 +1176,12 @@
                     "404": {
                         "$ref": "#/components/responses/NotFound"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/publishers/get": {
@@ -1042,10 +1244,15 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "$ref": "#/components/responses/PublisherSummaryResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -1059,10 +1266,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Удалено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/publishers/{slug}-{id}": {
@@ -1125,10 +1337,243 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Восстановлено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations": {
+            "get": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Получение броней",
+                "operationId": "getReservations",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/BookIdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserIdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EmailQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/StatusQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReservationsResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations/{id}": {
+            "get": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Получение брони",
+                "operationId": "getReservationById",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReservationResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations/user/{userId}": {
+            "get": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Получение брони пользователя",
+                "operationId": "getReservationByUserId",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/UserIdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReservationsResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/books/{bookId}/reserve": {
+            "post": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Забронировать книгу",
+                "operationId": "reserveBook",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/BookIdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReservationResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Отменить бронь книги",
+                "operationId": "cancelReservation",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReservationResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations/{id}/issue": {
+            "post": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Выдать книгу",
+                "operationId": "issueReservation",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReservationResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations/{id}/accept": {
+            "post": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Принять книгу",
+                "operationId": "acceptReservation",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReservationResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations/cancel-expired": {
+            "post": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Отменить просроченные брони",
+                "operationId": "cancelExpiredReservation",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Отменено"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/reviews": {
@@ -1190,7 +1635,12 @@
                     "404": {
                         "$ref": "#/components/responses/NotFound"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/books/{bookId}/reviews": {
@@ -1234,7 +1684,12 @@
                     "201": {
                         "$ref": "#/components/responses/ReviewResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/reviews/user/{userId}": {
@@ -1282,10 +1737,15 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "$ref": "#/components/responses/ReviewResponse"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -1299,10 +1759,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Восстановлено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -1316,10 +1781,15 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Удалено"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -2186,8 +2656,12 @@
                                 "user": {
                                     "$ref": "#/components/schemas/UserResource"
                                 },
-                                "token": {
-                                    "description": "токен sanctum",
+                                "accessToken": {
+                                    "description": "accessToken",
+                                    "type": "string"
+                                },
+                                "refreshToken": {
+                                    "description": "refreshToken",
                                     "type": "string"
                                 }
                             },
@@ -2248,12 +2722,36 @@
                                 "user": {
                                     "$ref": "#/components/schemas/UserResource"
                                 },
-                                "token": {
-                                    "description": "токен sanctum",
+                                "accessToken": {
+                                    "description": "accessToken",
+                                    "type": "string"
+                                },
+                                "refreshToken": {
+                                    "description": "refreshToken",
                                     "type": "string"
                                 }
                             },
                             "type": "object"
+                        }
+                    }
+                }
+            },
+            "ReservationResponse": {
+                "description": "Бронь",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ReservationResource"
+                        }
+                    }
+                }
+            },
+            "ReservationsResponse": {
+                "description": "Брони",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ReservationCollection"
                         }
                     }
                 }
@@ -2284,6 +2782,16 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/ReviewSummaryCollection"
+                        }
+                    }
+                }
+            },
+            "UserResponse": {
+                "description": "Пользователь",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UserResource"
                         }
                     }
                 }
@@ -2456,6 +2964,14 @@
                     "type": "integer"
                 }
             }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "введите access токен",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
         }
     },
     "tags": [
@@ -2482,6 +2998,10 @@
         {
             "name": "Publishers",
             "description": "Publishers"
+        },
+        {
+            "name": "Reservations",
+            "description": "Reservations"
         },
         {
             "name": "Reviews",

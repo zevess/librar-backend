@@ -53,6 +53,9 @@ class BookController extends Controller
         operationId: 'getAdminBooks',
         tags: ['Books'],
         summary: 'Получение книг для админа',
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
             new OA\Parameter(ref: '#/components/parameters/IdQuery'),
@@ -75,6 +78,7 @@ class BookController extends Controller
         $books = $this->bookService->getPaginated($request->validated(), true);
         return new BookCollection($books);
     }
+
 
     #[OA\Get(
         path: '/api/books/query',
@@ -140,6 +144,9 @@ class BookController extends Controller
         summary: 'Создать книгу',
         operationId: 'createBook',
         tags: ['Books'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/StoreBookRequest')
@@ -154,11 +161,15 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
+
     #[OA\Put(
         path: '/api/books/{id}',
         summary: 'Изменить книгу',
         operationId: 'updateBook',
         tags: ['Books'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
@@ -167,7 +178,7 @@ class BookController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateBookRequest')
         ),
         responses: [
-            new OA\Response(response: 201, ref: '#/components/responses/BookResponse'),
+            new OA\Response(response: 200, ref: '#/components/responses/BookResponse'),
         ]
     )]
     public function update(int $id, UpdateBookRequest $request): BookResource
@@ -181,11 +192,14 @@ class BookController extends Controller
         summary: 'Удалить книгу',
         operationId: 'deleteBook',
         tags: ['Books'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: "Удалено"),
+            new OA\Response(response: 200, description: "Удалено"),
         ]
     )]
     public function destroy(int $id): JsonResponse
@@ -201,11 +215,14 @@ class BookController extends Controller
         summary: 'Восстановить книгу',
         operationId: 'restoreBook',
         tags: ['Books'],
+        security: [
+            ['bearerAuth' => []]
+        ],
         parameters: [
             new OA\Parameter(ref: '#/components/parameters/IdInPath'),
         ],
         responses: [
-            new OA\Response(response: 201, description: "Восстановлено"),
+            new OA\Response(response: 200, description: "Восстановлено"),
         ]
     )]
     public function restore(int $id): JsonResponse
