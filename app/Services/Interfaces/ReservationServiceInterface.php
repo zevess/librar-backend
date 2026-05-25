@@ -31,4 +31,6 @@ interface ReservationServiceInterface
     public function update(Reservation $reservation, array $data): Reservation;
 
     public function delete(int $id): bool;
+
+    public function export(?string $startDate, ?string $endDate);
 }

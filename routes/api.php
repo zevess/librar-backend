@@ -59,7 +59,6 @@ Route::prefix('books')->group(function () {
         Route::post('/{bookId}/subscribe', [SubscriptionController::class, 'store']);
         Route::delete('/{bookId}/unsubscribe', [SubscriptionController::class, 'destroy']);
     });
-
 });
 
 Route::prefix('authors')->group(function () {
@@ -131,6 +130,7 @@ Route::prefix('reservations')->group(function () {
         Route::post('/{id}/issue', [ReservationController::class, 'issue']);
         Route::post('/{id}/accept', [ReservationController::class, 'accept']);
         Route::put('/cancel-expired', [ReservationController::class, 'cancelExpired']);
+        Route::get('/export', [ReservationController::class, 'export']);
     });
 });
 

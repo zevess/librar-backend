@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\ReservationStatus;
 use App\Exceptions\ApiException;
+use App\Exports\ReservationExport;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Notifications\SubscriptionNotification;
@@ -12,9 +13,10 @@ use App\Repositories\Interfaces\ReservationRepositoryInterface;
 use App\Repositories\Interfaces\SubscriptionRepositoryInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
-
+use Maatwebsite\Excel\Facades\Excel;
 use function Illuminate\Support\now;
 
 class ReservationService implements ReservationServiceInterface
@@ -24,8 +26,7 @@ class ReservationService implements ReservationServiceInterface
         private ReservationRepositoryInterface $reservationRepository,
         private BookRepositoryInterface $bookRepository,
         private SubscriptionRepositoryInterface $subscriptionRepository
-    ) {
-    }
+    ) {}
 
     public function getAll(): Collection
     {
@@ -150,7 +151,6 @@ class ReservationService implements ReservationServiceInterface
         $data['expires_at'] = null;
 
         return $this->reservationRepository->update($reservedBook, $data);
-
     }
 
     public function accept(int $reservationId): Reservation
@@ -208,5 +208,19 @@ class ReservationService implements ReservationServiceInterface
             throw new ApiException("Бронь не найдена");
         }
         return $this->reservationRepository->delete($reservation);
+    }
+
+    public function export(?string $startDate, ?string $endDate)
+    {
+        $startDate = isset($startDate) ? Carbon::parse($startDate)->startOfDay() : now()->startOfWeek();
+        $endDate = isset($endDate) ? Carbon::parse($endDate)->endOfDay() : now()->endOfWeek();
+
+        if ($startDate->greaterThan($endDate)) {
+            throw new ApiException("Дата начала не может быть позже даты окончания");
+        }
+
+        $filename = 'reservations_' . $startDate->format('Y-m-d') . '_' . $endDate->format('Y-m-d') . '.xlsx';
+        return Excel::download(new ReservationExport($startDate, $endDate), $filename);
+
     }
 }

@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ReservationExport;
 use App\Http\Requests\Reservation\ReservationRequest;
 use App\Http\Resources\Reservation\ReservationCollection;
 use App\Http\Resources\Reservation\ReservationResource;
 use App\Services\Interfaces\ReservationServiceInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+use Maatwebsite\Excel\Facades\Excel;
 use OpenApi\Attributes as OA;
 
 class ReservationController extends Controller
@@ -206,5 +210,15 @@ class ReservationController extends Controller
     public function cancelExpired()
     {
         return $this->reservationService->cancelExpired();
+    }
+
+    public function export(Request $request)
+    {
+        $dates = $request->validate([
+            'start_date' => 'nullable|sometimes|date',
+            'end_date' => 'nullable|sometimes|date',
+        ]);
+
+        return $this->reservationService->export($dates['start_date'] ?? null, $dates['end_date'] ?? null);
     }
 }
