@@ -14,11 +14,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         return Category::oldest()->get();
     }
 
-    public function create(array $data): Category
-    {
-        return Category::create($data);
-    }
-
     public function find(int $id): ?Category
     {
         return Category::find($id);
@@ -48,6 +43,16 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function getBySlug(?string $slug): Collection
     {
         return Category::query()->where('slug', 'like', "%{$slug}%")->take(10)->get();
+    }
+
+    public function getBySelectedField(?array $fields): Collection
+    {
+        return Category::select($fields)->get();
+    }
+
+    public function create(array $data): Category
+    {
+        return Category::create($data);
     }
 
     public function update(Category $category, array $data): Category

@@ -22,6 +22,8 @@ interface PublisherRepositoryInterface
 
     public function getBySlug(?string $slug): Collection;
 
+    public function getBySelectedField(?array $fields): Collection;
+
     public function update(Publisher $publisher, array $data): Publisher;
 
     public function delete(Publisher $publisher): bool;

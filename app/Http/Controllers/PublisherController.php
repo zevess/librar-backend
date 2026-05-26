@@ -238,4 +238,13 @@ class PublisherController extends Controller
             "message" => "Восстановлено"
         ]);
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+        $result = $this->publisherService->import($request->file('file'));
+        return response()->json($result);
+    }
 }

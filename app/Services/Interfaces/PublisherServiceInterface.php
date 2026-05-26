@@ -5,6 +5,7 @@ namespace App\Services\Interfaces;
 use App\Models\Publisher;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 
 interface PublisherServiceInterface
 {
@@ -20,6 +21,8 @@ interface PublisherServiceInterface
 
     public function getByQuery(?string $query): Collection;
 
+    public function getBySelectedField(?array $fields): Collection;
+
     public function create(array $data): Publisher;
 
     public function update(int $id, array $data): Publisher;
@@ -28,4 +31,5 @@ interface PublisherServiceInterface
 
     public function restore(int $id): bool;
 
+    public function import(UploadedFile $file): array;
 }

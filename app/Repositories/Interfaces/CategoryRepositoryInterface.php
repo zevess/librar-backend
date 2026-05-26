@@ -22,10 +22,11 @@ interface CategoryRepositoryInterface
 
     public function getBySlug(?string $slug): Collection;
 
+    public function getBySelectedField(?array $fields): Collection;
+
     public function update(Category $category, array $data): Category;
 
     public function delete(Category $category): bool;
 
     public function restore(Category $category): bool;
-
 }

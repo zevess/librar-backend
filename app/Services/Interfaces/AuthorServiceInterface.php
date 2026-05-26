@@ -5,6 +5,7 @@ namespace App\Services\Interfaces;
 use App\Models\Author;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 
 interface AuthorServiceInterface
 {
@@ -18,6 +19,8 @@ interface AuthorServiceInterface
 
     public function getByQuery(?string $query): Collection;
 
+    public function getBySelectedField(?array $fields): Collection;
+
     public function create(array $data): Author;
 
     public function update(int $id, array $data): ?Author;
@@ -26,4 +29,5 @@ interface AuthorServiceInterface
 
     public function restore(int $id): bool;
 
+    public function import(UploadedFile $file): array;
 }

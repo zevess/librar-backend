@@ -22,6 +22,8 @@ interface CategoryServiceInterface
 
     public function getByQuery(?string $query): Collection;
 
+    public function getBySelectedField(?array $fields): Collection;
+
     public function update(int $id, array $data): Category;
 
     public function delete(int $id): bool;

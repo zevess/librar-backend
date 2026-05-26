@@ -37,6 +37,11 @@ class AuthorRepository implements AuthorRepositoryInterface
         return Author::query()->where('slug', 'like', "%{$slug}%")->take(10)->get();
     }
 
+    public function getBySelectedField(?array $fields): Collection
+    {
+        return Author::select($fields)->get();
+    }
+
     public function create(array $data): Author
     {
         return Author::create($data);
@@ -57,5 +62,4 @@ class AuthorRepository implements AuthorRepositoryInterface
     {
         return $author->restore();
     }
-
 }

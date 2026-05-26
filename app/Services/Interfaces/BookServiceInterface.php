@@ -5,6 +5,7 @@ namespace App\Services\Interfaces;
 use App\Models\Book;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 
 interface BookServiceInterface
 {
@@ -27,4 +28,6 @@ interface BookServiceInterface
     public function delete(int $id): bool;
 
     public function restore(int $id): bool;
+
+    public function import(UploadedFile $file): array;
 }

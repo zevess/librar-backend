@@ -14,11 +14,6 @@ class PublisherRepository implements PublisherRepositoryInterface
         return Publisher::latest()->get();
     }
 
-    public function create(array $data): Publisher
-    {
-        return Publisher::create($data);
-    }
-
     public function find(int $id): ?Publisher
     {
         return Publisher::with(['books', 'books.author', 'books.activeReservations'])->find($id);
@@ -45,6 +40,16 @@ class PublisherRepository implements PublisherRepositoryInterface
     public function getBySlug(?string $slug): Collection
     {
         return Publisher::query()->where('slug', 'like', "%{$slug}%")->take(10)->get();
+    }
+
+    public function getBySelectedField(?array $fields): Collection
+    {
+        return Publisher::select($fields)->get();
+    }
+
+    public function create(array $data): Publisher
+    {
+        return Publisher::create($data);
     }
 
     public function update(Publisher $publisher, array $data): Publisher

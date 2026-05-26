@@ -58,6 +58,7 @@ Route::prefix('books')->group(function () {
         Route::post('/{bookId}/reserve', [ReservationController::class, 'reserve']);
         Route::post('/{bookId}/subscribe', [SubscriptionController::class, 'store']);
         Route::delete('/{bookId}/unsubscribe', [SubscriptionController::class, 'destroy']);
+        Route::post('/import', [BookController::class, 'import']);
     });
 });
 
@@ -72,6 +73,7 @@ Route::prefix('authors')->group(function () {
         Route::put('/{id}', [AuthorController::class, 'update']);
         Route::delete('/{id}', [AuthorController::class, 'destroy']);
         Route::post('/{id}/restore', [AuthorController::class, 'restore']);
+        Route::post('/import', [AuthorController::class, 'import']);
     });
 });
 
@@ -87,6 +89,7 @@ Route::prefix('publishers')->group(function () {
         Route::put('/{id}', [PublisherController::class, 'update']);
         Route::delete('/{id}', [PublisherController::class, 'destroy']);
         Route::post('/{id}/restore', [PublisherController::class, 'restore']);
+        Route::post('/import', [PublisherController::class, 'import']);
     });
 });
 

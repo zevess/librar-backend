@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\ApiException;
+use App\Imports\BooksImport;
 use App\Models\Book;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
@@ -11,7 +12,9 @@ use App\Repositories\Interfaces\PublisherRepositoryInterface;
 use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BookService implements BookServiceInterface
 {
@@ -157,5 +160,28 @@ class BookService implements BookServiceInterface
         }
 
         return $this->bookRepository->restore($book);
+    }
+
+    public function import(UploadedFile $file): array
+    {
+        $import = new BooksImport();
+        Excel::import($import, $file);
+        $skippedRows = [];
+        if($import->failures()->isNotEmpty()){
+            foreach ($import->failures() as $failure){
+                $skippedRows[] = "Строка " . $failure->row() . ": " . implode(', ', $failure->errors());
+            }
+        }
+
+        if ($import->errors()->isNotEmpty()) {
+            foreach ($import->errors() as $error) {
+                $skippedRows[] = "Ошибка: " . $error->getMessage();
+            }
+        }
+
+        return [
+            'message' => 'Импорт завершен',
+            'skippedRows' => empty($skippedRows) ? "Все данные успешно импортированы" : $skippedRows
+        ];
     }
 }

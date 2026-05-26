@@ -9,17 +9,18 @@ use App\Http\Resources\Author\AuthorCollection;
 use App\Http\Resources\Author\AuthorResource;
 use App\Http\Resources\Author\AuthorSummaryCollection;
 use App\Http\Resources\Author\AuthorSummaryResource;
+use App\Imports\AuthorsImport;
 use App\Services\Interfaces\AuthorServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use OpenApi\Attributes as OA;
 
 class AuthorController extends Controller
 {
     public function __construct(
         private AuthorServiceInterface $authorService,
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/authors',
@@ -126,7 +127,7 @@ class AuthorController extends Controller
         return new AuthorSummaryCollection($authors);
     }
 
-    
+
     #[OA\Post(
         path: '/api/authors',
         summary: 'Создать автора',
@@ -220,5 +221,14 @@ class AuthorController extends Controller
         return response()->json([
             "message" => "Восстановлено"
         ]);
+    }
+    
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+        $result = $this->authorService->import($request->file('file'));
+        return response()->json($result);
     }
 }
