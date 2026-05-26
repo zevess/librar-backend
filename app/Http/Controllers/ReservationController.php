@@ -17,8 +17,7 @@ class ReservationController extends Controller
 {
     public function __construct(
         private ReservationServiceInterface $reservationService
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/reservations',
@@ -212,6 +211,28 @@ class ReservationController extends Controller
         return $this->reservationService->cancelExpired();
     }
 
+    #[OA\Get(
+        path: '/api/reservations/export',
+        operationId: 'exportReservations',
+        tags: ['Reservations'],
+        summary: 'Экспортировать брони за период',
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/StartDateQuery'),
+            new OA\Parameter(ref: '#/components/parameters/EndDateQuery'),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Экспорт',
+                content: new OA\MediaType(
+                    mediaType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                )
+            )
+        ]
+    )]
     public function export(Request $request)
     {
         $dates = $request->validate([

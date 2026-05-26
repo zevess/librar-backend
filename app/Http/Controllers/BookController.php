@@ -17,8 +17,7 @@ class BookController extends Controller
 {
     public function __construct(
         private BookServiceInterface $bookService
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/books',
@@ -237,6 +236,47 @@ class BookController extends Controller
         ]);
     }
 
+
+    #[OA\Post(
+        path: '/api/books/import',
+        summary: 'Импортировать книги',
+        operationId: 'importBooks',
+        tags: ['Books'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(
+                    type: 'object',
+                    required: ['file'],
+                    properties: [
+                        new OA\Property(
+                            property: 'file',
+                            type: 'string',
+                            format: 'binary',
+                            description: 'Файл для импорта книг (xlsx)'
+                        )
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "Импорт завершен",
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties:[
+                        new OA\Property(property: 'message', type: 'string'),
+                        new OA\Property(property: 'skippedRows', type: 'object'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function import(Request $request)
     {
         $request->validate([

@@ -223,6 +223,46 @@ class AuthorController extends Controller
         ]);
     }
     
+    #[OA\Post(
+        path: '/api/authors/import',
+        summary: 'Импортировать авторов',
+        operationId: 'importAuthors',
+        tags: ['Authors'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(
+                    type: 'object',
+                    required: ['file'],
+                    properties: [
+                        new OA\Property(
+                            property: 'file',
+                            type: 'string',
+                            format: 'binary',
+                            description: 'Файл для импорта авторов (xlsx)'
+                        )
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "Импорт завершен",
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties:[
+                        new OA\Property(property: 'message', type: 'string'),
+                        new OA\Property(property: 'skippedRows', type: 'object'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function import(Request $request)
     {
         $request->validate([

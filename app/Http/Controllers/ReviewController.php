@@ -17,8 +17,7 @@ class ReviewController extends Controller
 {
     public function __construct(
         private ReviewServiceInterface $reviewService
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/reviews',
@@ -130,6 +129,9 @@ class ReviewController extends Controller
         tags: ['Reviews'],
         security: [
             ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/BookIdInPath'),
         ],
         requestBody: new OA\RequestBody(
             required: true,

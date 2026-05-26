@@ -17,8 +17,7 @@ class PublisherController extends Controller
 {
     public function __construct(
         private PublisherServiceInterface $publisherService
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/publishers',
@@ -118,7 +117,6 @@ class PublisherController extends Controller
     {
         $publisher = $this->publisherService->getBySlugAndId($slug, $id);
         return new PublisherResource($publisher);
-
     }
 
     #[OA\Get(
@@ -161,7 +159,6 @@ class PublisherController extends Controller
     {
         $publisher = $this->publisherService->create($request->validated());
         return new PublisherSummaryResource($publisher);
-
     }
 
     #[OA\Put(
@@ -239,6 +236,47 @@ class PublisherController extends Controller
         ]);
     }
 
+
+    #[OA\Post(
+        path: '/api/publishers/import',
+        summary: 'Импортировать издательства',
+        operationId: 'importPublishers',
+        tags: ['Publishers'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(
+                    type: 'object',
+                    required: ['file'],
+                    properties: [
+                        new OA\Property(
+                            property: 'file',
+                            type: 'string',
+                            format: 'binary',
+                            description: 'Файл для импорта издательств (xlsx)'
+                        )
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "Импорт завершен",
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string'),
+                        new OA\Property(property: 'skippedRows', type: 'object'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function import(Request $request)
     {
         $request->validate([

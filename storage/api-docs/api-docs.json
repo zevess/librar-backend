@@ -654,6 +654,60 @@
                 ]
             }
         },
+        "/api/books/import": {
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Импортировать книги",
+                "operationId": "importBooks",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "description": "Файл для импорта книг (xlsx)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Импорт завершен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "skippedRows": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/categories": {
             "get": {
                 "tags": [
@@ -1576,6 +1630,36 @@
                 ]
             }
         },
+        "/api/reservations/export": {
+            "get": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Экспортировать брони за период",
+                "operationId": "exportReservations",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/StartDateQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EndDateQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Экспорт",
+                        "content": {
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {}
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/reviews": {
             "get": {
                 "tags": [
@@ -1670,6 +1754,11 @@
                 ],
                 "summary": "Создать отзыв",
                 "operationId": "createReview",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/BookIdInPath"
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -2831,6 +2920,14 @@
                     "type": "string"
                 }
             },
+            "EndDateQuery": {
+                "name": "end_date",
+                "in": "query",
+                "description": "Дата окончания (в формате ГГГГ-мм-дд)",
+                "schema": {
+                    "type": "string"
+                }
+            },
             "GenresQuery": {
                 "name": "genres[]",
                 "in": "query",
@@ -2930,6 +3027,14 @@
                 "name": "sort",
                 "in": "query",
                 "description": "Сортировка",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "StartDateQuery": {
+                "name": "start_date",
+                "in": "query",
+                "description": "Дата начала (в формате ГГГГ-мм-дд)",
                 "schema": {
                     "type": "string"
                 }

@@ -122,18 +122,17 @@ Route::prefix('genres')->group(function () {
 });
 
 Route::prefix('reservations')->group(function () {
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/{id}', [ReservationController::class, 'show']);
-        Route::get('/user/{userId}', [ReservationController::class, 'showByUser']);
-        Route::post('/{id}/cancel', [ReservationController::class, 'cancel']);
-    });
-
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
         Route::get('/', [ReservationController::class, 'index']);
         Route::post('/{id}/issue', [ReservationController::class, 'issue']);
         Route::post('/{id}/accept', [ReservationController::class, 'accept']);
-        Route::put('/cancel-expired', [ReservationController::class, 'cancelExpired']);
         Route::get('/export', [ReservationController::class, 'export']);
+        Route::put('/cancel-expired', [ReservationController::class, 'cancelExpired']);
+    });
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/{id}', [ReservationController::class, 'show']);
+        Route::get('/user/{userId}', [ReservationController::class, 'showByUser']);
+        Route::post('/{id}/cancel', [ReservationController::class, 'cancel']);
     });
 });
 

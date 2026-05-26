@@ -17,7 +17,7 @@ class ReservationRepository implements ReservationRepositoryInterface
 
     public function find(int $id): ?Reservation
     {
-        return Reservation::find($id);
+        return Reservation::with(['book', 'reservedBy'])->find($id);
     }
 
     public function findFiltered(?array $data): Collection
