@@ -377,6 +377,60 @@
                 ]
             }
         },
+        "/api/authors/import": {
+            "post": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Импортировать авторов",
+                "operationId": "importAuthors",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "description": "Файл для импорта авторов (xlsx)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Импорт завершен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "skippedRows": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/books": {
             "get": {
                 "tags": [
@@ -1393,6 +1447,60 @@
                 "responses": {
                     "200": {
                         "description": "Восстановлено"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/publishers/import": {
+            "post": {
+                "tags": [
+                    "Publishers"
+                ],
+                "summary": "Импортировать издательства",
+                "operationId": "importPublishers",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "description": "Файл для импорта издательств (xlsx)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Импорт завершен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "skippedRows": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
