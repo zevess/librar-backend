@@ -341,3 +341,6 @@ ALTER TABLE IF EXISTS public.reviews
 
 ## Запуск на виртуальной машине
 <img width="1919" height="1079" alt="Снимок экрана 2026-05-27 153639" src="https://github.com/user-attachments/assets/7fac2d00-f103-4fc5-b619-35e25beb763a" />
+
+
+**[Запись фунционала](https://vk.com/video366909442_456239385?list=ln-JOt9nQxnuLZfGtSfnf)**
