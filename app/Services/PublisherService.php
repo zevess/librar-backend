@@ -68,9 +68,6 @@ class PublisherService implements PublisherServiceInterface
         $slug = Str::slug($query);
 
         $publishers = $this->publisherRepository->getBySlug($slug);
-        if (!$publishers) {
-            throw new ApiException("Издательства не найдены");
-        }
         return $publishers;
     }
 

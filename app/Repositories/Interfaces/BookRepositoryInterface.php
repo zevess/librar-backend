@@ -18,7 +18,7 @@ interface BookRepositoryInterface
 
     public function getBySlug(?string $slug): Collection;
 
-    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator;
+    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false, ?bool $includeInactive = false): LengthAwarePaginator;
 
     public function create(array $data): Book;
 

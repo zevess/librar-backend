@@ -11,7 +11,7 @@ interface BookServiceInterface
 {
     public function getAll(): Collection;
 
-    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator;
+    public function getPaginated(?array $data, ?bool $includeTrashed = false, ?bool $includeInactive = false): LengthAwarePaginator;
 
     public function getByQuery(?string $query): Collection;
 

@@ -33,7 +33,11 @@ class PublisherRepository implements PublisherRepositoryInterface
     {
         $search = $data['q'] ?? '';
         $id = $data['id'] ?? '';
-        $result = Publisher::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed($includeTrashed);
+        $sortColumn = $data['sort'] ?? '';
+        $sortOrder = $data['order'] ?? 'desc';
+        $allowed = ['created_at', 'name'];
+        $column = in_array($sortColumn, $allowed) ? $sortColumn : 'created_at';
+        $result = Publisher::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed($includeTrashed)->orderBy($column, $sortOrder);
         return $result->paginate($perPage)->withQueryString();
     }
 

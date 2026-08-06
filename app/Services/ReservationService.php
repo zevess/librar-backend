@@ -45,11 +45,6 @@ class ReservationService implements ReservationServiceInterface
     public function getFiltered(?array $data): Collection
     {
         $reservations = $this->reservationRepository->findFiltered($data);
-
-        if ($reservations->isEmpty()) {
-            throw new ApiException('Брони не найдены');
-        }
-
         return $reservations;
     }
 
@@ -61,15 +56,12 @@ class ReservationService implements ReservationServiceInterface
 
     public function getByUser(int $userId): Collection
     {
+        $user = User::findOrFail($userId);
+        Gate::authorize('view', $user);
+
         $reservations = $this->reservationRepository->findFiltered([
             'userId' => $userId
         ]);
-
-        if ($reservations->isEmpty()) {
-            throw new ApiException('Брони не найдены');
-        }
-
-        Gate::authorize('view', $reservations->first());
 
         return $reservations;
     }

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Interfaces\UserServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 
 class UserService implements UserServiceInterface
 {
@@ -63,8 +64,8 @@ class UserService implements UserServiceInterface
             throw new ApiException("Пользователь не найден");
         }
 
-        $isSameUser = auth()->id() === $user->id;
-        $isEditorAdmin = auth()->user()->role->value === UserRole::ADMIN->value;
+        $isSameUser = Auth::id() === $user->id;
+        $isEditorAdmin = Auth::user()->role->value === UserRole::ADMIN->value;
         $isRoleChanging = $data['role'] !== $user->role->value;
 
         if ($isSameUser && $isEditorAdmin && $isRoleChanging) {
@@ -86,8 +87,8 @@ class UserService implements UserServiceInterface
         if (!$user) {
             throw new ApiException("Пользователь не найден");
         }
-        $isSameUser = auth()->id() === $user->id;
-        $isEditorAdmin = auth()->user()->role->value === UserRole::ADMIN->value;
+        $isSameUser = Auth::id() === $user->id;
+        $isEditorAdmin = Auth::user()->role->value === UserRole::ADMIN->value;
         if ($isSameUser && $isEditorAdmin) {
             throw new ApiException('Себя удалить нельзя');
         }

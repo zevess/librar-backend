@@ -143,7 +143,7 @@ class ReviewController extends Controller
     )]
     public function store(int $bookId, StoreReviewRequest $request): ReviewResource
     {
-        $review = $this->reviewService->create(auth()->id(), $bookId, $request->validated());
+        $review = $this->reviewService->create(Auth::id(), $bookId, $request->validated());
         return new ReviewResource($review);
     }
 

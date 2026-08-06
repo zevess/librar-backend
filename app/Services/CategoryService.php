@@ -60,9 +60,6 @@ class CategoryService implements CategoryServiceInterface
         $slug = Str::slug($query);
 
         $categories = $this->categoryRepository->getBySlug($slug);
-        if (!$categories) {
-            throw new ApiException("Категории не найдены");
-        }
         return $categories;
     }
 

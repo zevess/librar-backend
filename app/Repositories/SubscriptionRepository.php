@@ -10,7 +10,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
 {
     public function all(): Collection
     {
-        return Subscription::get();
+        return Subscription::latest()->get();
     }
 
     public function find(int $id): Subscription

@@ -49,7 +49,7 @@ Route::prefix('books')->group(function () {
 
     Route::get('/query', [BookController::class, 'getByQuery']);
     Route::get('/', [BookController::class, 'index']);
-    Route::get('/{slug}-{id}', [BookController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
+    Route::get('/{slug}-{id}', [BookController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+'])->middleware('auth:sanctum');
     Route::get('/{id}', [BookController::class, 'show']);
     Route::get('/{id}/reviews', [ReviewController::class, 'showByBook']);
 

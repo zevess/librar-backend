@@ -3,7 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Author;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Str;

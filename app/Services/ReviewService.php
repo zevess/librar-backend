@@ -36,18 +36,12 @@ class ReviewService implements ReviewServiceInterface
     public function getByBook(int $bookId): Collection
     {
         $reviews = $this->reviewRepository->findByBook($bookId);
-        if ($reviews->isEmpty()) {
-            throw new ApiException('Отзывы не найдены');
-        }
         return $reviews;
     }
 
     public function getByUser(int $userId): Collection
     {
         $reviews = $this->reviewRepository->findByUser($userId);
-        if ($reviews->isEmpty()) {
-            throw new ApiException('Отзывы не найдены');
-        }
         return $reviews;
     }
 

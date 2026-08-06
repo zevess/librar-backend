@@ -55,6 +55,7 @@ class BookSummaryResource extends JsonResource
             'image' => $this->image,
             'author' => new AuthorSummaryResource($this->whenLoaded('author')),
             'isAvailable' => $this->activeReservations ? $this->activeReservations->isEmpty() : false,
+            'isActive'=>$this->is_active
         ];
     }
 }

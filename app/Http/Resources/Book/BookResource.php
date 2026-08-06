@@ -81,6 +81,7 @@ class BookResource extends BaseResource
             'isAvailable' => $this->activeReservations ? $this->activeReservations->isEmpty() : false,
             'isSubscribed' => $this->subscribers ? $this->subscribers->where('pivot.user_id', $userId)->isNotEmpty() : false,
             'isDeleted' => (bool) $this->deleted_at,
+            'isActive'=> $this->is_active
         ];
     }
 }

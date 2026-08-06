@@ -35,11 +35,7 @@ class AuthorService implements AuthorServiceInterface
     public function getByQuery(?string $query): Collection
     {
         $slug = Str::slug($query);
-
         $authors = $this->authorRepository->getBySlug($slug);
-        if (!$authors) {
-            throw new ApiException("Авторы не найдены");
-        }
         return $authors;
     }
 

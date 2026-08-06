@@ -9,7 +9,7 @@ use App\Http\Resources\Reservation\ReservationResource;
 use App\Services\Interfaces\ReservationServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use OpenApi\Attributes as OA;
 
@@ -109,7 +109,7 @@ class ReservationController extends Controller
     )]
     public function reserve(int $bookId): ReservationResource|JsonResponse
     {
-        $reservation = $this->reservationService->reserve($bookId, auth()->id());
+        $reservation = $this->reservationService->reserve($bookId, Auth::id());
         return response()->json([
             "message" => "Книга забронирована",
             "reservation" => new ReservationResource($reservation)

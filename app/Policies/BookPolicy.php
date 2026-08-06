@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\UserRole;
 use App\Models\Book;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -21,7 +22,10 @@ class BookPolicy
      */
     public function view(User $user, Book $book): bool
     {
-        return false;
+        if($book->is_active){
+            return true;
+        }
+        return $user->role->value === (UserRole::ADMIN->value) || $user->role->value === (UserRole::LIBRARIAN->value) ?? false;
     }
 
     /**

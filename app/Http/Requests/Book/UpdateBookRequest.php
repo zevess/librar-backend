@@ -42,26 +42,22 @@ class UpdateBookRequest extends FormRequest
             'slug' => 'nullable',
             'description' => ['sometimes', 'min:10'],
             'image' => ['nullable'],
-            'remove_image' => ['sometimes', 'boolean'],
             'author_id' => ['sometimes', 'nullable', 'numeric'],
             'publisher_id' => ['sometimes', 'numeric'],
-            'category_id' => ['sometimes', 'numeric']
+            'category_id' => ['sometimes', 'numeric'],
+            'is_active' => ['sometimes', 'boolean']
         ];
     }
 
-    // public function messages(): array
-    // {
-    //     return [
-    //         'title.required' => 'Пожалуйста введите название книги',
-    //         'description.required' => 'Пожалуйста введите описание'
-    //     ];
-    // }
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Пожалуйста введите название книги',
+            'description.required' => 'Пожалуйста введите описание',
+            'author_id.required' => 'Пожайлуста укажите id автора',
+            'publisher_id.required' => 'Пожайлуста укажите id издательства',
+            'category_id.required' => 'Пожайлуста укажите id категории',
+        ];
+    }
 
-    // protected function prepareForValidation(): void
-    // {
-    //     $this->merge([
-    //         'is_published' => $this->boolean('is_published'),
-    //         'remove_image' => $this->boolean('remove_image')
-    //     ]);
-    // }
 }

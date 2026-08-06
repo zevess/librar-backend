@@ -74,7 +74,7 @@ class BookController extends Controller
     )]
     public function adminPaginated(GetBookRequest $request): BookCollection
     {
-        $books = $this->bookService->getPaginated($request->validated(), true);
+        $books = $this->bookService->getPaginated($request->validated(), true, true);
         return new BookCollection($books);
     }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\BookStatus;
 use App\Enums\ReservationStatus;
+use App\Models\Scopes\ActiveScope;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +23,8 @@ class Book extends Model
         'image',
         'author_id',
         'publisher_id',
-        'category_id'
+        'category_id',
+        'is_active'
     ];
 
     protected $casts = [

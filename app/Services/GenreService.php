@@ -53,9 +53,6 @@ class GenreService implements GenreServiceInterface
     {
         $slug = Str::slug($query);
         $genres = $this->genreRepository->getBySlug($slug);
-        if (!$genres) {
-            throw new ApiException("Жанры не найдены");
-        }
         return $genres;
     }
 
