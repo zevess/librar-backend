@@ -75,6 +75,17 @@ class BookRepository implements BookRepositoryInterface
                 fn($q) =>
                 $q->whereIn('status', ['reserved', 'issued'])
             ))
+            ->when($includeInactive, function ($q) use ($status) {
+                $q->when($status === 'active', function ($q2) {
+                    $q2->where('is_active', true);
+                })
+                    ->when($status === 'inactive', function ($q2) {
+                        $q2->where('is_active', false)->withoutTrashed();
+                    })
+                    ->when($status === 'deleted', function ($q2) {
+                        $q2->onlyTrashed();
+                    });
+            })
             ->when(!$includeInactive, function ($query) {
                 $query->where('is_active', true);
             })

@@ -9,11 +9,9 @@ use App\Http\Resources\Author\AuthorCollection;
 use App\Http\Resources\Author\AuthorResource;
 use App\Http\Resources\Author\AuthorSummaryCollection;
 use App\Http\Resources\Author\AuthorSummaryResource;
-use App\Imports\AuthorsImport;
 use App\Services\Interfaces\AuthorServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 use OpenApi\Attributes as OA;
 
 class AuthorController extends Controller

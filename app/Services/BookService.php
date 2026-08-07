@@ -64,10 +64,8 @@ class BookService implements BookServiceInterface
 
     public function getBySlugAndId(string $slug, int $id): ?Book
     {
-        $user = Auth::user();
-        Gate::authorize('view', $user);
-
         $book = $this->bookRepository->findBySlugAndId($slug, $id);
+        Gate::authorize('view', $book);
         if (!$book) {
             throw new ApiException("Книга не найдена");
         }
