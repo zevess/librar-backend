@@ -19,9 +19,9 @@ class UserPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, User $model): bool
+    public function view(User $user, User $targetUser): bool
     {
-        return false;
+        return $user->id === $targetUser->id || $user->role->value === (UserRole::ADMIN->value) || $user->role->value === (UserRole::LIBRARIAN->value);
     }
 
     /**
@@ -74,5 +74,14 @@ class UserPolicy
     public function forceDelete(User $user, User $model): bool
     {
         return false;
+    }
+
+    public function viewSubscriptions(User $user, User $targetUser): bool
+    {
+        return $user->id === $targetUser->id || $user->role->value === (UserRole::ADMIN->value) || $user->role->value === (UserRole::LIBRARIAN->value);
+    }
+    public function viewReservations(User $user, User $targetUser): bool
+    {
+        return $user->id === $targetUser->id || $user->role->value === (UserRole::ADMIN->value) || $user->role->value === (UserRole::LIBRARIAN->value);
     }
 }

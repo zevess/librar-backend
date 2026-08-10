@@ -37,7 +37,7 @@ class ReviewRepository implements ReviewRepositoryInterface
         $id = $data['id'] ?? '';
         $user = $data['email'] ?? '';
         $userId = $data['userId'] ?? '';
-        $bookId = $data['userId'] ?? '';
+        $bookId = $data['bookId'] ?? '';
         $rating = $data['rating'] ?? '';
 
         $result = Review::with(['user', 'book'])

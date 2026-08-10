@@ -4,7 +4,21 @@ namespace App\Http\Resources\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-
+use OpenApi\Attributes as OA;
+#[OA\Schema(
+    schema: 'UserPublicCollection',
+    properties: [
+        new OA\Property(
+            property: 'data',
+            type: 'array',
+            description: 'Список пользователей',
+            items: new OA\Items(
+                ref: '#/components/schemas/UserPublicResource'
+            )
+        ),
+    ],
+    type: 'object'
+)]
 class UserPublicCollection extends ResourceCollection
 {
     /**

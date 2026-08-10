@@ -18,6 +18,8 @@ interface AuthorRepositoryInterface
 
     public function getBySlug(?string $slug): Collection;
 
+    public function getBySelectedField(?array $fields): Collection;
+
     public function create(array $data): Author;
 
     public function update(Author $author, array $data): Author;

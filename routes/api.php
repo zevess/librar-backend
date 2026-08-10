@@ -22,6 +22,7 @@ Route::prefix('auth')->group(function () {
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
     });
+    Route::post('/refresh', [AuthController::class, 'refresh']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
@@ -48,7 +49,7 @@ Route::prefix('books')->group(function () {
 
     Route::get('/query', [BookController::class, 'getByQuery']);
     Route::get('/', [BookController::class, 'index']);
-    Route::get('/{slug}-{id}', [BookController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+']);
+    Route::get('/{slug}-{id}', [BookController::class, 'showBySlugAndId'])->where(['slug' => '[a-z0-9-]+', 'id' => '[0-9]+'])->middleware('auth:sanctum');
     Route::get('/{id}', [BookController::class, 'show']);
     Route::get('/{id}/reviews', [ReviewController::class, 'showByBook']);
 
@@ -57,8 +58,8 @@ Route::prefix('books')->group(function () {
         Route::post('/{bookId}/reserve', [ReservationController::class, 'reserve']);
         Route::post('/{bookId}/subscribe', [SubscriptionController::class, 'store']);
         Route::delete('/{bookId}/unsubscribe', [SubscriptionController::class, 'destroy']);
+        Route::post('/import', [BookController::class, 'import']);
     });
-
 });
 
 Route::prefix('authors')->group(function () {
@@ -72,6 +73,7 @@ Route::prefix('authors')->group(function () {
         Route::put('/{id}', [AuthorController::class, 'update']);
         Route::delete('/{id}', [AuthorController::class, 'destroy']);
         Route::post('/{id}/restore', [AuthorController::class, 'restore']);
+        Route::post('/import', [AuthorController::class, 'import']);
     });
 });
 
@@ -87,6 +89,7 @@ Route::prefix('publishers')->group(function () {
         Route::put('/{id}', [PublisherController::class, 'update']);
         Route::delete('/{id}', [PublisherController::class, 'destroy']);
         Route::post('/{id}/restore', [PublisherController::class, 'restore']);
+        Route::post('/import', [PublisherController::class, 'import']);
     });
 });
 
@@ -119,17 +122,17 @@ Route::prefix('genres')->group(function () {
 });
 
 Route::prefix('reservations')->group(function () {
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/{id}', [ReservationController::class, 'show']);
-        Route::get('/user/{userId}', [ReservationController::class, 'showByUser']);
-        Route::post('/{id}/cancel', [ReservationController::class, 'cancel']);
-    });
-
     Route::middleware(['auth:sanctum', 'role:admin,librarian'])->group(function () {
         Route::get('/', [ReservationController::class, 'index']);
         Route::post('/{id}/issue', [ReservationController::class, 'issue']);
         Route::post('/{id}/accept', [ReservationController::class, 'accept']);
+        Route::get('/export', [ReservationController::class, 'export']);
         Route::put('/cancel-expired', [ReservationController::class, 'cancelExpired']);
+    });
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/{id}', [ReservationController::class, 'show']);
+        Route::get('/user/{userId}', [ReservationController::class, 'showByUser']);
+        Route::post('/{id}/cancel', [ReservationController::class, 'cancel']);
     });
 });
 

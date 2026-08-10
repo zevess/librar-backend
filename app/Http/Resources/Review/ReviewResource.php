@@ -9,6 +9,42 @@ use App\Http\Resources\User\UserPublicResource;
 use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
+
+#[OA\Schema(
+    schema: 'ReviewResource',
+    properties: [
+        new OA\Property(
+            property: 'id',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'rating',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'text',
+            type: 'string',
+        ),
+        new OA\Property(
+            property: 'book',
+            ref: '#/components/schemas/BookSummaryResource'
+        ),
+        new OA\Property(
+            property: 'user',
+            ref: '#/components/schemas/UserResource'
+        ),
+        new OA\Property(
+            property: 'createdAt',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'isDeleted',
+            type: 'boolean',
+        ),
+    ],
+    type: 'object'
+)]
 
 class ReviewResource extends BaseResource
 {

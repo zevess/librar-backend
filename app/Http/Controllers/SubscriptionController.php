@@ -6,6 +6,7 @@ use App\Http\Resources\Book\BookSummaryCollection;
 use App\Http\Resources\User\UserPublicCollection;
 use App\Services\Interfaces\SubscriptionServiceInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
@@ -28,7 +29,7 @@ class SubscriptionController extends Controller
 
     public function store(int $bookId): JsonResponse
     {
-        $userId = auth()->id();
+        $userId = Auth::id();
         $this->subscriptionService->subscribe($userId, $bookId);
         return response()->json([
             'message' => "Вы подписались к книге"
@@ -37,7 +38,7 @@ class SubscriptionController extends Controller
 
     public function destroy(int $bookId): JsonResponse
     {
-        $userId = auth()->id();
+        $userId = Auth::id();
         $this->subscriptionService->unsubscribe($userId, $bookId);
         return response()->json([
             'message' => "Вы отписались от книги"

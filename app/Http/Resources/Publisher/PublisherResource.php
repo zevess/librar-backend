@@ -3,11 +3,40 @@
 namespace App\Http\Resources\Publisher;
 
 use App\Http\Resources\BaseResource;
-use App\Http\Resources\Book\BookCollection;
 use App\Http\Resources\Book\BookSummaryCollection;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'PublisherResource',
+    properties: [
+        new OA\Property(
+            property: 'id',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'name',
+            type: 'string',
+        ),
+        new OA\Property(
+            property: 'slug',
+            type: 'string',
+        ),
+        new OA\Property(
+            property: 'description',
+            type: 'string',
+        ),
+        new OA\Property(
+            property: 'books',
+            ref: '#/components/schemas/BookSummaryCollection'
+        ),
+        new OA\Property(
+            property: 'isDeleted',
+            type: 'boolean',
+        ),
+    ],
+    type: 'object'
+)]
 class PublisherResource extends BaseResource
 {
     /**

@@ -5,12 +5,13 @@ namespace App\Services\Interfaces;
 use App\Models\Book;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 
 interface BookServiceInterface
 {
     public function getAll(): Collection;
 
-    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator;
+    public function getPaginated(?array $data, ?bool $includeTrashed = false, ?bool $includeInactive = false): LengthAwarePaginator;
 
     public function getByQuery(?string $query): Collection;
 
@@ -27,4 +28,6 @@ interface BookServiceInterface
     public function delete(int $id): bool;
 
     public function restore(int $id): bool;
+
+    public function import(UploadedFile $file): array;
 }

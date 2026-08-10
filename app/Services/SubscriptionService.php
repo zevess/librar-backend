@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\ApiException;
 use App\Models\Subscription;
+use App\Models\User;
 use App\Repositories\Interfaces\SubscriptionRepositoryInterface;
 use App\Services\Interfaces\SubscriptionServiceInterface;
 use Illuminate\Support\Collection;
@@ -26,12 +27,11 @@ class SubscriptionService implements SubscriptionServiceInterface
 
     public function getUserSubscriptions(int $userId): Collection
     {
+        $user = User::findOrFail($userId);
+        Gate::authorize('view', $user);
+
         $follows = $this->subscriptionRepository->findByUser($userId);
         $books = $follows->pluck('book');
-        if ($books->isEmpty()) {
-            throw new ApiException("Подписки не найдены");
-        }
-        Gate::authorize('view', $follows->first());
 
         return $books;
     }
@@ -39,9 +39,6 @@ class SubscriptionService implements SubscriptionServiceInterface
     public function getBookSubscribers(int $bookId): Collection
     {
         $subscribers = $this->subscriptionRepository->findByBook($bookId)->pluck('user');
-        if (!$subscribers) {
-            throw new ApiException("Подписчики не найдены");
-        }
         return $subscribers;
     }
 

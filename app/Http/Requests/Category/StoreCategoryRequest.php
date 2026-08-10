@@ -3,6 +3,17 @@
 namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
+
+#[OA\Schema(
+    schema: 'StoreCategoryRequest',
+    required: ['name'],
+    properties: [
+        new OA\Property(property: 'name', type: 'string', example: 'Название категории'),
+        new OA\Property(property: 'description', type: 'string', example: 'Описание категории'),
+    ],
+    type: 'object'
+)]
 
 class StoreCategoryRequest extends FormRequest
 {

@@ -29,7 +29,7 @@ class BookRepository implements BookRepositoryInterface
         return Book::with(['author', 'category', 'genres', 'publisher', 'activeReservations', 'subscribers'])->where('slug', $slug)->where('id', $id)->first();
     }
 
-    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false): LengthAwarePaginator
+    public function getPaginated(?array $data, int $perPage, ?bool $includeTrashed = false, ?bool $includeInactive = false): LengthAwarePaginator
     {
         $search = $data['q'] ?? '';
         $genres = $data['genres'];
@@ -43,7 +43,6 @@ class BookRepository implements BookRepositoryInterface
         $column = in_array($sortColumn, $allowed) ? $sortColumn : 'created_at';
 
         $result = Book::with(['author', 'genres', 'publisher', 'category', 'activeReservations', 'subscribers', 'reservation'])
-
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('slug', 'like', "%{$search}%")
@@ -76,6 +75,20 @@ class BookRepository implements BookRepositoryInterface
                 fn($q) =>
                 $q->whereIn('status', ['reserved', 'issued'])
             ))
+            ->when($includeInactive, function ($q) use ($status) {
+                $q->when($status === 'active', function ($q2) {
+                    $q2->where('is_active', true);
+                })
+                    ->when($status === 'inactive', function ($q2) {
+                        $q2->where('is_active', false)->withoutTrashed();
+                    })
+                    ->when($status === 'deleted', function ($q2) {
+                        $q2->onlyTrashed();
+                    });
+            })
+            ->when(!$includeInactive, function ($query) {
+                $query->where('is_active', true);
+            })
             ->withTrashed($includeTrashed)
             ->orderBy($column, $sortOrder);
 

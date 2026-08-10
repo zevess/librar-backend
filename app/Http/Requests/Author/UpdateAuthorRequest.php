@@ -3,7 +3,16 @@
 namespace App\Http\Requests\Author;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'UpdateAuthorRequest',
+    properties: [
+        new OA\Property(property: 'name', type: 'string', example: 'Имя автора'),
+        new OA\Property(property: 'description', type: 'string', example: 'Описание автора'),
+    ],
+    type: 'object'
+)]
 class UpdateAuthorRequest extends FormRequest
 {
     /**
@@ -24,18 +33,14 @@ class UpdateAuthorRequest extends FormRequest
         return [
             'name' => 'required|min:3',
             'slug' => 'nullable',
-            'description' => 'required|min:10',
-            'author_id' => 'nullable'
-            // 'years' => 'required|integer'
+            'description' => 'nullable',
         ];
     }
 
-    // public function messages(): array
-    // {
-    //     return [
-    //         'name.required' => 'Пожалуйста введите имя автора',
-    //         'description.required' => 'Пожалуйста введите описание',
-    //         'years.required' => 'Пожалуйста укажите даты'
-    //     ];
-    // }
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Пожалуйста введите имя автора',
+        ];
+    }
 }

@@ -17,8 +17,7 @@ class CategoryService implements CategoryServiceInterface
      */
     public function __construct(
         private CategoryRepositoryInterface $categoryRepository
-    ) {
-    }
+    ) {}
 
     public function getAll(): Collection
     {
@@ -61,10 +60,12 @@ class CategoryService implements CategoryServiceInterface
         $slug = Str::slug($query);
 
         $categories = $this->categoryRepository->getBySlug($slug);
-        if (!$categories) {
-            throw new ApiException("Категории не найдены");
-        }
         return $categories;
+    }
+
+    public function getBySelectedField(?array $fields): Collection
+    {
+        return $this->categoryRepository->getBySelectedField($fields);
     }
 
     public function create(array $data): Category

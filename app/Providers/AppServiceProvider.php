@@ -6,13 +6,11 @@ use App\Repositories\AuthorRepository;
 use App\Repositories\AuthRepository;
 use App\Repositories\BookRepository;
 use App\Repositories\CategoryRepository;
-use App\Repositories\FollowRepository;
 use App\Repositories\GenreRepository;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\AuthRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
-use App\Repositories\Interfaces\FollowRepositoryInterface;
 use App\Repositories\Interfaces\GenreRepositoryInterface;
 use App\Repositories\Interfaces\PublisherRepositoryInterface;
 use App\Repositories\Interfaces\ReservationRepositoryInterface;
@@ -28,13 +26,11 @@ use App\Services\AuthorService;
 use App\Services\AuthService;
 use App\Services\BookService;
 use App\Services\CategoryService;
-use App\Services\FollowService;
 use App\Services\GenreService;
 use App\Services\Interfaces\AuthorServiceInterface;
 use App\Services\Interfaces\AuthServiceInterface;
 use App\Services\Interfaces\BookServiceInterface;
 use App\Services\Interfaces\CategoryServiceInterface;
-use App\Services\Interfaces\FollowServiceInterface;
 use App\Services\Interfaces\GenreServiceInterface;
 use App\Services\Interfaces\PublisherServiceInterface;
 use App\Services\Interfaces\ReservationServiceInterface;
@@ -47,6 +43,7 @@ use App\Services\ReviewService;
 use App\Services\SubscriptionService;
 use App\Services\UserService;
 use Illuminate\Support\ServiceProvider;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -91,6 +88,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        HeadingRowFormatter::default('none');
     }
 }

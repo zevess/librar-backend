@@ -11,7 +11,7 @@ class GenreRepository implements GenreRepositoryInterface
 {
     public function all(): Collection
     {
-        return Genre::get();
+        return Genre::oldest()->get();
     }
 
     public function create(array $data): Genre

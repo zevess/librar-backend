@@ -28,13 +28,22 @@ class AuthorRepository implements AuthorRepositoryInterface
     {
         $search = $data['q'] ?? '';
         $id = $data['id'] ?? '';
-        $result = Author::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed($includeTrashed);
+        $sortColumn = $data['sort'] ?? '';
+        $sortOrder = $data['order'] ?? 'desc';
+        $allowed = ['created_at', 'name'];
+        $column = in_array($sortColumn, $allowed) ? $sortColumn : 'created_at';
+        $result = Author::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed($includeTrashed)->orderBy($column, $sortOrder);
         return $result->paginate($perPage)->withQueryString();
     }
 
     public function getBySlug(?string $slug): Collection
     {
         return Author::query()->where('slug', 'like', "%{$slug}%")->take(10)->get();
+    }
+
+    public function getBySelectedField(?array $fields): Collection
+    {
+        return Author::select($fields)->get();
     }
 
     public function create(array $data): Author
@@ -57,5 +66,4 @@ class AuthorRepository implements AuthorRepositoryInterface
     {
         return $author->restore();
     }
-
 }

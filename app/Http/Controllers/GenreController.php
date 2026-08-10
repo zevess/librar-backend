@@ -8,6 +8,7 @@ use App\Http\Resources\Genre\GenreResource;
 use App\Services\Interfaces\GenreServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class GenreController extends Controller
 {
@@ -15,7 +16,19 @@ class GenreController extends Controller
         private GenreServiceInterface $genreService
     ) {
     }
-
+    #[OA\Get(
+        path: '/api/genres',
+        operationId: 'getGenres',
+        tags: ['Genres'],
+        summary: 'Получение жанров',
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/GenresResponse'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound')
+        ]
+    )]
     public function index(Request $request): GenreCollection
     {
         $query = $request->input('q');
@@ -23,18 +36,47 @@ class GenreController extends Controller
         return new GenreCollection($genres);
     }
 
-    public function adminPaginated(GetGenreRequest $request): GenreCollection
-    {
-        $genres = $this->genreService->getPaginated($request->validated(), true);
-        return new GenreCollection($genres);
-    }
 
+
+    #[OA\Get(
+        path: '/api/admin/genres',
+        operationId: 'getAdminGenres',
+        tags: ['Genres'],
+        summary: 'Получение жанров для админа',
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
+            new OA\Parameter(ref: '#/components/parameters/IdQuery'),
+            new OA\Parameter(ref: '#/components/parameters/PerPageQuery'),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/GenresResponse'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound')
+        ]
+    )]
     public function adminFiltered(GetGenreRequest $request): GenreCollection
     {
         $genres = $this->genreService->getAdminFiltered($request->validated());
         return new GenreCollection($genres);
     }
 
+
+
+    #[OA\Get(
+        path: '/api/genres/{id}',
+        operationId: 'getGenreById',
+        tags: ['Genres'],
+        summary: 'Получение жанра',
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/IdInPath'),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/GenreResponse'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound')
+        ]
+    )]
     public function show($id): GenreResource
     {
         $genre = $this->genreService->getById($id);
@@ -42,14 +84,67 @@ class GenreController extends Controller
 
     }
 
+
+
+    #[OA\Post(
+        path: '/api/genres',
+        summary: 'Создать жанр',
+        operationId: 'createGenre',
+        tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                type: 'object',
+                required: ['name'],
+                properties: [
+                    new OA\Property(
+                        property: 'name',
+                        type: 'string',
+                    )
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, ref: '#/components/responses/GenreResponse'),
+        ]
+    )]
     public function store(Request $request): GenreResource
     {
         $genreName = $request->input('name');
         $genre = $this->genreService->create($genreName);
         return new GenreResource($genre);
-
     }
 
+
+
+    #[OA\Put(
+        path: '/api/genres',
+        summary: 'Изменить жанр',
+        operationId: 'updateGenre',
+        tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                type: 'object',
+                required: ['name'],
+                properties: [
+                    new OA\Property(
+                        property: 'name',
+                        type: 'string',
+                    )
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/GenreResponse'),
+        ]
+    )]
     public function update(int $genreId, Request $request): GenreResource
     {
         $data['name'] = $request->input('name');
@@ -57,6 +152,22 @@ class GenreController extends Controller
         return new GenreResource($genre);
     }
 
+    #[OA\Post(
+        path: '/api/genres/attach/{bookId}',
+        summary: 'Добавить жанр к книге',
+        operationId: 'attachGenre',
+        tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/BookIdInPath'),
+            new OA\Parameter(ref: '#/components/parameters/GenresQuery'),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Жанры присвоены'),
+        ]
+    )]
     public function attach(Request $request, int $bookId): JsonResponse
     {
         $genres = $request->input('genres');
@@ -66,6 +177,24 @@ class GenreController extends Controller
         ], 200);
     }
 
+
+
+    #[OA\Delete(
+        path: '/api/genres/detach/{bookId}',
+        summary: 'Удалить жанр из книге',
+        operationId: 'detachGenre',
+        tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/BookIdInPath'),
+            new OA\Parameter(ref: '#/components/parameters/GenresQuery'),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Жанры удалены'),
+        ]
+    )]
     public function detach(Request $request, int $bookId): JsonResponse
     {
         $genres = $request->input('genres');
@@ -75,6 +204,23 @@ class GenreController extends Controller
         ], 200);
     }
 
+
+
+    #[OA\Delete(
+        path: '/api/genres/{id}',
+        summary: 'Удалить жанр',
+        operationId: 'deleteGenre',
+        tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/IdInPath'),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Удалено"),
+        ]
+    )]
     public function destroy(int $id): JsonResponse
     {
         $this->genreService->delete($id);
@@ -82,6 +228,24 @@ class GenreController extends Controller
             "message" => "Удалено"
         ], 200);
     }
+
+
+
+    #[OA\Post(
+        path: '/api/genres/{id}/restore',
+        summary: 'Восстановить жанр',
+        operationId: 'restoreGenre',
+        tags: ['Genres'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/IdInPath'),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Восстановлено"),
+        ]
+    )]
     public function restore(int $id): JsonResponse
     {
         $restored = $this->genreService->restore($id);

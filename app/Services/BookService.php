@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\ApiException;
+use App\Imports\BooksImport;
 use App\Models\Book;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
@@ -11,7 +12,11 @@ use App\Repositories\Interfaces\PublisherRepositoryInterface;
 use App\Services\Interfaces\BookServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BookService implements BookServiceInterface
 {
@@ -29,24 +34,20 @@ class BookService implements BookServiceInterface
         return $this->bookRepository->all();
     }
 
-    public function getPaginated(?array $data, ?bool $includeTrashed = false): LengthAwarePaginator
+    public function getPaginated(?array $data, ?bool $includeTrashed = false, ?bool $includeInactive = false): LengthAwarePaginator
     {
         $data['q'] = Str::slug($data['q'] ?? '');
         $data['genres'] = array_map('intval', $data['genres'] ?? []);
         $data['publishers'] = array_map('intval', $data['publishers'] ?? []);
         $perPage = $data['perPage'] ?? 10;
 
-        return $this->bookRepository->getPaginated($data, $perPage, $includeTrashed);
+        return $this->bookRepository->getPaginated($data, $perPage, $includeTrashed, $includeInactive);
     }
 
     public function getByQuery(?string $query): Collection
     {
         $slug = Str::slug($query);
-
         $books = $this->bookRepository->getBySlug($slug);
-        if (!$books) {
-            throw new ApiException("Книги не найдены");
-        }
         return $books;
     }
 
@@ -64,6 +65,7 @@ class BookService implements BookServiceInterface
     public function getBySlugAndId(string $slug, int $id): ?Book
     {
         $book = $this->bookRepository->findBySlugAndId($slug, $id);
+        Gate::authorize('view', $book);
         if (!$book) {
             throw new ApiException("Книга не найдена");
         }
@@ -157,5 +159,28 @@ class BookService implements BookServiceInterface
         }
 
         return $this->bookRepository->restore($book);
+    }
+
+    public function import(UploadedFile $file): array
+    {
+        $import = new BooksImport();
+        Excel::import($import, $file);
+        $skippedRows = [];
+        if($import->failures()->isNotEmpty()){
+            foreach ($import->failures() as $failure){
+                $skippedRows[] = "Строка " . $failure->row() . ": " . implode(', ', $failure->errors());
+            }
+        }
+
+        if ($import->errors()->isNotEmpty()) {
+            foreach ($import->errors() as $error) {
+                $skippedRows[] = "Ошибка: " . $error->getMessage();
+            }
+        }
+
+        return [
+            'message' => 'Импорт завершен',
+            'skippedRows' => empty($skippedRows) ? "Все данные успешно импортированы" : $skippedRows
+        ];
     }
 }

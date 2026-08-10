@@ -24,7 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'role'
+        // 'role'
     ];
 
 
@@ -43,6 +43,15 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    protected static function booted()
+    {
+        static::creating(function (User $user){
+            if(static::query()->doesntExist()){
+                $user->role = UserRole::ADMIN;
+            }
+        });
+    }
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(PasswordReset::create($token));
@@ -56,6 +65,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function subscriptions(): BelongsToMany
     {
         return $this->belongsToMany(Book::class, 'subscriptions');
+    }
+
+    public function refreshTokens(): HasMany
+    {
+        return $this->hasMany(RefreshToken::class);
     }
 
 }

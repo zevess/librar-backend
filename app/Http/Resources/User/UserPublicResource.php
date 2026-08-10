@@ -4,8 +4,22 @@ namespace App\Http\Resources\User;
 
 use App\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'UserPublicResource',
+    properties: [
+        new OA\Property(
+            property: 'id',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'name',
+            type: 'string',
+        ),
+    ],
+    type: 'object'
+)]
 class UserPublicResource extends BaseResource
 {
     /**

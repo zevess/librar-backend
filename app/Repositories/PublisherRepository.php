@@ -14,11 +14,6 @@ class PublisherRepository implements PublisherRepositoryInterface
         return Publisher::latest()->get();
     }
 
-    public function create(array $data): Publisher
-    {
-        return Publisher::create($data);
-    }
-
     public function find(int $id): ?Publisher
     {
         return Publisher::with(['books', 'books.author', 'books.activeReservations'])->find($id);
@@ -38,13 +33,27 @@ class PublisherRepository implements PublisherRepositoryInterface
     {
         $search = $data['q'] ?? '';
         $id = $data['id'] ?? '';
-        $result = Publisher::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed($includeTrashed);
+        $sortColumn = $data['sort'] ?? '';
+        $sortOrder = $data['order'] ?? 'desc';
+        $allowed = ['created_at', 'name'];
+        $column = in_array($sortColumn, $allowed) ? $sortColumn : 'created_at';
+        $result = Publisher::when($id, fn($q) => $q->where('id', $id))->when($search, fn($q) => $q->where('slug', 'like', "%{$search}%"))->withTrashed($includeTrashed)->orderBy($column, $sortOrder);
         return $result->paginate($perPage)->withQueryString();
     }
 
     public function getBySlug(?string $slug): Collection
     {
         return Publisher::query()->where('slug', 'like', "%{$slug}%")->take(10)->get();
+    }
+
+    public function getBySelectedField(?array $fields): Collection
+    {
+        return Publisher::select($fields)->get();
+    }
+
+    public function create(array $data): Publisher
+    {
+        return Publisher::create($data);
     }
 
     public function update(Publisher $publisher, array $data): Publisher

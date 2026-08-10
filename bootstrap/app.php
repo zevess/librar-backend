@@ -19,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->validateCsrfTokens(except: [
+            '*',
+        ]);
+    })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => RoleMiddleware::class
@@ -33,6 +38,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'log' => LogQueries::class
         ]);
+    })
+    ->withMiddleware(function (Middleware $middleware): void{
+        $middleware->append(\Illuminate\Http\Middleware\HandleCors::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ApiException $e) {

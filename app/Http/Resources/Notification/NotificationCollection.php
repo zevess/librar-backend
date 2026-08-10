@@ -4,7 +4,37 @@ namespace App\Http\Resources\Notification;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-
+use OpenApi\Attributes as OA;
+#[OA\Schema(
+    schema: 'NotificationCollection',
+    properties: [
+        new OA\Property(
+            property: 'id',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'notifiableId',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'notificationData',
+            type: 'string',
+        ),
+        new OA\Property(
+            property: 'readAt',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'createdAt',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'updatedAt',
+            type: 'integer',
+        ),
+    ],
+    type: 'object'
+)]
 class NotificationCollection extends ResourceCollection
 {
     /**

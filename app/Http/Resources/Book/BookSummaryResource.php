@@ -3,11 +3,41 @@
 namespace App\Http\Resources\Book;
 
 use App\Http\Resources\Author\AuthorSummaryResource;
-use App\Http\Resources\Category\CategorySummaryResource;
-use App\Http\Resources\Genre\GenreSummaryCollection;
-use App\Http\Resources\Publisher\PublisherSummaryResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
+
+#[OA\Schema(
+    schema: 'BookSummaryResource',
+    properties: [
+        new OA\Property(
+            property: 'id',
+            type: 'integer',
+        ),
+        new OA\Property(
+            property: 'title',
+            type: 'string',
+        ),
+        new OA\Property(
+            property: 'slug',
+            type: 'string',
+        ),
+        new OA\Property(
+            property: 'image',
+            type: 'string',
+        ),
+        new OA\Property(
+            property: 'author',
+            ref: '#/components/schemas/AuthorSummaryResource'
+        ),
+        new OA\Property(
+            property: 'isAvailable',
+            type: 'boolean',
+        ),
+    ],
+    type: 'object'
+)]
+
 
 class BookSummaryResource extends JsonResource
 {
@@ -25,6 +55,7 @@ class BookSummaryResource extends JsonResource
             'image' => $this->image,
             'author' => new AuthorSummaryResource($this->whenLoaded('author')),
             'isAvailable' => $this->activeReservations ? $this->activeReservations->isEmpty() : false,
+            'isActive'=>$this->is_active
         ];
     }
 }

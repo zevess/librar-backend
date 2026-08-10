@@ -11,20 +11,55 @@ use App\Http\Resources\Review\ReviewSummaryResource;
 use App\Services\Interfaces\ReviewServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use OpenApi\Attributes as OA;
 
 class ReviewController extends Controller
 {
     public function __construct(
         private ReviewServiceInterface $reviewService
-    ) {
-    }
+    ) {}
 
+    #[OA\Get(
+        path: '/api/reviews',
+        operationId: 'getReviews',
+        tags: ['Reviews'],
+        summary: 'Получение отзывов',
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
+            new OA\Parameter(ref: '#/components/parameters/IdQuery'),
+            new OA\Parameter(ref: '#/components/parameters/PerPageQuery'),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/ReviewsResponse'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound')
+        ]
+    )]
     public function index(): ReviewCollection
     {
         $reviews = $this->reviewService->getAll();
         return new ReviewCollection($reviews);
     }
 
+    #[OA\Get(
+        path: '/api/admin/reviews',
+        operationId: 'getAdminReviews',
+        tags: ['Reviews'],
+        summary: 'Получение отзывов для админа',
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/SearchQuery'),
+            new OA\Parameter(ref: '#/components/parameters/IdQuery'),
+            new OA\Parameter(ref: '#/components/parameters/BookIdQuery'),
+            new OA\Parameter(ref: '#/components/parameters/EmailQuery'),
+            new OA\Parameter(ref: '#/components/parameters/PerPageQuery'),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/ReviewsResponse'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound')
+        ]
+    )]
     public function adminPaginated(GetReviewRequest $request): ReviewCollection
     {
         $reviews = $this->reviewService->getPaginated($request->validated(), true);
@@ -37,6 +72,19 @@ class ReviewController extends Controller
         return new ReviewResource($review);
     }
 
+    #[OA\Get(
+        path: '/api/books/{bookId}/reviews',
+        operationId: 'getBooksReviews',
+        tags: ['Reviews'],
+        summary: 'Получение отзывов книги',
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/BookIdInPath'),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/ReviewsSummaryResponse'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound')
+        ]
+    )]
     public function showByBook(int $bookId): ReviewSummaryCollection
     {
         $reviews = $this->reviewService->getByBook($bookId);
@@ -54,24 +102,92 @@ class ReviewController extends Controller
         ]);
     }
 
+    #[OA\Get(
+        path: '/api/reviews/user/{userId}',
+        operationId: 'getUserReviews',
+        tags: ['Reviews'],
+        summary: 'Получение отзывов пользователя',
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/UserIdInPath'),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/ReviewsSummaryResponse'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound')
+        ]
+    )]
     public function showByUser(int $userId): ReviewSummaryCollection
     {
         $reviews = $this->reviewService->getByUser($userId);
         return new ReviewSummaryCollection($reviews);
     }
 
+
+    #[OA\Post(
+        path: '/api/books/{bookId}/reviews',
+        summary: 'Создать отзыв',
+        operationId: 'createReview',
+        tags: ['Reviews'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/BookIdInPath'),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/StoreReviewRequest')
+        ),
+        responses: [
+            new OA\Response(response: 201, ref: '#/components/responses/ReviewResponse'),
+        ]
+    )]
     public function store(int $bookId, StoreReviewRequest $request): ReviewResource
     {
-        $review = $this->reviewService->create(auth()->id(), $bookId, $request->validated());
+        $review = $this->reviewService->create(Auth::id(), $bookId, $request->validated());
         return new ReviewResource($review);
     }
 
+    #[OA\Put(
+        path: '/api/reviews/{id}',
+        summary: 'Изменить отзыв',
+        operationId: 'updateReview',
+        tags: ['Reviews'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/IdInPath'),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/StoreReviewRequest')
+        ),
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/ReviewResponse'),
+        ]
+    )]
     public function update(int $id, StoreReviewRequest $request): ReviewResource
     {
         $review = $this->reviewService->update($id, $request->validated());
         return new ReviewResource($review);
     }
 
+
+    #[OA\Delete(
+        path: '/api/reviews/{id}',
+        summary: 'Удалить отзыв',
+        operationId: 'deleteReview',
+        tags: ['Reviews'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/IdInPath'),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Удалено'),
+        ]
+    )]
     public function destroy(int $id): JsonResponse
     {
         $this->reviewService->delete($id);
@@ -80,6 +196,21 @@ class ReviewController extends Controller
         ]);
     }
 
+    #[OA\Post(
+        path: '/api/reviews/{id}',
+        summary: 'Восстановить отзыв',
+        operationId: 'restoreReview',
+        tags: ['Reviews'],
+        security: [
+            ['bearerAuth' => []]
+        ],
+        parameters: [
+            new OA\Parameter(ref: '#/components/parameters/IdInPath'),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Восстановлено'),
+        ]
+    )]
     public function restore(int $id): JsonResponse
     {
         $restored = $this->reviewService->restore($id);
