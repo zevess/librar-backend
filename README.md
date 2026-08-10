@@ -32,7 +32,7 @@ cp .env.example .env
   ```
 * **Frontend URL (CORS)**: Укажите актуальный адрес вашего фронтенда (например, Vue на порту 3000):
   ```env
-  FRONTEND_URL=http://localhost:3000
+  VITE_APP_URL=http://localhost:3000
   ```
 * **Google SMTP**: Для отправки писем используйте 16-значный **Пароль приложения** из настроек безопасности Google:
   ```env
