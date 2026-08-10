@@ -52,16 +52,16 @@ docker compose up -d
 Выполните команды инициализации приложения в запущенной Docker-среде:
 ```bash
 # Установка всех PHP зависимостей через Composer
-docker compose exec app composer install
+docker compose exec librar-api composer install
 
 # Генерация уникального ключа безопасности приложения
-docker compose exec app php artisan key:generate
+docker compose exec librar-api php artisan key:generate
 
 # Создание символической ссылки для хранения изображений (Storage)
-docker compose exec app php artisan storage:link
+docker compose exec librar-api php artisan storage:link
 
 # Запуск миграций базы данных
-docker compose exec app php artisan migrate
+docker compose exec librar-api php artisan migrate
 ```
 
 Запущенный проект будет доступен по адресу [localhost:8000/api](http://localhost:8000/api), Swagger-документация по адресу [localhost:8000/api/documentation](http://localhost:8000/api/documentation)
