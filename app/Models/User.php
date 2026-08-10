@@ -24,7 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'role'
+        // 'role'
     ];
 
 
@@ -41,6 +41,15 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'role' => UserRole::class
         ];
+    }
+
+    protected static function booted()
+    {
+        static::creating(function (User $user){
+            if(static::query()->doesntExist()){
+                $user->role = UserRole::ADMIN;
+            }
+        });
     }
 
     public function sendPasswordResetNotification($token)
