@@ -20,7 +20,7 @@ cd librar-backend
 ```bash
 cp .env.example .env
 ```
-Откройте созданный файл `.env` в текстовом редакторе и настройте ключевые параметры:
+Откройте созданный файл `.env` и настройте ключевые параметры:
 * **Подключение к БД**: Если ваша PostgreSQL запущена локально вне Docker, укажите:
   ```env
   DB_CONNECTION=pgsql
@@ -37,11 +37,10 @@ cp .env.example .env
 * **Google SMTP**: Для отправки писем используйте 16-значный **Пароль приложения** из настроек безопасности Google:
   ```env
   MAIL_MAILER=smtp
-  MAIL_HOST=://gmail.com
+  MAIL_HOST=smtp.gmail.com
   MAIL_PORT=587
   MAIL_USERNAME=ваша_почта@gmail.com
   MAIL_PASSWORD=xxxx-xxxx-xxxx-xxxx
-  MAIL_ENCRYPTION=tls
   ```
 ### 3. Сборка и запуск контейнеров
 Запустите Docker Compose для автоматической сборки образов и поднятия контейнеров (`librar-api-app`, `librar-api-nginx`, `librar-api-scheduler`) в фоновом режиме:
